@@ -1,0 +1,98 @@
+version: "3.9"
+
+services:
+
+  # ── Next.js Frontend ─────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./grantsetu-frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.grantsetu.in}
+    container_name: grantsetu-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+    depends_on:
+      - api
+    restart: unless-stopped
+    mem_limit: 512m
+
+  # ── FastAPI Backend ───────────────────────────────────────────────────────────
+  api:
+    build: ./grantsetu-backend
+    container_name: grantsetu-api
+    ports:
+      - "8000:8000"
+    env_file: ./grantsetu-backend/.env
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./grantsetu-backend/app:/app/app
+      - ./grantsetu-backend/alembic:/app/alembic
+      - scraped_pdfs:/app/scraped_pdfs
+    restart: unless-stopped
+    mem_limit: 512m
+    command: >
+      sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  # ── PostgreSQL Database ───────────────────────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: grantsetu-db
+    environment:
+      POSTGRES_USER: grantsetu
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: grantsetu
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # Do NOT expose 5432 externally in production
+    restart: unless-stopped
+    mem_limit: 256m
+
+  # ── Redis Cache / Task Queue ──────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: grantsetu-redis
+    command: redis-server --maxmemory 100mb --maxmemory-policy allkeys-lru
+    # Do NOT expose 6379 externally in production
+    restart: unless-stopped
+    mem_limit: 128m
+
+  # ── Celery Worker ─────────────────────────────────────────────────────────────
+  celery-worker:
+    build: ./grantsetu-backend
+    container_name: grantsetu-celery-worker
+    command: celery -A app.tasks.celery_app worker --loglevel=info --concurrency=2
+    env_file: ./grantsetu-backend/.env
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./grantsetu-backend/app:/app/app
+      - scraped_pdfs:/app/scraped_pdfs
+    restart: unless-stopped
+    mem_limit: 256m
+
+  # ── Celery Beat Scheduler ─────────────────────────────────────────────────────
+  celery-beat:
+    build: ./grantsetu-backend
+    container_name: grantsetu-celery-beat
+    command: celery -A app.tasks.celery_app beat --loglevel=info
+    env_file: ./grantsetu-backend/.env
+    depends_on:
+      - redis
+    volumes:
+      - ./grantsetu-backend/app:/app/app
+    restart: unless-stopped
+    mem_limit: 128m
+
+volumes:
+  pgdata:
+  scraped_pdfs:

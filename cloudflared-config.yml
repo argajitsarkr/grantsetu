@@ -1,0 +1,21 @@
+# ── Cloudflare Tunnel Configuration for grantsetu.in ─────────────────────────
+# Copy this file to: /root/.cloudflared/config.yml  (on your server)
+# Replace YOUR_TUNNEL_ID with the ID from: cloudflared tunnel create grantsetu
+
+tunnel: YOUR_TUNNEL_ID
+credentials-file: /root/.cloudflared/YOUR_TUNNEL_ID.json
+
+ingress:
+  # grantsetu.in → Next.js frontend
+  - hostname: grantsetu.in
+    service: http://localhost:3000
+
+  - hostname: www.grantsetu.in
+    service: http://localhost:3000
+
+  # api.grantsetu.in → FastAPI backend
+  - hostname: api.grantsetu.in
+    service: http://localhost:8000
+
+  # Catch-all (required by cloudflared)
+  - service: http_status:404
