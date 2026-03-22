@@ -23,12 +23,12 @@ class ICMRScraper(BaseScraper):
         grants = []
 
         try:
-            html = await self.fetch_page(self.portal_url)
+            html = await self.fetch_dynamic_page(self.portal_url)
         except Exception as e:
             logger.error(f"[ICMR] Failed to fetch main page: {e}")
             # Fallback to alternate URL
             try:
-                html = await self.fetch_page("https://main.icmr.nic.in/content/extramural-research-programme")
+                html = await self.fetch_dynamic_page("https://main.icmr.nic.in/content/extramural-research-programme")
             except Exception:
                 raise
 

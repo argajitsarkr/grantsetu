@@ -22,7 +22,7 @@ class BIRACScraper(BaseScraper):
         """Scrape BIRAC portal for active grant calls."""
         grants = []
 
-        html = await self.fetch_page(self.portal_url)
+        html = await self.fetch_dynamic_page(self.portal_url)
         soup = BeautifulSoup(html, "lxml")
 
         # BIRAC typically has a table of CFPs

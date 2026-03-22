@@ -25,7 +25,7 @@ class DSTScraper(BaseScraper):
         """Scrape DST portal for active grant calls."""
         grants = []
 
-        html = await self.fetch_page(self.portal_url)
+        html = await self.fetch_dynamic_page(self.portal_url)
         soup = BeautifulSoup(html, "lxml")
 
         # DST typically has a table with columns: S.No, Title, Opening Date, Deadline

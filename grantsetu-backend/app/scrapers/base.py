@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 
 import httpx
+from playwright.async_api import async_playwright, Error as PlaywrightError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.scraper_run import ScraperRun
@@ -48,6 +49,43 @@ class BaseScraper(ABC):
                     wait = BACKOFF_SECONDS[attempt]
                     logger.warning(
                         f"[{self.agency}] Retry {attempt + 1}/{MAX_RETRIES} for {url} "
+                        f"after {wait}s: {e}"
+                    )
+                    await asyncio.sleep(wait)
+
+        raise last_error  # type: ignore[misc]
+
+    async def fetch_dynamic_page(self, url: str, wait_selector: str | None = None) -> str:
+        """Fetch a JS-rendered page using Playwright."""
+        last_error = None
+        for attempt in range(MAX_RETRIES):
+            try:
+                async with async_playwright() as p:
+                    # Launching chromium
+                    browser = await p.chromium.launch(
+                        headless=True,
+                        args=["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
+                    )
+                    context = await browser.new_context(user_agent=USER_AGENT)
+                    page = await context.new_page()
+                    
+                    # Navigate and wait for network to be idle
+                    await page.goto(url, wait_until="networkidle", timeout=REQUEST_TIMEOUT * 1000)
+                    
+                    # Wait for specific selector if requested
+                    if wait_selector:
+                        await page.wait_for_selector(wait_selector, timeout=10000)
+                        
+                    content = await page.content()
+                    await browser.close()
+                    return content
+            except Exception as e:
+                last_error = e
+                if attempt < MAX_RETRIES - 1:
+                    import asyncio
+                    wait = BACKOFF_SECONDS[attempt]
+                    logger.warning(
+                        f"[{self.agency}] Playwright retry {attempt + 1}/{MAX_RETRIES} for {url} "
                         f"after {wait}s: {e}"
                     )
                     await asyncio.sleep(wait)

@@ -43,7 +43,7 @@ class CSIRScraper(BaseScraper):
         # Try main portal first
         for url in [self.portal_url] + self.FALLBACK_URLS:
             try:
-                html = await self.fetch_page(url)
+                html = await self.fetch_dynamic_page(url)
                 found = self._parse_page(html, url)
                 grants.extend(found)
             except Exception as e:

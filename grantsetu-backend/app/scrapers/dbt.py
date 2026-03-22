@@ -23,12 +23,12 @@ class DBTScraper(BaseScraper):
         grants = []
 
         try:
-            html = await self.fetch_page(self.portal_url)
+            html = await self.fetch_dynamic_page(self.portal_url)
         except Exception as e:
             logger.error(f"[DBT] Failed to fetch main page: {e}")
             # Try alternate URL (DBT recently migrated)
             try:
-                html = await self.fetch_page("https://dbt.gov.in/whats-new/call-for-proposals")
+                html = await self.fetch_dynamic_page("https://dbt.gov.in/whats-new/call-for-proposals")
             except Exception:
                 raise
 
