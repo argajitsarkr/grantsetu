@@ -61,8 +61,12 @@ class BaseScraper(ABC):
         for attempt in range(MAX_RETRIES):
             try:
                 async with async_playwright() as p:
+                    import os
+                    executable_path = "/usr/bin/chromium" if os.path.exists("/usr/bin/chromium") else None
+                    
                     # Launching chromium
                     browser = await p.chromium.launch(
+                        executable_path=executable_path,
                         headless=True,
                         args=["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"]
                     )

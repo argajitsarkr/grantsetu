@@ -8,17 +8,12 @@ ENV PYTHONPATH=/app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libpq-dev \
+    chromium \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Install Playwright and dependencies
-RUN apt-get update && \
-    playwright install-deps && \
-    playwright install chromium && \
-    rm -rf /var/lib/apt/lists/*
 # Copy application code
 COPY . .
 
