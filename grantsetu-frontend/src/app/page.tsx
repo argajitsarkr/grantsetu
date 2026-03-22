@@ -3,6 +3,55 @@ import Image from "next/image";
 import { AGENCIES } from "@/lib/constants";
 import AgencyLogo from "@/components/AgencyLogo";
 
+/* ── FAQ data — powers both the UI section and JSON-LD schema ── */
+const FAQ_DATA = [
+  {
+    q: "What is GrantSetu?",
+    a: "GrantSetu is India's free research grant discovery platform. It aggregates active grant calls from 8 Indian government funding agencies — DBT, DST, ICMR, ANRF (formerly SERB), BIRAC, CSIR, UGC, and AYUSH — into a single searchable interface, updated daily from official portals.",
+  },
+  {
+    q: "Which agencies does GrantSetu track?",
+    a: "GrantSetu tracks grants from DBT (Department of Biotechnology), DST (Department of Science & Technology), ICMR (Indian Council of Medical Research), ANRF/SERB (Anusandhan National Research Foundation), BIRAC, CSIR, UGC (University Grants Commission), and Ministry of AYUSH.",
+  },
+  {
+    q: "Is GrantSetu free to use?",
+    a: "Yes, GrantSetu is completely free. There is no premium tier, no paywall, and no hidden charges. It was built by a PhD researcher for the Indian research community.",
+  },
+  {
+    q: "How often is GrantSetu updated?",
+    a: "GrantSetu is updated daily. Automated systems check all 8 agency portals every day for new grant calls, updated deadlines, and closed grants.",
+  },
+  {
+    q: "Can I get email alerts for new grants?",
+    a: "Yes. Visit the Alerts page to set up free email notifications. Choose your subject areas, career stage, and preferred agencies — you'll receive matching grants weekly or daily without needing an account.",
+  },
+  {
+    q: "What types of grants are available for early career researchers in India?",
+    a: "Key schemes for early career researchers include ANRF PM-ECRG (Prime Minister's Early Career Research Grant), ANRF CRG (Core Research Grant), DST INSPIRE Faculty Award, UGC Start-Up Grants for newly recruited faculty, and CSIR Extramural Research grants.",
+  },
+  {
+    q: "Are there grants specifically for women scientists in India?",
+    a: "Yes. Major women-specific schemes include DST WOS-A (Women Scientist Scheme), DBT BioCARe (Career Development Programme for Women Scientists), ANRF POWER, and ANRF SERB-SURE. GrantSetu lets you filter grants by eligibility for women scientists.",
+  },
+  {
+    q: "What is ANRF? Is it the same as SERB?",
+    a: "ANRF (Anusandhan National Research Foundation) replaced SERB (Science and Engineering Research Board) in 2023. All former SERB schemes like CRG, MATRICS, and SUPRA now operate under ANRF. The application portal is anrfonline.in.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ_DATA.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.a,
+    },
+  })),
+};
+
 export default function HomePage() {
   return (
     <div>
@@ -149,6 +198,37 @@ export default function HomePage() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ── FAQ — drives Google Featured Snippets + LLM knowledge ── */}
+      <section className="section-padding bg-white">
+        <div className="container-main">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-display-sm sm:text-display-md font-bold text-brand-900">
+              Frequently Asked Questions
+            </h2>
+            <p className="mt-4 text-brand-500 text-lg leading-relaxed">
+              Everything you need to know about finding Indian research grants
+            </p>
+          </div>
+          <div className="max-w-3xl mx-auto divide-y divide-brand-100">
+            {FAQ_DATA.map((item, i) => (
+              <details key={i} className="group py-5">
+                <summary className="flex items-center justify-between cursor-pointer list-none">
+                  <h3 className="text-base font-semibold text-brand-900 pr-4">{item.q}</h3>
+                  <svg className="h-5 w-5 text-brand-400 flex-shrink-0 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </summary>
+                <p className="mt-3 text-brand-600 leading-relaxed text-sm">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
       </section>
 
       {/* ── CTA — dark Topmate section with grid pattern ── */}

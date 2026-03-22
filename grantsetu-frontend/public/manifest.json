@@ -1,0 +1,20 @@
+{
+  "name": "GrantSetu — Indian Research Grant Discovery",
+  "short_name": "GrantSetu",
+  "description": "Discover Indian government research grants from DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC, and more — updated daily.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#141414",
+  "orientation": "portrait-primary",
+  "categories": ["education", "productivity"],
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/grantsetu-logo.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

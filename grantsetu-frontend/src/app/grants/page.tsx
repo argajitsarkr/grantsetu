@@ -7,8 +7,17 @@ import SearchBar from "@/components/SearchBar";
 import Pagination from "@/components/Pagination";
 
 export const metadata = {
-  title: "Browse Grants",
-  description: "Search and filter active Indian research grant calls from DBT, DST, ICMR, ANRF, BIRAC, and more.",
+  title: "Browse Indian Research Grants — DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC",
+  description:
+    "Search and filter active Indian government research grant calls. Filter by agency (DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC, AYUSH), subject area, career stage, budget, and deadline. Updated daily from official portals.",
+  alternates: {
+    canonical: "https://grantsetu.in/grants",
+  },
+  openGraph: {
+    title: "Browse Indian Research Grants — GrantSetu",
+    description: "Search active grant calls from 8 Indian funding agencies. Filter by subject, career stage, budget & deadline.",
+    url: "https://grantsetu.in/grants",
+  },
 };
 
 interface PageProps {

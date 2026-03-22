@@ -16,13 +16,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   try {
     const grant = await fetchGrant(slug);
+    const desc = grant.summary || `${grant.agency} grant call \u2014 ${grant.title}`;
     return {
-      title: grant.title,
-      description: grant.summary || `${grant.agency} grant call \u2014 ${grant.title}`,
+      title: `${grant.title} — ${grant.agency} Grant`,
+      description: desc,
       openGraph: {
-        title: grant.title,
-        description: grant.summary || `${grant.agency} grant call`,
+        title: `${grant.title} — ${grant.agency}`,
+        description: desc,
         type: "article",
+        url: `https://grantsetu.in/grants/${slug}`,
+        siteName: "GrantSetu",
+        images: [{ url: "https://grantsetu.in/og-image.png" }],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${grant.title} — ${grant.agency}`,
+        description: desc,
+        images: ["https://grantsetu.in/og-image.png"],
       },
       alternates: {
         canonical: `https://grantsetu.in/grants/${slug}`,
@@ -284,22 +294,61 @@ export default async function GrantDetailPage({ params }: PageProps) {
           </div>
         </article>
 
-        {/* JSON-LD structured data */}
+        {/* JSON-LD: BreadcrumbList — enables breadcrumbs in Google results */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Event",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: "https://grantsetu.in" },
+                { "@type": "ListItem", position: 2, name: "Grants", item: "https://grantsetu.in/grants" },
+                { "@type": "ListItem", position: 3, name: grant.agency, item: `https://grantsetu.in/grants?agency=${grant.agency}` },
+                { "@type": "ListItem", position: 4, name: grant.title },
+              ],
+            }),
+          }}
+        />
+        {/* JSON-LD: Grant structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "GovernmentService",
               name: grant.title,
               description: grant.summary || grant.description,
-              organizer: {
-                "@type": "Organization",
+              provider: {
+                "@type": "GovernmentOrganization",
                 name: grant.agency,
+                ...(grant.agency === "DBT" && { url: "https://dbtindia.gov.in" }),
+                ...(grant.agency === "DST" && { url: "https://dst.gov.in" }),
+                ...(grant.agency === "ICMR" && { url: "https://icmr.gov.in" }),
+                ...(grant.agency === "ANRF" && { url: "https://anrf.gov.in" }),
+                ...(grant.agency === "BIRAC" && { url: "https://birac.nic.in" }),
+                ...(grant.agency === "CSIR" && { url: "https://csir.res.in" }),
+                ...(grant.agency === "UGC" && { url: "https://ugc.gov.in" }),
+                ...(grant.agency === "AYUSH" && { url: "https://ayush.gov.in" }),
+                areaServed: { "@type": "Country", name: "India" },
               },
-              ...(grant.deadline && { endDate: grant.deadline }),
+              ...(grant.deadline && { availableThrough: grant.deadline }),
               url: `https://grantsetu.in/grants/${slug}`,
-              eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+              serviceType: "Research Grant",
+              audience: {
+                "@type": "EducationalAudience",
+                educationalRole: grant.career_stages?.join(", ") || "Researcher",
+              },
+              ...(grant.budget_max && {
+                offers: {
+                  "@type": "Offer",
+                  price: grant.budget_max,
+                  priceCurrency: "INR",
+                  description: "Maximum grant funding amount",
+                },
+              }),
+              isAccessibleForFree: true,
+              areaServed: { "@type": "Country", name: "India" },
             }),
           }}
         />
