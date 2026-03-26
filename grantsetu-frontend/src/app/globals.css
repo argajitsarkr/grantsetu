@@ -17,8 +17,8 @@
   --color-success:   #25C16F;
   --font-gilroy:     "gilroy", "gilroy Fallback", Arial, sans-serif;
   --font-inter:      "Inter", "Inter Fallback", system-ui, sans-serif;
-  --nav-height:      64px;
-  --nav-height-mob:  56px;
+  --nav-height:      68px;
+  --nav-height-mob:  60px;
 }
 
 @layer base {
