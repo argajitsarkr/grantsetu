@@ -55,65 +55,65 @@ export default function AdminNewGrant() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Add Grant Manually</h1>
+      <h1 className="text-2xl font-bold text-[#05073F] mb-6" style={{ fontFamily: "var(--font-display)" }}>Add Grant Manually</h1>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Agency *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Agency *</label>
             <select name="agency" required className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
               {AGENCIES.map((a) => <option key={a} value={a}>{a}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Scheme Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Scheme Name</label>
             <input name="scheme_name" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="e.g., PM-ECRG" />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Title *</label>
           <input name="title" required className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Summary</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Summary</label>
           <textarea name="summary" rows={2} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Description</label>
           <textarea name="description" rows={4} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Deadline</label>
             <input name="deadline" type="date" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Deadline Text</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Deadline Text</label>
             <input name="deadline_text" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="e.g., Open / Rolling" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Duration (months)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Duration (months)</label>
             <input name="duration_months" type="number" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Budget Min (INR)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Budget Min (INR)</label>
             <input name="budget_min" type="number" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Budget Max (INR)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Budget Max (INR)</label>
             <input name="budget_max" type="number" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Subject Areas</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Subject Areas</label>
           <div className="flex flex-wrap gap-2">
             {SUBJECT_AREAS.map((area) => (
               <label key={area} className="flex items-center gap-1.5 text-sm">
@@ -125,7 +125,7 @@ export default function AdminNewGrant() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Career Stages</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Career Stages</label>
           <div className="flex flex-wrap gap-3">
             {CAREER_STAGES.map((stage) => (
               <label key={stage} className="flex items-center gap-1.5 text-sm">
@@ -137,7 +137,7 @@ export default function AdminNewGrant() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Institution Types</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Institution Types</label>
           <div className="flex flex-wrap gap-2">
             {INSTITUTION_TYPES.map((type) => (
               <label key={type} className="flex items-center gap-1.5 text-sm">
@@ -149,23 +149,23 @@ export default function AdminNewGrant() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Eligibility Summary</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Eligibility Summary</label>
           <textarea name="eligibility_summary" rows={2} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">URL *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>URL *</label>
             <input name="url" type="url" required className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">PDF URL</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>PDF URL</label>
             <input name="pdf_url" type="url" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Portal Name</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Portal Name</label>
           <input name="portal_name" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder="e.g., eProMIS, anrfonline.in" />
         </div>
 
@@ -174,7 +174,7 @@ export default function AdminNewGrant() {
         <button
           type="submit"
           disabled={saving}
-          className="bg-primary-800 text-white px-6 py-3 rounded-lg font-medium hover:bg-primary-900 disabled:opacity-50"
+          className="bg-[#2451F3] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1a3fc2] disabled:opacity-50"
         >
           {saving ? "Creating..." : "Create Grant"}
         </button>

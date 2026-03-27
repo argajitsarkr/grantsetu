@@ -83,7 +83,7 @@ export default function OnboardingPage() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-display-sm font-bold text-brand-900 tracking-heading">
+          <h1 className="text-display-sm font-bold text-[#05073F] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>
             Welcome to GrantSetu
           </h1>
           <p className="mt-2 text-brand-500">
@@ -130,7 +130,7 @@ export default function OnboardingPage() {
           {/* Step 0: Institution */}
           {step === 0 && (
             <div className="space-y-5">
-              <h2 className="text-lg font-semibold text-brand-900">Institution Details</h2>
+              <h2 className="text-lg font-semibold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>Institution Details</h2>
 
               <div>
                 <label className="block text-sm font-medium text-brand-700 mb-1">Institution Name *</label>
@@ -201,7 +201,7 @@ export default function OnboardingPage() {
           {/* Step 1: Research Profile */}
           {step === 1 && (
             <div className="space-y-5">
-              <h2 className="text-lg font-semibold text-brand-900">Research Profile</h2>
+              <h2 className="text-lg font-semibold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>Research Profile</h2>
 
               <div>
                 <label className="block text-sm font-medium text-brand-700 mb-1">Career Stage *</label>
@@ -265,7 +265,7 @@ export default function OnboardingPage() {
           {/* Step 2: Preferences */}
           {step === 2 && (
             <div className="space-y-5">
-              <h2 className="text-lg font-semibold text-brand-900">Preferences</h2>
+              <h2 className="text-lg font-semibold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>Preferences</h2>
 
               <div>
                 <label className="block text-sm font-medium text-brand-700 mb-1">Date of Birth</label>

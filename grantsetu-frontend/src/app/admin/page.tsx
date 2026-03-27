@@ -30,7 +30,7 @@ export default async function AdminDashboard() {
   return (
     <div className="container-main py-8">
       <div className="mb-8">
-        <h1 className="text-display-sm font-bold text-brand-900 tracking-heading">Admin Dashboard</h1>
+        <h1 className="text-display-sm font-bold text-[#05073F] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Admin Dashboard</h1>
         <p className="text-sm text-brand-500 mt-1">Overview of grants, users, and scraper health</p>
       </div>
 
@@ -44,7 +44,7 @@ export default async function AdminDashboard() {
             { label: "Alert Subscribers", value: stats.alerts_enabled, bg: "bg-accent-50 border-accent-100", color: "text-accent-700" },
           ].map((stat) => (
             <div key={stat.label} className={`${stat.bg} border rounded-xl p-5`}>
-              <p className="text-xs font-semibold text-brand-400 uppercase tracking-wider">{stat.label}</p>
+              <p className="text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>{stat.label}</p>
               <p className={`text-3xl font-bold ${stat.color} mt-2`}>{stat.value}</p>
             </div>
           ))}
@@ -53,18 +53,18 @@ export default async function AdminDashboard() {
 
       {/* Scraper Health */}
       <div className="mb-8">
-        <h2 className="text-lg font-bold text-brand-900 tracking-heading mb-4">Recent Scraper Runs</h2>
+        <h2 className="text-lg font-bold text-[#05073F] tracking-heading mb-4" style={{ fontFamily: "var(--font-display)" }}>Recent Scraper Runs</h2>
         <div className="card p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-brand-100">
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider">Agency</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider">Started</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider">Status</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider">Found</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider">New</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider">Error</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Agency</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Started</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Status</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Found</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>New</th>
+                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Error</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-100">

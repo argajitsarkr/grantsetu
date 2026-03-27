@@ -78,3 +78,38 @@ async def get_optional_user(
 
     result = await db.execute(select(User).where(User.email == email))
     return result.scalar_one_or_none()
+
+
+async def require_admin(request: Request, db: AsyncSession = Depends(get_db)) -> None:
+    """FastAPI dependency that enforces admin access.
+
+    Accepts either:
+    - An Admin_Token JWT with role="admin" (issued by /admin/login)
+    - A user JWT where the corresponding User.is_admin is True (Google OAuth path)
+
+    Raises HTTP 401 for missing/invalid/expired tokens.
+    Raises HTTP 403 for valid tokens belonging to non-admin users.
+    """
+    token = _extract_token(request)
+    if not token:
+        raise HTTPException(status_code=401, detail="Authentication required")
+
+    payload = _decode_token(token)  # raises 401 on expired/invalid
+
+    # Admin_Token path: JWT has role="admin"
+    if payload.get("role") == "admin":
+        return
+
+    # Google OAuth path: JWT has email, look up user in DB
+    email = payload.get("email")
+    if not email:
+        raise HTTPException(status_code=401, detail="Authentication required")
+
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalar_one_or_none()
+
+    if user is None:
+        raise HTTPException(status_code=401, detail="Authentication required")
+
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="Admin access required")

@@ -7,7 +7,7 @@ export default function SignInPage() {
     <div className="min-h-[60vh] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Sign in to GrantSetu</h1>
+          <h1 className="text-2xl font-bold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>Sign in to GrantSetu</h1>
           <p className="mt-2 text-gray-600">
             Set up your research profile and get personalised grant recommendations
           </p>

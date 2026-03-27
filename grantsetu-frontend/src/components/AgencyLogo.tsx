@@ -17,6 +17,7 @@ function AgencyTextBadge({ agency, className = "" }: { agency: string; className
   return (
     <span
       className={`inline-flex items-center justify-center px-3 py-1 rounded-lg text-xs font-bold border ${colors} ${className}`}
+      style={{ fontFamily: "var(--font-mono)" }}
     >
       {agency}
     </span>

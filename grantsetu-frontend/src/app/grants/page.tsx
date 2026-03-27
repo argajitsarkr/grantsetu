@@ -54,7 +54,7 @@ export default async function GrantsPage({ searchParams }: PageProps) {
     <div className="container-main pt-12 pb-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-display-sm font-bold text-brand-900 tracking-heading">Research Grants</h1>
+        <h1 className="text-display-sm font-bold text-[#05073F] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Research Grants</h1>
         <p className="text-sm text-brand-500 mt-1">
           {data ? `${data.total} grants found` : "Browse active grant calls from Indian funding agencies"}
         </p>
@@ -100,7 +100,7 @@ export default async function GrantsPage({ searchParams }: PageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h3 className="text-sm font-semibold text-brand-900">No grants found</h3>
+              <h3 className="text-sm font-semibold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>No grants found</h3>
               <p className="mt-1 text-sm text-brand-400">Try adjusting your filters or search query.</p>
             </div>
           )}

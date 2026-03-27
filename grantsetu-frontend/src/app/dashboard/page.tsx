@@ -71,7 +71,7 @@ export default function DashboardPage() {
           </div>
         )}
         <div>
-          <h1 className="text-2xl font-bold text-brand-900">
+          <h1 className="text-2xl font-bold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>
             Welcome back, {session?.user?.name?.split(" ")[0] || "Researcher"}
           </h1>
           <p className="text-brand-500 text-sm">
@@ -84,7 +84,7 @@ export default function DashboardPage() {
         {/* Sidebar — Profile summary */}
         <div className="lg:col-span-1">
           <div className="bg-white border border-brand-200 rounded-2xl p-5 shadow-card sticky top-24">
-            <h2 className="text-sm font-semibold text-brand-400 uppercase tracking-wider mb-4">
+            <h2 className="text-sm font-semibold text-brand-400 uppercase tracking-wider mb-4" style={{ fontFamily: "var(--font-mono)" }}>
               Your Profile
             </h2>
 
@@ -157,7 +157,7 @@ export default function DashboardPage() {
           {/* Recommended grants */}
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-brand-900">
+              <h2 className="text-lg font-bold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>
                 Recommended for You
               </h2>
               <span className="text-sm text-brand-400">
@@ -190,7 +190,7 @@ export default function DashboardPage() {
           {/* Saved grants */}
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-brand-900">
+              <h2 className="text-lg font-bold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>
                 Saved Grants
               </h2>
               <span className="text-sm text-brand-400">

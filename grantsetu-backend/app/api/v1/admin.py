@@ -1,21 +1,54 @@
 """Admin endpoints — protected, requires is_admin=True."""
 
+import time
+
+import bcrypt
+import jwt
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.deps import require_admin
+from app.config import settings
 from app.database import get_db
 from app.models.grant import Grant
 from app.models.scraper_run import ScraperRun
 from app.models.user import User
+from app.schemas.admin import AdminLoginRequest, AdminTokenResponse
 from app.schemas.grant import GrantCreate, GrantResponse, GrantUpdate
 from app.services.grant_service import create_grant, get_grant_by_id, update_grant
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 
+@router.post("/login", response_model=AdminTokenResponse)
+async def admin_login(data: AdminLoginRequest) -> AdminTokenResponse:
+    """Authenticate with admin credentials and return a signed JWT."""
+    from app.main import _admin_password_hash
+
+    username_ok = data.username == settings.ADMIN_USERNAME
+    password_ok = username_ok and bcrypt.checkpw(
+        data.password.encode(), _admin_password_hash.encode()
+    )
+
+    if not (username_ok and password_ok):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    now = int(time.time())
+    payload = {
+        "role": "admin",
+        "sub": "admin",
+        "iat": now,
+        "exp": now + 86400,
+    }
+    token = jwt.encode(payload, settings.NEXTAUTH_SECRET, algorithm="HS256")
+    return AdminTokenResponse(access_token=token)
+
+
 @router.get("/stats")
-async def admin_stats(db: AsyncSession = Depends(get_db)) -> dict:
+async def admin_stats(
+    _: None = Depends(require_admin), db: AsyncSession = Depends(get_db)
+) -> dict:
     """Get admin dashboard statistics."""
     grants_total = (await db.execute(select(func.count(Grant.id)))).scalar() or 0
     grants_active = (
@@ -36,7 +69,9 @@ async def admin_stats(db: AsyncSession = Depends(get_db)) -> dict:
 
 @router.post("/grants", response_model=GrantResponse)
 async def admin_create_grant(
-    data: GrantCreate, db: AsyncSession = Depends(get_db)
+    data: GrantCreate,
+    _: None = Depends(require_admin),
+    db: AsyncSession = Depends(get_db),
 ) -> GrantResponse:
     """Create a grant manually."""
     grant = await create_grant(db, data)
@@ -45,7 +80,10 @@ async def admin_create_grant(
 
 @router.put("/grants/{grant_id}", response_model=GrantResponse)
 async def admin_update_grant(
-    grant_id: int, data: GrantUpdate, db: AsyncSession = Depends(get_db)
+    grant_id: int,
+    data: GrantUpdate,
+    _: None = Depends(require_admin),
+    db: AsyncSession = Depends(get_db),
 ) -> GrantResponse:
     """Update an existing grant."""
     grant = await update_grant(db, grant_id, data)
@@ -56,7 +94,9 @@ async def admin_update_grant(
 
 @router.delete("/grants/{grant_id}")
 async def admin_delete_grant(
-    grant_id: int, db: AsyncSession = Depends(get_db)
+    grant_id: int,
+    _: None = Depends(require_admin),
+    db: AsyncSession = Depends(get_db),
 ) -> dict:
     """Soft delete a grant (set status to expired)."""
     grant = await get_grant_by_id(db, grant_id)
@@ -68,7 +108,9 @@ async def admin_delete_grant(
 
 
 @router.post("/scrapers/run")
-async def admin_run_scraper(agency: str = "all") -> dict:
+async def admin_run_scraper(
+    agency: str = "all", _: None = Depends(require_admin)
+) -> dict:
     """Trigger scraper manually via Celery."""
     from app.tasks.scraper_tasks import run_all_scrapers, run_scraper
 
@@ -81,7 +123,9 @@ async def admin_run_scraper(agency: str = "all") -> dict:
 
 
 @router.get("/scrapers/health")
-async def admin_scraper_health(db: AsyncSession = Depends(get_db)) -> list[dict]:
+async def admin_scraper_health(
+    _: None = Depends(require_admin), db: AsyncSession = Depends(get_db)
+) -> list[dict]:
     """Get recent scraper run history."""
     result = await db.execute(
         select(ScraperRun).order_by(ScraperRun.started_at.desc()).limit(20)

@@ -2,6 +2,7 @@
 
 from contextlib import asynccontextmanager
 
+import bcrypt
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,10 +10,18 @@ from app.api.v1.router import v1_router
 from app.config import settings
 from app.database import engine
 
+# Module-level storage for the hashed admin password.
+# Populated at startup; plaintext is never retained beyond the hash call.
+_admin_password_hash: str = ""
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Manage application lifecycle — dispose engine on shutdown."""
+    """Manage application lifecycle — hash admin password on startup, dispose engine on shutdown."""
+    global _admin_password_hash
+    _admin_password_hash = bcrypt.hashpw(
+        settings.ADMIN_PASSWORD.encode(), bcrypt.gensalt()
+    ).decode()
     yield
     await engine.dispose()
 

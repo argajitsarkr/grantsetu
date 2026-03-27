@@ -7,9 +7,9 @@ import { useSession, signOut } from "next-auth/react";
 
 /* ── Dropdown data ── */
 const PLATFORM_ITEMS = [
-  { href: "/grants", label: "Browse Grants", desc: "Search all active grant calls from 8+ agencies" },
-  { href: "/alerts", label: "Email Alerts", desc: "Get matched grants delivered to your inbox" },
-  { href: "/dashboard", label: "Dashboard", desc: "Track your saved grants and applications", auth: true },
+  { href: "/grants", label: "Browse Grants", desc: "Search all active grant calls" },
+  { href: "/alerts", label: "Email Alerts", desc: "Matched grants to your inbox" },
+  { href: "/dashboard", label: "Dashboard", desc: "Track saved grants & applications", auth: true },
 ];
 
 const AGENCIES_ITEMS = [
@@ -30,16 +30,16 @@ const RESOURCES_ITEMS = [
   { href: "/grants?subject_area=Engineering", label: "Engineering & Tech", desc: "Core engineering, CS, Electronics" },
 ];
 
-/* ── Caret icon ── */
-function CaretDown({ className }: { className?: string }) {
+/* ── Chevron icon — indicium.ai style ── */
+function ChevronDown({ className }: { className?: string }) {
   return (
-    <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" aria-hidden="true" className={className || "w-3.5 h-3.5"}>
-      <path fillRule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clipRule="evenodd" />
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className={className || "w-3.5 h-3.5"}>
+      <path fillRule="evenodd" clipRule="evenodd" d="M2.558 6.295a.25.25 0 010-.353l.884-.884a.25.25 0 01.354 0L8 9.263l4.205-4.205a.25.25 0 01.353 0l.884.884a.25.25 0 010 .353L8.177 11.56a.25.25 0 01-.354 0L2.558 6.295z" fill="currentColor" />
     </svg>
   );
 }
 
-/* ── Dropdown component — ChatSpark style ── */
+/* ── Dropdown component — indicium.ai style ── */
 function NavDropdown({
   label, items, open, onToggle, isAuthenticated,
 }: {
@@ -52,13 +52,14 @@ function NavDropdown({
   return (
     <div className="relative">
       <button
-        className="flex items-center gap-[2px] py-2.5 px-[2px] cursor-pointer font-medium text-[15px] leading-5 tracking-[-0.01em] text-white/80 hover:text-white transition-colors duration-150 whitespace-nowrap"
+        className="flex items-center gap-1 py-2 cursor-pointer text-[13px] tracking-[0.04em] uppercase text-white/70 hover:text-white transition-colors duration-200 whitespace-nowrap"
+        style={{ fontFamily: "var(--font-mono)" }}
         onClick={onToggle}
         aria-expanded={open}
         type="button"
       >
         <span>{label}</span>
-        <CaretDown className={`w-3.5 h-3.5 ml-0.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
       <div className={`dropdown-panel ${open ? "open" : ""}`}>
         <div className="space-y-0.5">
@@ -68,18 +69,11 @@ function NavDropdown({
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors group"
+                className="flex flex-col px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors group"
                 onClick={onToggle}
               >
-                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                  </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className="text-[14px] font-semibold text-gray-900 group-hover:text-blue-600 transition-colors block">{item.label}</span>
-                  <span className="text-[12px] text-gray-400 leading-snug block mt-0.5">{item.desc}</span>
-                </div>
+                <span className="text-[14px] font-medium text-gray-900 group-hover:text-[#2451F3] transition-colors">{item.label}</span>
+                <span className="text-[12px] text-gray-400 leading-snug mt-0.5">{item.desc}</span>
               </Link>
             ))}
         </div>
@@ -92,19 +86,24 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const { data: session, status } = useSession();
 
-  /* Close dropdowns on outside click or scroll */
+  /* Scroll effect + close dropdowns */
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
       if (navRef.current && !navRef.current.contains(e.target as Node)) setOpenDropdown(null);
     }
-    function handleScroll() { setOpenDropdown(null); }
+    function handleScroll() {
+      setOpenDropdown(null);
+      setScrolled(window.scrollY > 50);
+    }
     document.addEventListener("mousedown", handleClick);
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => {
       document.removeEventListener("mousedown", handleClick);
       window.removeEventListener("scroll", handleScroll);
@@ -118,29 +117,39 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── Dark nav wrapper — ChatSpark exact: fixed, max-w-1400, dark bg, rounded ── */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[1400px] z-[9999] px-4 pt-3">
-        <nav
-          ref={navRef}
-          className="w-full bg-[#1E293B] rounded-2xl px-5 py-3"
-        >
-          <div className="flex items-center justify-between gap-2">
-            {/* Logo — small icon + text wordmark like ChatSpark ⚡ChatSpark */}
-            <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+      {/* ── Navbar — indicium.ai: fixed, full-width, transparent→solid on scroll ── */}
+      <nav
+        ref={navRef}
+        className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 ${
+          scrolled
+            ? "bg-[#05073F]/95 backdrop-blur-xl shadow-lg"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="max-w-[1400px] mx-auto px-5 sm:px-8">
+          <div className="flex items-center justify-between h-[var(--nav-height)]">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
               <Image
                 src="/grantsetu-logo.png"
                 alt=""
-                width={28}
-                height={28}
+                width={32}
+                height={32}
                 className="object-contain rounded-md"
                 priority
               />
-              <span className="text-white font-bold text-[18px] tracking-[-0.02em]">GrantSetu</span>
+              <span className="text-white font-medium text-[18px] tracking-[-0.01em]" style={{ fontFamily: "var(--font-display)" }}>
+                GrantSetu
+              </span>
             </Link>
 
-            {/* Desktop nav links — ChatSpark: 15px/500, 5 items, gap-8 */}
-            <div className="hidden lg:flex items-center gap-8 flex-1 ml-10">
-              <Link href="/grants" className="flex items-center py-2.5 px-[2px] font-medium text-[15px] text-white/80 hover:text-white transition-colors duration-150 whitespace-nowrap">
+            {/* Desktop nav — indicium.ai: mono labels, uppercase, spaced */}
+            <div className="hidden lg:flex items-center gap-7 flex-1 justify-center">
+              <Link
+                href="/grants"
+                className="py-2 text-[13px] tracking-[0.04em] uppercase text-white/70 hover:text-white transition-colors duration-200 whitespace-nowrap"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
                 Grants
               </Link>
               <NavDropdown
@@ -165,30 +174,35 @@ export default function Navbar() {
                 isAuthenticated={isAuthenticated}
               />
               {isAuthenticated && session.user.isAdmin && (
-                <Link href="/admin" className="flex items-center py-2.5 px-[2px] font-medium text-[15px] text-white/80 hover:text-white transition-colors duration-150">
+                <Link
+                  href="/admin"
+                  className="py-2 text-[13px] tracking-[0.04em] uppercase text-white/70 hover:text-white transition-colors duration-200"
+                  style={{ fontFamily: "var(--font-mono)" }}
+                >
                   Admin
                 </Link>
               )}
             </div>
 
-            {/* Right — Auth CTA: ChatSpark "Log in" ghost + "Get Started Free" blue */}
-            <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
+            {/* Right side — Auth + CTA */}
+            <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
               {status === "loading" && (
-                <div className="h-[38px] w-[120px] bg-white/10 rounded-lg animate-pulse" />
+                <div className="h-[40px] w-[120px] bg-white/10 rounded-lg animate-pulse" />
               )}
               {status === "unauthenticated" && (
                 <>
                   <Link
                     href="/auth/signin"
-                    className="text-[15px] font-medium text-white/70 hover:text-white transition-colors duration-150 py-2 px-3"
+                    className="text-[13px] tracking-[0.04em] uppercase text-white/60 hover:text-white transition-colors duration-200 py-2 px-3"
+                    style={{ fontFamily: "var(--font-mono)" }}
                   >
                     Log in
                   </Link>
                   <Link
                     href="/grants"
-                    className="inline-flex items-center justify-center w-[160px] h-[38px] bg-blue-500 text-white text-[14px] font-semibold rounded-lg hover:bg-blue-600 active:bg-blue-700 transition-all duration-150"
+                    className="inline-flex items-center justify-center h-[40px] px-6 bg-[#2451F3] text-white text-[13px] font-medium rounded-lg hover:brightness-110 hover:shadow-lg transition-all duration-200"
                   >
-                    Get Started Free
+                    Browse Grants
                   </Link>
                 </>
               )}
@@ -201,17 +215,17 @@ export default function Navbar() {
                     {session.user.image ? (
                       <Image src={session.user.image} alt="" width={32} height={32} className="rounded-full" />
                     ) : (
-                      <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold">
+                      <div className="w-8 h-8 rounded-full bg-[#2451F3] flex items-center justify-center text-white text-sm font-medium">
                         {session.user.name?.[0]?.toUpperCase() || "U"}
                       </div>
                     )}
                     <span className="text-[14px] font-medium text-white/80 max-w-[120px] truncate">
                       {session.user.name || "User"}
                     </span>
-                    <CaretDown className="w-3.5 h-3.5 text-white/50" />
+                    <ChevronDown className="w-3.5 h-3.5 text-white/50" />
                   </button>
                   {menuOpen && (
-                    <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 z-50">
+                    <div className="absolute right-0 mt-2 w-52 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-xl shadow-2xl py-2 z-50">
                       <Link href="/dashboard" className="block px-4 py-2.5 text-[14px] text-gray-700 hover:bg-gray-50" onClick={() => setMenuOpen(false)}>Dashboard</Link>
                       <Link href="/profile" className="block px-4 py-2.5 text-[14px] text-gray-700 hover:bg-gray-50" onClick={() => setMenuOpen(false)}>Edit Profile</Link>
                       <hr className="my-1.5 border-gray-100" />
@@ -222,7 +236,7 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Mobile hamburger — white icon on dark */}
+            {/* Mobile hamburger */}
             <button
               className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -237,11 +251,11 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Mobile drawer — slides down inside the dark nav */}
+          {/* Mobile drawer */}
           {mobileOpen && (
-            <div className="lg:hidden border-t border-white/10 mt-3 pt-4 pb-2">
+            <div className="lg:hidden border-t border-white/10 pb-6 pt-4">
               <div className="space-y-1">
-                <p className="text-xs font-semibold text-white/40 uppercase tracking-wider px-2 pb-1">Platform</p>
+                <p className="label-mono px-3 pb-1 text-[10px]">Platform</p>
                 {PLATFORM_ITEMS
                   .filter((item) => !("auth" in item) || isAuthenticated)
                   .map((item) => (
@@ -251,7 +265,7 @@ export default function Navbar() {
                     </Link>
                   ))}
 
-                <p className="text-xs font-semibold text-white/40 uppercase tracking-wider px-2 pt-3 pb-1">Agencies</p>
+                <p className="label-mono px-3 pt-4 pb-1 text-[10px]">Agencies</p>
                 <div className="grid grid-cols-2 gap-1 px-1">
                   {AGENCIES_ITEMS.map((item) => (
                     <Link key={item.href} href={item.href} className="py-2 px-2 text-[14px] text-white/80 font-medium rounded-lg hover:bg-white/10 transition-colors" onClick={() => setMobileOpen(false)}>
@@ -267,14 +281,14 @@ export default function Navbar() {
                   </>
                 )}
 
-                <div className="pt-4 flex flex-col gap-2.5">
+                <div className="pt-6 flex flex-col gap-2.5">
                   {isAuthenticated ? (
                     <>
                       <div className="flex items-center gap-3 px-3 py-2">
                         {session.user.image ? (
                           <Image src={session.user.image} alt="" width={36} height={36} className="rounded-full" />
                         ) : (
-                          <div className="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold">
+                          <div className="w-9 h-9 rounded-full bg-[#2451F3] flex items-center justify-center text-white text-sm font-medium">
                             {session.user.name?.[0]?.toUpperCase() || "U"}
                           </div>
                         )}
@@ -289,18 +303,18 @@ export default function Navbar() {
                   ) : (
                     <>
                       <Link href="/auth/signin" onClick={() => setMobileOpen(false)} className="block w-full text-center border border-white/20 text-white py-2.5 rounded-lg font-medium text-[14px] hover:bg-white/5 transition-colors">Log in</Link>
-                      <Link href="/grants" onClick={() => setMobileOpen(false)} className="block w-full text-center bg-blue-500 text-white py-2.5 rounded-lg font-semibold text-[14px] hover:bg-blue-600 transition-colors">Get Started Free</Link>
+                      <Link href="/grants" onClick={() => setMobileOpen(false)} className="block w-full text-center bg-[#2451F3] text-white py-2.5 rounded-lg font-medium text-[14px] hover:brightness-110 transition-all">Browse Grants</Link>
                     </>
                   )}
                 </div>
               </div>
             </div>
           )}
-        </nav>
-      </div>
+        </div>
+      </nav>
 
-      {/* Spacer — accounts for fixed nav + padding */}
-      <div style={{ height: "calc(var(--nav-height) + 12px)" }} />
+      {/* Spacer */}
+      <div style={{ height: "var(--nav-height)" }} />
     </>
   );
 }

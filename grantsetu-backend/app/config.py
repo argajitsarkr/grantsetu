@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = "http://localhost:3000"
     NEXTAUTH_SECRET: str = ""
     DEBUG: bool = False
+    ADMIN_USERNAME: str = "admin"
+    ADMIN_PASSWORD: str = "admin123"
 
     @property
     def admin_email_list(self) -> list[str]:

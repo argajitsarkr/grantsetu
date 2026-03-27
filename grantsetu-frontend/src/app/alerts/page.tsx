@@ -49,7 +49,7 @@ export default function AlertsPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="mt-4 text-2xl font-bold text-gray-900">You&apos;re subscribed!</h2>
+        <h2 className="mt-4 text-2xl font-bold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>You&apos;re subscribed!</h2>
         <p className="mt-2 text-gray-600">
           We&apos;ll send you matching grants {frequency === "daily" ? "every day" : "every Monday"} at {email}.
         </p>
@@ -59,7 +59,7 @@ export default function AlertsPage() {
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
-      <h1 className="text-2xl font-bold text-gray-900">Grant Alerts</h1>
+      <h1 className="text-2xl font-bold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>Grant Alerts</h1>
       <p className="mt-2 text-gray-600">
         Get notified when new grants matching your interests are posted. No account required.
       </p>
@@ -67,7 +67,7 @@ export default function AlertsPage() {
       <form onSubmit={handleSubmit} className="mt-6 space-y-5">
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Email</label>
           <input
             type="email"
             value={email}
@@ -80,7 +80,7 @@ export default function AlertsPage() {
 
         {/* Subject Areas */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Subject Areas</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5" style={{ fontFamily: "var(--font-mono)" }}>Subject Areas</label>
           <div className="flex flex-wrap gap-2">
             {SUBJECT_AREAS.map((area) => (
               <button
@@ -89,7 +89,7 @@ export default function AlertsPage() {
                 onClick={() => toggleItem(subjectAreas, area, setSubjectAreas)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   subjectAreas.includes(area)
-                    ? "bg-primary-800 text-white border-primary-800"
+                    ? "bg-[#2451F3] text-white border-[#2451F3]"
                     : "bg-white text-gray-700 border-gray-300 hover:border-primary-300"
                 }`}
               >
@@ -101,7 +101,7 @@ export default function AlertsPage() {
 
         {/* Career Stage */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Career Stage</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Career Stage</label>
           <select
             value={careerStage}
             onChange={(e) => setCareerStage(e.target.value)}
@@ -116,7 +116,7 @@ export default function AlertsPage() {
 
         {/* Agencies */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">Agencies to track</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1.5" style={{ fontFamily: "var(--font-mono)" }}>Agencies to track</label>
           <div className="flex flex-wrap gap-2">
             {AGENCIES.map((agency) => (
               <button
@@ -125,7 +125,7 @@ export default function AlertsPage() {
                 onClick={() => toggleItem(agencies, agency, setAgencies)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   agencies.includes(agency)
-                    ? "bg-primary-800 text-white border-primary-800"
+                    ? "bg-[#2451F3] text-white border-[#2451F3]"
                     : "bg-white text-gray-700 border-gray-300 hover:border-primary-300"
                 }`}
               >
@@ -138,7 +138,7 @@ export default function AlertsPage() {
 
         {/* Frequency */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "var(--font-mono)" }}>Frequency</label>
           <div className="flex gap-3">
             {[
               { value: "weekly", label: "Weekly (Monday)" },
@@ -163,7 +163,7 @@ export default function AlertsPage() {
 
         <button
           type="submit"
-          className="w-full bg-primary-800 text-white rounded-lg px-4 py-3 font-medium hover:bg-primary-900 transition-colors"
+          className="w-full bg-[#2451F3] text-white rounded-lg px-4 py-3 font-medium hover:bg-[#1a3fc2] transition-colors"
         >
           Subscribe to Alerts
         </button>
