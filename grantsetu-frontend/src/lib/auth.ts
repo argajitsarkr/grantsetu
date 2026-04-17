@@ -70,7 +70,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (u.backendToken) token.backendToken = u.backendToken;
         token.onboardingCompleted = u.onboardingCompleted ?? false;
         token.isAdmin = u.isAdmin ?? false;
-        if (u.id) token.userId = u.id;
+        if (u.id) token.userId = Number(u.id);
         return token;
       }
 
