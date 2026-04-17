@@ -24,7 +24,7 @@ export default function GrantCard({ grant }: GrantCardProps) {
       </div>
 
       <Link href={`/grants/${grant.slug}`}>
-        <h3 className="text-base sm:text-lg font-semibold text-[#05073F] group-hover:text-accent-500 leading-snug tracking-heading transition-colors" style={{ fontFamily: "var(--font-display)" }}>
+        <h3 className="text-base sm:text-lg font-semibold text-[#0A0A0A] group-hover:text-accent-500 leading-snug tracking-heading transition-colors" style={{ fontFamily: "var(--font-display)" }}>
           {grant.title}
         </h3>
       </Link>

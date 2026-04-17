@@ -30,7 +30,7 @@ export default async function AdminDashboard() {
   return (
     <div className="container-main py-8">
       <div className="mb-8">
-        <h1 className="text-display-sm font-bold text-[#05073F] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Admin Dashboard</h1>
+        <h1 className="text-display-sm font-bold text-[#0A0A0A] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Admin Dashboard</h1>
         <p className="text-sm text-brand-500 mt-1">Overview of grants, users, and scraper health</p>
       </div>
 
@@ -53,7 +53,7 @@ export default async function AdminDashboard() {
 
       {/* Scraper Health */}
       <div className="mb-8">
-        <h2 className="text-lg font-bold text-[#05073F] tracking-heading mb-4" style={{ fontFamily: "var(--font-display)" }}>Recent Scraper Runs</h2>
+        <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-4" style={{ fontFamily: "var(--font-display)" }}>Recent Scraper Runs</h2>
         <div className="card p-0 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">

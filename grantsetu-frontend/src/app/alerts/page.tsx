@@ -49,7 +49,7 @@ export default function AlertsPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="mt-4 text-2xl font-bold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>You&apos;re subscribed!</h2>
+        <h2 className="mt-4 text-2xl font-bold text-[#0A0A0A]" style={{ fontFamily: "var(--font-display)" }}>You&apos;re subscribed!</h2>
         <p className="mt-2 text-gray-600">
           We&apos;ll send you matching grants {frequency === "daily" ? "every day" : "every Monday"} at {email}.
         </p>
@@ -59,7 +59,7 @@ export default function AlertsPage() {
 
   return (
     <div className="max-w-lg mx-auto px-4 pt-12 pb-8">
-      <h1 className="text-2xl font-bold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>Grant Alerts</h1>
+      <h1 className="text-2xl font-bold text-[#0A0A0A]" style={{ fontFamily: "var(--font-display)" }}>Grant Alerts</h1>
       <p className="mt-2 text-gray-600">
         Get notified when new grants matching your interests are posted. No account required.
       </p>
@@ -89,7 +89,7 @@ export default function AlertsPage() {
                 onClick={() => toggleItem(subjectAreas, area, setSubjectAreas)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   subjectAreas.includes(area)
-                    ? "bg-[#2451F3] text-white border-[#2451F3]"
+                    ? "bg-[#E9283D] text-white border-[#E9283D]"
                     : "bg-white text-gray-700 border-gray-300 hover:border-primary-300"
                 }`}
               >
@@ -125,7 +125,7 @@ export default function AlertsPage() {
                 onClick={() => toggleItem(agencies, agency, setAgencies)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
                   agencies.includes(agency)
-                    ? "bg-[#2451F3] text-white border-[#2451F3]"
+                    ? "bg-[#E9283D] text-white border-[#E9283D]"
                     : "bg-white text-gray-700 border-gray-300 hover:border-primary-300"
                 }`}
               >
@@ -163,7 +163,7 @@ export default function AlertsPage() {
 
         <button
           type="submit"
-          className="w-full bg-[#2451F3] text-white rounded-lg px-4 py-3 font-medium hover:bg-[#1a3fc2] transition-colors"
+          className="w-full bg-[#E9283D] text-white rounded-lg px-4 py-3 font-medium hover:bg-[#1a3fc2] transition-colors"
         >
           Subscribe to Alerts
         </button>

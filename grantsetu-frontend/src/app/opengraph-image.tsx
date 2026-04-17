@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "GrantSetu — Discover Indian Research Grants from DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC & AYUSH";
+export const alt = "GrantSetu — India's Research Grants Hub for Life Sciences & Biotechnology";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -10,123 +10,125 @@ export default async function Image() {
     (
       <div
         style={{
-          background: "linear-gradient(135deg, #141414 0%, #1a1a2e 50%, #16213e 100%)",
+          background: "#FFFFFF",
           width: "100%",
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "60px",
+          padding: "72px",
           fontFamily: "system-ui, -apple-system, sans-serif",
+          position: "relative",
         }}
       >
-        {/* Logo area */}
+        {/* Red top bar */}
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-            marginBottom: "40px",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "12px",
+            background: "#E9283D",
+          }}
+        />
+
+        {/* Logo wordmark */}
+        <span
+          style={{
+            fontSize: "40px",
+            fontWeight: 900,
+            color: "#E9283D",
+            letterSpacing: "-0.02em",
+            textTransform: "uppercase",
           }}
         >
-          <div
-            style={{
-              width: "56px",
-              height: "56px",
-              borderRadius: "14px",
-              background: "#E44A32",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "28px",
-              fontWeight: 800,
-              color: "white",
-            }}
-          >
-            G
-          </div>
-          <span style={{ fontSize: "36px", fontWeight: 700, color: "white" }}>
-            GrantSetu
-          </span>
-        </div>
+          GrantSetu
+        </span>
+
+        {/* Label */}
+        <span
+          style={{
+            marginTop: "48px",
+            fontSize: "14px",
+            fontWeight: 700,
+            color: "#E9283D",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+          }}
+        >
+          Life Sciences · Biotechnology
+        </span>
 
         {/* Main heading */}
         <h1
           style={{
-            fontSize: "52px",
-            fontWeight: 800,
-            color: "white",
-            textAlign: "center",
-            lineHeight: 1.2,
+            fontSize: "84px",
+            fontWeight: 900,
+            color: "#0A0A0A",
+            lineHeight: 1.0,
             margin: 0,
-            maxWidth: "900px",
-          }}
-        >
-          Discover Indian Research Grants
-        </h1>
-
-        {/* Subtitle */}
-        <p
-          style={{
-            fontSize: "24px",
-            color: "#a0aec0",
-            textAlign: "center",
             marginTop: "20px",
-            maxWidth: "700px",
-            lineHeight: 1.5,
+            letterSpacing: "-0.03em",
+            textTransform: "uppercase",
+            maxWidth: "1050px",
           }}
         >
-          Browse active grant calls from DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC & AYUSH — updated daily
-        </p>
+          India&apos;s Grant Engine
+          <br />
+          for <span style={{ color: "#E9283D" }}>Life Sciences</span>
+          <br />
+          &amp; Biotech.
+        </h1>
 
         {/* Agency pills */}
         <div
           style={{
             display: "flex",
-            gap: "12px",
+            gap: "10px",
             marginTop: "40px",
             flexWrap: "wrap",
-            justifyContent: "center",
           }}
         >
-          {["DBT", "DST", "ICMR", "ANRF", "BIRAC", "CSIR", "UGC", "AYUSH"].map(
-            (agency) => (
-              <span
-                key={agency}
-                style={{
-                  background: "rgba(255,255,255,0.1)",
-                  border: "1px solid rgba(255,255,255,0.2)",
-                  borderRadius: "20px",
-                  padding: "8px 20px",
-                  fontSize: "16px",
-                  fontWeight: 600,
-                  color: "white",
-                }}
-              >
-                {agency}
-              </span>
-            )
-          )}
+          {["DBT", "BIRAC", "ICMR", "CSIR", "AYUSH", "DST", "ANRF"].map((agency, i) => (
+            <span
+              key={agency}
+              style={{
+                background: i < 3 ? "#0A0A0A" : "#FFFFFF",
+                color: i < 3 ? "#FFFFFF" : "#0A0A0A",
+                border: "2px solid #0A0A0A",
+                borderRadius: "999px",
+                padding: "8px 18px",
+                fontSize: "16px",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+              }}
+            >
+              {agency}
+            </span>
+          ))}
         </div>
 
         {/* Footer */}
         <div
           style={{
             position: "absolute",
-            bottom: "30px",
+            bottom: "48px",
+            left: "72px",
+            right: "72px",
             display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: "8px",
-            color: "#718096",
-            fontSize: "16px",
+            color: "#0A0A0A",
+            fontSize: "14px",
+            fontWeight: 600,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            borderTop: "2px solid #0A0A0A",
+            paddingTop: "20px",
           }}
         >
           <span>grantsetu.in</span>
-          <span>•</span>
-          <span>Free & Open Access</span>
-          <span>•</span>
-          <span>Made in India</span>
+          <span>Free · Updated Daily · Made in India</span>
         </div>
       </div>
     ),

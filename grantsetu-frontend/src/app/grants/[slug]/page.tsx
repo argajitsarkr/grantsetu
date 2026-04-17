@@ -80,7 +80,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          <h1 className="text-display-sm sm:text-display-md font-bold text-[#05073F] tracking-heading leading-tight" style={{ fontFamily: "var(--font-display)" }}>
+          <h1 className="text-display-sm sm:text-display-md font-bold text-[#0A0A0A] tracking-heading leading-tight" style={{ fontFamily: "var(--font-display)" }}>
             {grant.title}
           </h1>
 
@@ -139,7 +139,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
           {/* Eligibility */}
           {grant.eligibility_summary && (
             <section className="mt-8">
-              <h2 className="text-lg font-bold text-[#05073F] tracking-heading mb-3" style={{ fontFamily: "var(--font-display)" }}>Eligibility</h2>
+              <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-3" style={{ fontFamily: "var(--font-display)" }}>Eligibility</h2>
               <p className="text-brand-600 leading-relaxed">{grant.eligibility_summary}</p>
             </section>
           )}
@@ -147,7 +147,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
           {/* Description */}
           {grant.description && (
             <section className="mt-8">
-              <h2 className="text-lg font-bold text-[#05073F] tracking-heading mb-3" style={{ fontFamily: "var(--font-display)" }}>Description</h2>
+              <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-3" style={{ fontFamily: "var(--font-display)" }}>Description</h2>
               <p className="text-brand-600 whitespace-pre-line leading-relaxed">{grant.description}</p>
             </section>
           )}
@@ -196,7 +196,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
 
           {/* Important Links — organized section */}
           <section className="mt-10">
-            <h2 className="text-lg font-bold text-[#05073F] tracking-heading mb-4" style={{ fontFamily: "var(--font-display)" }}>Important Links</h2>
+            <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-4" style={{ fontFamily: "var(--font-display)" }}>Important Links</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* Original Notification */}
               <a

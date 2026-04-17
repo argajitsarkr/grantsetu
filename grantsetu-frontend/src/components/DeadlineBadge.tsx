@@ -8,7 +8,7 @@ interface DeadlineBadgeProps {
 export default function DeadlineBadge({ deadline, deadlineText }: DeadlineBadgeProps) {
   if (!deadline) {
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium bg-blue-50 text-[#2451F3] border border-blue-200" style={{ fontFamily: "var(--font-mono)" }}>
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-medium bg-blue-50 text-[#E9283D] border border-blue-200" style={{ fontFamily: "var(--font-mono)" }}>
         {deadlineText || "Open / Rolling"}
       </span>
     );

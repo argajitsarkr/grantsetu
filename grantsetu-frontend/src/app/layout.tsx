@@ -16,39 +16,40 @@ const SITE_URL = "https://grantsetu.in";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "GrantSetu — Discover Indian Research Grants from DBT, DST, ICMR, ANRF, CSIR, UGC",
-    template: "%s | GrantSetu — Indian Research Grant Discovery",
+    default: "GrantSetu — India's Research Grants Hub for Life Sciences & Biotechnology",
+    template: "%s | GrantSetu — Life Sciences & Biotech Grants India",
   },
   description:
-    "GrantSetu is India's free research grant discovery platform. Browse and filter active grant calls from DBT, DST, ICMR, ANRF (SERB), BIRAC, CSIR, UGC, and AYUSH — updated daily from official government portals. Set up alerts, track deadlines, and never miss a funding opportunity.",
+    "GrantSetu is India's #1 free grant discovery platform for Life Sciences and Biotechnology researchers. Browse active grant calls from DBT, BIRAC, ICMR and allied agencies — curated daily for biotech, biomedical and life science research.",
   keywords: [
-    "Indian research grants",
+    "Life sciences grants India",
+    "Biotechnology grants India",
     "DBT grants India",
-    "DST grants India",
-    "ICMR funding",
-    "ANRF grants",
-    "SERB grants",
     "BIRAC funding",
-    "CSIR grants",
-    "UGC grants",
+    "ICMR funding",
+    "biomedical research grants India",
+    "biotech research funding",
+    "DBT Wellcome India Alliance",
+    "BIRAC BIG grant",
+    "Ramalingaswami fellowship",
+    "ICMR research associate",
+    "vaccine research grants India",
+    "drug discovery grants India",
+    "cancer biology grants India",
+    "genomics grants India",
+    "molecular biology grants India",
+    "immunology grants India",
+    "synthetic biology grants India",
+    "bioinformatics grants India",
+    "agricultural biotech grants",
     "AYUSH research funding",
-    "research funding India",
-    "grant discovery India",
-    "government research grants India",
-    "PhD funding India",
-    "postdoc grants India",
-    "early career researcher grants India",
-    "research grant deadlines India",
-    "call for proposals India",
-    "science funding India",
-    "biotechnology grants India",
-    "medical research grants India",
-    "engineering grants India",
-    "university grants India",
-    "NE India research grants",
-    "Northeast India funding",
-    "women scientist grants India",
-    "startup research grants India",
+    "PhD funding life sciences India",
+    "postdoc biotech grants India",
+    "early career researcher grants biotech",
+    "women in biotech grants India",
+    "BioCARe DBT",
+    "NE India biotech research grants",
+    "Northeast India life sciences funding",
   ],
   authors: [{ name: "Argajit Sen", url: SITE_URL }],
   creator: "Argajit Sen",
@@ -65,9 +66,9 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: SITE_URL,
     siteName: "GrantSetu",
-    title: "GrantSetu — Discover Indian Research Grants from 8+ Government Agencies",
+    title: "GrantSetu — India's Research Grants Hub for Life Sciences & Biotechnology",
     description:
-      "India's free grant discovery platform. Browse active grant calls from DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC & AYUSH — updated daily from official portals.",
+      "India's #1 free grant discovery platform for Life Sciences & Biotechnology. DBT, BIRAC, ICMR grants curated daily from official portals.",
     images: [
       {
         url: `${SITE_URL}/og-image.png`,
@@ -80,9 +81,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GrantSetu — Discover Indian Research Grants",
+    title: "GrantSetu — Life Sciences & Biotech Grants India",
     description:
-      "Free platform tracking grant calls from DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC & AYUSH. Updated daily.",
+      "India's #1 grant platform for Life Sciences & Biotechnology. DBT · BIRAC · ICMR — updated daily.",
     images: [`${SITE_URL}/og-image.png`],
     creator: "@grantsetu",
     site: "@grantsetu",
@@ -114,7 +115,7 @@ const organizationJsonLd = {
   url: SITE_URL,
   logo: `${SITE_URL}/grantsetu-logo.png`,
   description:
-    "India's free research grant discovery platform aggregating calls from DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC, and AYUSH.",
+    "India's #1 free grant discovery platform for Life Sciences and Biotechnology — curating calls from DBT, BIRAC, ICMR and allied agencies.",
   foundingDate: "2026",
   founder: {
     "@type": "Person",
@@ -143,7 +144,7 @@ const websiteJsonLd = {
   "@type": "WebSite",
   name: "GrantSetu",
   url: SITE_URL,
-  description: "Discover Indian government research grants from 8+ agencies — all in one place.",
+  description: "Discover Indian government research grants for Life Sciences & Biotechnology — DBT, BIRAC, ICMR and more.",
   potentialAction: {
     "@type": "SearchAction",
     target: {
@@ -167,7 +168,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#05073F" />
+        <meta name="theme-color" content="#E9283D" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

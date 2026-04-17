@@ -7,15 +7,15 @@ import SearchBar from "@/components/SearchBar";
 import Pagination from "@/components/Pagination";
 
 export const metadata = {
-  title: "Browse Indian Research Grants — DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC",
+  title: "Browse Life Sciences & Biotech Research Grants — DBT, BIRAC, ICMR",
   description:
-    "Search and filter active Indian government research grant calls. Filter by agency (DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC, AYUSH), subject area, career stage, budget, and deadline. Updated daily from official portals.",
+    "Search and filter active Life Sciences & Biotechnology grant calls from DBT, BIRAC, ICMR and allied agencies. Filter by subject area, career stage, budget, and deadline. Updated daily from official portals.",
   alternates: {
     canonical: "https://grantsetu.in/grants",
   },
   openGraph: {
-    title: "Browse Indian Research Grants — GrantSetu",
-    description: "Search active grant calls from 8 Indian funding agencies. Filter by subject, career stage, budget & deadline.",
+    title: "Browse Life Sciences & Biotech Grants — GrantSetu",
+    description: "Active grant calls from DBT, BIRAC, ICMR and allied agencies. Filter by subject, career stage, budget & deadline.",
     url: "https://grantsetu.in/grants",
   },
 };
@@ -54,7 +54,7 @@ export default async function GrantsPage({ searchParams }: PageProps) {
     <div className="container-main pt-12 pb-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-display-sm font-bold text-[#05073F] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Research Grants</h1>
+        <h1 className="text-display-sm font-bold text-[#0A0A0A] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Research Grants</h1>
         <p className="text-sm text-brand-500 mt-1">
           {data ? `${data.total} grants found` : "Browse active grant calls from Indian funding agencies"}
         </p>
@@ -100,7 +100,7 @@ export default async function GrantsPage({ searchParams }: PageProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h3 className="text-sm font-semibold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>No grants found</h3>
+              <h3 className="text-sm font-semibold text-[#0A0A0A]" style={{ fontFamily: "var(--font-display)" }}>No grants found</h3>
               <p className="mt-1 text-sm text-brand-400">Try adjusting your filters or search query.</p>
             </div>
           )}

@@ -185,7 +185,7 @@ export default function GrantFilters() {
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
           <div className="absolute right-0 top-0 h-full w-80 bg-white p-6 overflow-y-auto shadow-2xl">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-lg font-bold text-[#05073F] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Filters</h2>
+              <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Filters</h2>
               <button onClick={() => setMobileOpen(false)} className="p-1 rounded-lg hover:bg-brand-50" aria-label="Close filters">
                 <svg className="h-5 w-5 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -200,7 +200,7 @@ export default function GrantFilters() {
       {/* Desktop sidebar */}
       <aside className="hidden md:block w-64 flex-shrink-0">
         <div className="sticky top-20">
-          <h2 className="text-sm font-bold text-[#05073F] tracking-heading mb-5" style={{ fontFamily: "var(--font-display)" }}>Filters</h2>
+          <h2 className="text-sm font-bold text-[#0A0A0A] tracking-heading mb-5" style={{ fontFamily: "var(--font-display)" }}>Filters</h2>
           {filterContent}
         </div>
       </aside>

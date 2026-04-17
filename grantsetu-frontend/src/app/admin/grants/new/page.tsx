@@ -55,7 +55,7 @@ export default function AdminNewGrant() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold text-[#05073F] mb-6" style={{ fontFamily: "var(--font-display)" }}>Add Grant Manually</h1>
+      <h1 className="text-2xl font-bold text-[#0A0A0A] mb-6" style={{ fontFamily: "var(--font-display)" }}>Add Grant Manually</h1>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -174,7 +174,7 @@ export default function AdminNewGrant() {
         <button
           type="submit"
           disabled={saving}
-          className="bg-[#2451F3] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1a3fc2] disabled:opacity-50"
+          className="bg-[#E9283D] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#1a3fc2] disabled:opacity-50"
         >
           {saving ? "Creating..." : "Create Grant"}
         </button>

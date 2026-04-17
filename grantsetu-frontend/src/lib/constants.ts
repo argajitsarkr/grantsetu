@@ -1,80 +1,111 @@
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-export const AGENCY_META: Record<string, { fullName: string; website: string; logo: string; logotype: "png" | "svg" }> = {
+/* ──────────────────────────────────────────────────────────────
+ * GrantSetu — Life Sciences & Biotechnology Focus
+ *
+ * Agencies are ordered by relevance to life sciences / biotech research.
+ * Primary: DBT, BIRAC, ICMR (core biotech & biomedical)
+ * Secondary: CSIR (biosciences labs), AYUSH (traditional medicine R&D)
+ * Tertiary: DST (has life sci programmes), ANRF (cross-disciplinary, incl. life sci)
+ * ────────────────────────────────────────────────────────────── */
+
+export const AGENCY_META: Record<string, { fullName: string; website: string; logo: string; logotype: "png" | "svg"; focus: "primary" | "secondary" | "tertiary" }> = {
   DBT: {
     fullName: "Department of Biotechnology",
     website: "https://dbt.gov.in",
     logo: "/logos/dbt.svg",
     logotype: "svg",
-  },
-  DST: {
-    fullName: "Dept. of Science & Technology",
-    website: "https://dst.gov.in",
-    logo: "/logos/dst.png",
-    logotype: "png",
-  },
-  ICMR: {
-    fullName: "Indian Council of Medical Research",
-    website: "https://icmr.gov.in",
-    logo: "/logos/icmr.jpg",
-    logotype: "png",
-  },
-  ANRF: {
-    fullName: "Anusandhan National Research Foundation",
-    website: "https://anrf.gov.in",
-    logo: "/logos/anrf.svg",
-    logotype: "svg",
+    focus: "primary",
   },
   BIRAC: {
     fullName: "Biotech Industry Research Assistance Council",
     website: "https://birac.nic.in",
     logo: "/logos/birac.png",
     logotype: "png",
+    focus: "primary",
+  },
+  ICMR: {
+    fullName: "Indian Council of Medical Research",
+    website: "https://icmr.gov.in",
+    logo: "/logos/icmr.jpg",
+    logotype: "png",
+    focus: "primary",
   },
   CSIR: {
     fullName: "Council of Scientific & Industrial Research",
     website: "https://csir.res.in",
     logo: "/logos/csir.png",
     logotype: "png",
-  },
-  UGC: {
-    fullName: "University Grants Commission",
-    website: "https://ugc.gov.in",
-    logo: "/logos/ugc.jpg",
-    logotype: "png",
+    focus: "secondary",
   },
   AYUSH: {
     fullName: "Ministry of AYUSH",
     website: "https://ayush.gov.in",
     logo: "/logos/ayush.svg",
     logotype: "svg",
+    focus: "secondary",
+  },
+  DST: {
+    fullName: "Dept. of Science & Technology",
+    website: "https://dst.gov.in",
+    logo: "/logos/dst.png",
+    logotype: "png",
+    focus: "tertiary",
+  },
+  ANRF: {
+    fullName: "Anusandhan National Research Foundation",
+    website: "https://anrf.gov.in",
+    logo: "/logos/anrf.svg",
+    logotype: "svg",
+    focus: "tertiary",
   },
 };
 
+/* NUUK-style monochrome colors — red/black/white only */
 export const AGENCY_COLORS: Record<string, string> = {
-  DBT: "bg-blue-50 text-blue-700 border-blue-200",
-  DST: "bg-teal-50 text-teal-700 border-teal-200",
-  ICMR: "bg-red-50 text-red-700 border-red-200",
-  ANRF: "bg-orange-50 text-orange-700 border-orange-200",
-  BIRAC: "bg-purple-50 text-purple-700 border-purple-200",
-  CSIR: "bg-cyan-50 text-cyan-700 border-cyan-200",
-  UGC: "bg-yellow-50 text-yellow-700 border-yellow-200",
-  AYUSH: "bg-lime-50 text-lime-700 border-lime-200",
+  DBT:   "bg-black text-white border-black",
+  BIRAC: "bg-black text-white border-black",
+  ICMR:  "bg-black text-white border-black",
+  CSIR:  "bg-white text-black border-black",
+  AYUSH: "bg-white text-black border-black",
+  DST:   "bg-white text-black border-gray-300",
+  ANRF:  "bg-white text-black border-gray-300",
 };
 
+/* Ordered by life-sci relevance */
 export const AGENCIES = [
-  "DBT", "DST", "ICMR", "ANRF", "BIRAC", "CSIR", "UGC", "AYUSH",
+  "DBT", "BIRAC", "ICMR", "CSIR", "AYUSH", "DST", "ANRF",
 ];
 
+/* Primary agencies for Life Sci / Biotech */
+export const PRIMARY_AGENCIES = ["DBT", "BIRAC", "ICMR"];
+
+/* Life Sciences & Biotechnology subject areas */
 export const SUBJECT_AREAS = [
-  "Life Sciences",
-  "Physical Sciences",
-  "Engineering",
-  "Medical/Health",
-  "Computer Science",
-  "Social Sciences",
+  "Molecular Biology",
+  "Genetics & Genomics",
+  "Cell Biology",
+  "Microbiology",
+  "Biochemistry",
   "Biotechnology",
-  "Interdisciplinary",
+  "Immunology",
+  "Pharmacology",
+  "Neuroscience",
+  "Structural Biology",
+  "Bioinformatics",
+  "Systems Biology",
+  "Plant Sciences",
+  "Agricultural Biotech",
+  "Medical Research",
+  "Clinical Research",
+  "Public Health",
+  "Drug Discovery",
+  "Vaccine Research",
+  "Infectious Diseases",
+  "Cancer Biology",
+  "Stem Cell Research",
+  "Synthetic Biology",
+  "Ayurveda / Traditional Medicine",
 ];
 
 export const CAREER_STAGES = ["Early Career", "Mid Career", "Senior"];
@@ -82,9 +113,13 @@ export const CAREER_STAGES = ["Early Career", "Mid Career", "Senior"];
 export const INSTITUTION_TYPES = [
   "Central University",
   "State University",
-  "Private",
+  "Private University",
+  "Medical College / AIIMS",
   "CSIR Lab",
-  "IIT/NIT",
+  "DBT Autonomous Institute",
+  "ICMR Institute",
+  "IIT / NIT / IISc",
+  "Biotech Startup / Company",
 ];
 
 export const DEADLINE_FILTERS = [
@@ -114,14 +149,14 @@ export const INDIAN_STATES = [
 export const DESIGNATIONS = [
   "PhD Student",
   "Postdoctoral Fellow",
+  "Research Associate",
   "Assistant Professor",
   "Associate Professor",
   "Professor",
-  "Scientist",
-  "Senior Scientist",
+  "Scientist / Senior Scientist",
   "Principal Scientist",
-  "Research Associate",
-  "Project Scientist",
+  "Clinician-Researcher",
+  "Biotech Entrepreneur",
   "Other",
 ];
 

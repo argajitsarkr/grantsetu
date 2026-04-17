@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Set Up Free Grant Alerts — Get Notified About New Indian Research Grants",
+  title: "Free Life Sciences & Biotech Grant Alerts — GrantSetu",
   description:
-    "Subscribe to free email alerts for Indian research grants. Choose your subject areas, career stage, and agencies (DBT, DST, ICMR, ANRF, BIRAC, CSIR, UGC, AYUSH). Get weekly or daily notifications — no account required.",
+    "Subscribe to free email alerts for Life Sciences & Biotechnology grants in India. Choose your subject areas, career stage, and agencies (DBT, BIRAC, ICMR and more). Weekly or daily notifications — no account required.",
   alternates: {
     canonical: "https://grantsetu.in/alerts",
   },

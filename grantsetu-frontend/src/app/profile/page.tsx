@@ -120,7 +120,7 @@ export default function ProfilePage() {
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-[#05073F]" style={{ fontFamily: "var(--font-display)" }}>Edit Profile</h1>
+            <h1 className="text-2xl font-bold text-[#0A0A0A]" style={{ fontFamily: "var(--font-display)" }}>Edit Profile</h1>
             <p className="text-brand-500 text-sm mt-1">
               Keep your profile up to date for better grant recommendations
             </p>
@@ -136,7 +136,7 @@ export default function ProfilePage() {
         <div className="space-y-8">
           {/* Personal */}
           <section className="bg-white border border-brand-200 rounded-2xl p-6 shadow-card">
-            <h2 className="text-lg font-semibold text-[#05073F] mb-4" style={{ fontFamily: "var(--font-display)" }}>Personal Information</h2>
+            <h2 className="text-lg font-semibold text-[#0A0A0A] mb-4" style={{ fontFamily: "var(--font-display)" }}>Personal Information</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
                 <label className="block text-sm font-medium text-brand-700 mb-1">Full Name</label>
@@ -174,7 +174,7 @@ export default function ProfilePage() {
 
           {/* Institution */}
           <section className="bg-white border border-brand-200 rounded-2xl p-6 shadow-card">
-            <h2 className="text-lg font-semibold text-[#05073F] mb-4" style={{ fontFamily: "var(--font-display)" }}>Institution</h2>
+            <h2 className="text-lg font-semibold text-[#0A0A0A] mb-4" style={{ fontFamily: "var(--font-display)" }}>Institution</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
                 <label className="block text-sm font-medium text-brand-700 mb-1">Institution Name</label>
@@ -225,7 +225,7 @@ export default function ProfilePage() {
 
           {/* Research Profile */}
           <section className="bg-white border border-brand-200 rounded-2xl p-6 shadow-card">
-            <h2 className="text-lg font-semibold text-[#05073F] mb-4" style={{ fontFamily: "var(--font-display)" }}>Research Profile</h2>
+            <h2 className="text-lg font-semibold text-[#0A0A0A] mb-4" style={{ fontFamily: "var(--font-display)" }}>Research Profile</h2>
 
             <div className="space-y-5">
               <div>
@@ -306,7 +306,7 @@ export default function ProfilePage() {
 
           {/* Alert Preferences */}
           <section className="bg-white border border-brand-200 rounded-2xl p-6 shadow-card">
-            <h2 className="text-lg font-semibold text-[#05073F] mb-4" style={{ fontFamily: "var(--font-display)" }}>Email Alerts</h2>
+            <h2 className="text-lg font-semibold text-[#0A0A0A] mb-4" style={{ fontFamily: "var(--font-display)" }}>Email Alerts</h2>
 
             <div className="space-y-4">
               <label className="flex items-center gap-3 cursor-pointer">
