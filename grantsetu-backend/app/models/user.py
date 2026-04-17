@@ -31,6 +31,7 @@ class User(Base):
     alert_frequency: Mapped[str] = mapped_column(String(20), server_default="weekly")
     alert_agencies: Mapped[list[str]] = mapped_column(ARRAY(String), server_default="{}")
     auth_provider: Mapped[str | None] = mapped_column(String(20))
+    password_hash: Mapped[str | None] = mapped_column(String(255))
     is_admin: Mapped[bool] = mapped_column(Boolean, server_default="false")
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()

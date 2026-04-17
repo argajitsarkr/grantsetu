@@ -5,33 +5,66 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 
-export default function SignInPage() {
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+export default function SignUpPage() {
   const router = useRouter();
   const search = useSearchParams();
-  const callbackUrl = search.get("callbackUrl") || "/dashboard";
+  const callbackUrl = search.get("callbackUrl") || "/onboarding";
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  async function handleEmailSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
-    setSubmitting(true);
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-      callbackUrl,
-    });
-    setSubmitting(false);
-    if (!res || res.error) {
-      setError("Invalid email or password.");
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
       return;
     }
-    router.push(res.url || callbackUrl);
-    router.refresh();
+    if (password !== confirm) {
+      setError("Passwords don't match.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch(`${API_URL}/api/v1/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.detail || "Unable to create account. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+
+      // Account created — immediately sign in via credentials provider.
+      const signInRes = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl,
+      });
+      setSubmitting(false);
+      if (!signInRes || signInRes.error) {
+        setError("Account created but sign-in failed. Please try signing in.");
+        return;
+      }
+      router.push(signInRes.url || callbackUrl);
+      router.refresh();
+    } catch {
+      setSubmitting(false);
+      setError("Network error. Please try again.");
+    }
   }
 
   return (
@@ -39,15 +72,15 @@ export default function SignInPage() {
       <div className="max-w-md mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <span className="label-pill mb-6 inline-flex">Sign In</span>
+          <span className="label-pill mb-6 inline-flex">Create Account</span>
           <h1 className="heading-display text-[2.25rem] sm:text-[3rem] text-black leading-[1]">
-            Welcome <span className="text-[#E9283D]">back.</span>
+            Join <span className="text-[#E9283D]">GrantSetu.</span>
           </h1>
           <p
             className="mt-4 text-[15px] text-gray-600 leading-relaxed"
             style={{ fontFamily: "var(--font-body)" }}
           >
-            Sign in to track saved grants, set up alerts, and get personalised recommendations.
+            Free forever. Set up your research profile and get matched grants weekly.
           </p>
         </div>
 
@@ -66,7 +99,7 @@ export default function SignInPage() {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
-            Continue with Google
+            Sign up with Google
           </button>
 
           {/* Divider */}
@@ -81,8 +114,26 @@ export default function SignInPage() {
             <div className="flex-1 h-px bg-gray-200" />
           </div>
 
-          {/* Email form */}
-          <form onSubmit={handleEmailSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-[11px] uppercase tracking-[0.15em] text-black font-bold mb-1.5"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Full Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                required
+                autoComplete="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-[15px] text-black focus:border-[#E9283D] focus:ring-2 focus:ring-[#E9283D]/20 outline-none transition-colors"
+                placeholder="Dr. Jane Doe"
+              />
+            </div>
             <div>
               <label
                 htmlFor="email"
@@ -114,11 +165,32 @@ export default function SignInPage() {
                 id="password"
                 type="password"
                 required
-                autoComplete="current-password"
+                minLength={8}
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-[15px] text-black focus:border-[#E9283D] focus:ring-2 focus:ring-[#E9283D]/20 outline-none transition-colors"
-                placeholder="••••••••"
+                placeholder="At least 8 characters"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="confirm"
+                className="block text-[11px] uppercase tracking-[0.15em] text-black font-bold mb-1.5"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Confirm Password
+              </label>
+              <input
+                id="confirm"
+                type="password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                value={confirm}
+                onChange={(e) => setConfirm(e.target.value)}
+                className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 text-[15px] text-black focus:border-[#E9283D] focus:ring-2 focus:ring-[#E9283D]/20 outline-none transition-colors"
+                placeholder="Repeat password"
               />
             </div>
 
@@ -137,17 +209,17 @@ export default function SignInPage() {
               className="w-full bg-[#E9283D] text-white px-7 py-3.5 rounded-lg font-bold text-[14px] uppercase tracking-wider hover:bg-[#C91E30] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
               style={{ fontFamily: "var(--font-mono)" }}
             >
-              {submitting ? "Signing in…" : "Sign in →"}
+              {submitting ? "Creating account…" : "Create Account →"}
             </button>
           </form>
 
           <p className="text-center text-[13px] text-gray-600 pt-2 border-t border-gray-100">
-            Don&apos;t have an account?{" "}
+            Already have an account?{" "}
             <Link
-              href={`/auth/signup${callbackUrl !== "/dashboard" ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ""}`}
+              href={`/auth/signin${callbackUrl !== "/onboarding" ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ""}`}
               className="text-[#E9283D] font-bold hover:underline"
             >
-              Create one
+              Sign in
             </Link>
           </p>
         </div>
@@ -156,7 +228,7 @@ export default function SignInPage() {
           className="mt-6 text-center text-[11px] uppercase tracking-[0.15em] text-gray-500"
           style={{ fontFamily: "var(--font-mono)" }}
         >
-          Your data stays private. No spam.
+          Free forever · No credit card · Unsubscribe anytime
         </p>
       </div>
     </div>

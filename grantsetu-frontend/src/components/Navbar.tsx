@@ -8,6 +8,7 @@ import { useSession, signOut } from "next-auth/react";
 /* ── Dropdown data ── */
 const PLATFORM_ITEMS = [
   { href: "/grants", label: "Browse Grants", desc: "Search all active grant calls" },
+  { href: "/newsletter", label: "Weekly Newsletter", desc: "Every open grant call, every Monday" },
   { href: "/alerts", label: "Email Alerts", desc: "Matched grants to your inbox" },
   { href: "/dashboard", label: "Dashboard", desc: "Track saved grants & applications", auth: true },
 ];
@@ -149,6 +150,13 @@ export default function Navbar() {
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 Grants
+              </Link>
+              <Link
+                href="/newsletter"
+                className="py-2 text-[13px] font-semibold tracking-[0.06em] uppercase text-black hover:text-[#E9283D] transition-colors duration-200 whitespace-nowrap"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Newsletter
               </Link>
               <NavDropdown
                 label="Agencies"

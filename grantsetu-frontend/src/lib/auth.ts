@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
 import { SignJWT } from "jose";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -17,16 +18,65 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
+    Credentials({
+      name: "Email & Password",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
+        try {
+          const res = await fetch(`${API_URL}/api/v1/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          });
+          if (!res.ok) return null;
+          const data = await res.json();
+          return {
+            id: String(data.user.id),
+            email: data.user.email,
+            name: data.user.name,
+            image: data.user.image_url ?? null,
+            backendToken: data.access_token,
+            onboardingCompleted: data.user.onboarding_completed,
+            isAdmin: data.user.is_admin,
+          } as unknown as { id: string };
+        } catch (err) {
+          console.error("Credentials authorize failed:", err);
+          return null;
+        }
+      },
+    }),
   ],
   pages: {
     signIn: "/auth/signin",
   },
   callbacks: {
-    async jwt({ token, account, profile }) {
-      // On initial sign-in, sync user to backend and generate backend token
+    async jwt({ token, account, profile, user }) {
+      // Credentials path: the authorize() callback returned a user with an
+      // already-signed backend token and DB-derived flags.
+      if (account?.provider === "credentials" && user) {
+        const u = user as unknown as {
+          backendToken?: string;
+          onboardingCompleted?: boolean;
+          isAdmin?: boolean;
+          id?: string;
+        };
+        if (u.backendToken) token.backendToken = u.backendToken;
+        token.onboardingCompleted = u.onboardingCompleted ?? false;
+        token.isAdmin = u.isAdmin ?? false;
+        if (u.id) token.userId = u.id;
+        return token;
+      }
+
+      // Google OAuth path: sync with backend + mint our own backend JWT.
       if (account && profile) {
         try {
-          // Sync user to backend
           const syncRes = await fetch(`${API_URL}/api/v1/users/sync`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -48,7 +98,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           console.error("Failed to sync user to backend:", err);
         }
 
-        // Generate a signed JWT for backend API calls
         try {
           const backendToken = await new SignJWT({
             email: profile.email || token.email,
