@@ -88,8 +88,8 @@ export default function HomePage() {
             <Link href="/grants" className="btn-primary">
               Browse Grants →
             </Link>
-            <Link href="/alerts" className="btn-secondary">
-              Set Up Alerts
+            <Link href="/newsletter" className="btn-secondary">
+              Get Weekly Newsletter
             </Link>
           </div>
 
@@ -340,15 +340,15 @@ export default function HomePage() {
             biotech grant again.
           </h2>
           <p className="mt-10 text-[18px] sm:text-[20px] text-white/90 max-w-[600px] mx-auto leading-relaxed">
-            Set up email alerts and get matched grants delivered weekly — completely free, forever.
+            Join the weekly newsletter and get matched grants delivered every Monday — completely free, forever.
           </p>
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/alerts"
+              href="/newsletter"
               className="inline-flex items-center justify-center bg-white text-[#E9283D] px-10 py-4 rounded-lg font-bold text-[15px] uppercase tracking-wider transition-all duration-200 hover:bg-black hover:text-white"
               style={{ fontFamily: "var(--font-mono)" }}
             >
-              Set Up Alerts →
+              Subscribe →
             </Link>
             <Link
               href="/grants"

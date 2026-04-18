@@ -9,7 +9,6 @@ import { useSession, signOut } from "next-auth/react";
 const PLATFORM_ITEMS = [
   { href: "/grants", label: "Browse Grants", desc: "Search all active grant calls" },
   { href: "/newsletter", label: "Weekly Newsletter", desc: "Every open grant call, every Monday" },
-  { href: "/alerts", label: "Email Alerts", desc: "Matched grants to your inbox" },
   { href: "/dashboard", label: "Dashboard", desc: "Track saved grants & applications", auth: true },
 ];
 

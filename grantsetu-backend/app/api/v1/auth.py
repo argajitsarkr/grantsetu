@@ -74,11 +74,13 @@ async def register(data: RegisterRequest, db: AsyncSession = Depends(get_db)) ->
         )
 
     password_hash = bcrypt.hashpw(data.password.encode(), bcrypt.gensalt()).decode()
+    is_admin = email in [e.lower() for e in settings.admin_email_list]
     user = User(
         name=data.name.strip(),
         email=email,
         password_hash=password_hash,
         auth_provider="credentials",
+        is_admin=is_admin,
     )
     db.add(user)
     await db.flush()
@@ -105,6 +107,12 @@ async def login(data: LoginRequest, db: AsyncSession = Depends(get_db)) -> AuthR
 
     if not bcrypt.checkpw(data.password.encode(), user.password_hash.encode()):
         raise invalid
+
+    # Self-heal: promote admin if email is in ADMIN_EMAILS but flag is stale.
+    if not user.is_admin and email in [e.lower() for e in settings.admin_email_list]:
+        user.is_admin = True
+        await db.flush()
+        await db.refresh(user)
 
     return AuthResponse(
         access_token=_sign_token(user),

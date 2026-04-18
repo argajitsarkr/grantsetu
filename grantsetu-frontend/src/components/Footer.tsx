@@ -46,7 +46,6 @@ export default function Footer() {
               {[
                 { href: "/grants", label: "Browse Grants" },
                 { href: "/newsletter", label: "Weekly Newsletter" },
-                { href: "/alerts", label: "Email Alerts" },
                 { href: "/dashboard", label: "Dashboard" },
                 { href: "/auth/signin", label: "Sign In" },
               ].map(({ href, label }) => (

@@ -88,7 +88,12 @@
       "Bash(py -3 -c \"import ast; ast.parse\\(open\\(''app/services/recommendation_service.py''\\).read\\(\\)\\); print\\(''recommendation syntax OK''\\)\")",
       "Bash(py -3 -c \"import ast; ast.parse\\(open\\(''app/api/v1/users.py''\\).read\\(\\)\\); print\\(''users syntax OK''\\)\")",
       "Bash(py -3 -c \"import ast; ast.parse\\(open\\(''app/api/v1/grants.py''\\).read\\(\\)\\); print\\(''grants syntax OK''\\)\")",
-      "Bash(py -3 -c \"import ast; ast.parse\\(open\\(''app/schemas/user.py''\\).read\\(\\)\\); print\\(''schemas syntax OK''\\)\")"
+      "Bash(py -3 -c \"import ast; ast.parse\\(open\\(''app/schemas/user.py''\\).read\\(\\)\\); print\\(''schemas syntax OK''\\)\")",
+      "Bash(gh pr create --base main --head claude/eloquent-lalande-427e04 --title 'feat: email/password auth + weekly newsletter page' --body ' *)",
+      "Bash(command -v gh)",
+      "Bash(gh --version)",
+      "Bash(curl -s \"http://localhost:3000/_next/static/chunks/app/layout.js\")",
+      "Bash(curl -s \"http://localhost:3000/_next/static/chunks/app/page.js\")"
     ]
   }
 }

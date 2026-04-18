@@ -1,119 +1,270 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { API_URL } from "@/lib/constants";
 
-async function getStats() {
-  try {
-    const res = await fetch(`${API_URL}/api/v1/admin/stats`, {
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error("Failed");
-    return res.json();
-  } catch {
-    return null;
-  }
+interface Stats {
+  grants_total: number;
+  grants_active: number;
+  users_total: number;
+  alerts_enabled: number;
 }
 
-async function getScraperHealth() {
-  try {
-    const res = await fetch(`${API_URL}/api/v1/admin/scrapers/health`, {
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error("Failed");
-    return res.json();
-  } catch {
-    return [];
-  }
+interface ScraperRun {
+  id: number;
+  agency: string;
+  started_at: string | null;
+  status: string;
+  grants_found: number;
+  grants_new: number;
+  error_message: string | null;
 }
 
-export default async function AdminDashboard() {
-  const [stats, scraperRuns] = await Promise.all([getStats(), getScraperHealth()]);
+export default function AdminDashboard() {
+  const { data: session } = useSession();
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [runs, setRuns] = useState<ScraperRun[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = session?.backendToken;
+    if (!token) return;
+    (async () => {
+      try {
+        const [sRes, rRes] = await Promise.all([
+          fetch(`${API_URL}/api/v1/admin/stats`, {
+            headers: { Authorization: `Bearer ${token}` },
+            cache: "no-store",
+          }),
+          fetch(`${API_URL}/api/v1/admin/scrapers/health`, {
+            headers: { Authorization: `Bearer ${token}` },
+            cache: "no-store",
+          }),
+        ]);
+        if (sRes.ok) setStats(await sRes.json());
+        if (rRes.ok) setRuns(await rRes.json());
+      } catch (err) {
+        console.error("Admin stats load failed:", err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [session]);
 
   return (
-    <div className="container-main py-8">
-      <div className="mb-8">
-        <h1 className="text-display-sm font-bold text-[#0A0A0A] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Admin Dashboard</h1>
-        <p className="text-sm text-brand-500 mt-1">Overview of grants, users, and scraper health</p>
-      </div>
-
-      {/* Stats — pastel colored cards like Topmate feature section */}
-      {stats && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-          {[
-            { label: "Total Grants", value: stats.grants_total, bg: "bg-blue-50 border-blue-100", color: "text-blue-700" },
-            { label: "Active Grants", value: stats.grants_active, bg: "bg-teal-50 border-teal-100", color: "text-teal-700" },
-            { label: "Total Users", value: stats.users_total, bg: "bg-purple-50 border-purple-100", color: "text-purple-700" },
-            { label: "Alert Subscribers", value: stats.alerts_enabled, bg: "bg-accent-50 border-accent-100", color: "text-accent-700" },
-          ].map((stat) => (
-            <div key={stat.label} className={`${stat.bg} border rounded-xl p-5`}>
-              <p className="text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>{stat.label}</p>
-              <p className={`text-3xl font-bold ${stat.color} mt-2`}>{stat.value}</p>
-            </div>
-          ))}
+    <div className="bg-white min-h-screen">
+      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-10">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
+          <div>
+            <span
+              className="inline-block text-[10px] uppercase tracking-[0.2em] text-[#E9283D] font-bold mb-2"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Admin · Control Room
+            </span>
+            <h1
+              className="text-[2.25rem] sm:text-[3rem] font-black text-black leading-[1]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              GrantSetu <span className="text-[#E9283D]">Admin.</span>
+            </h1>
+            <p className="mt-2 text-sm text-gray-600">
+              Grants, users, scraper health — all in one place.
+            </p>
+          </div>
+          <Link
+            href="/admin/grants/new"
+            className="inline-flex items-center justify-center h-[44px] px-6 bg-[#E9283D] text-white text-[13px] font-bold rounded-lg hover:bg-[#C91E30] uppercase tracking-wider transition-colors"
+            style={{ fontFamily: "var(--font-mono)" }}
+          >
+            + Add Grant
+          </Link>
         </div>
-      )}
 
-      {/* Scraper Health */}
-      <div className="mb-8">
-        <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-4" style={{ fontFamily: "var(--font-display)" }}>Recent Scraper Runs</h2>
-        <div className="card p-0 overflow-hidden">
+        {/* Stats */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
+          <StatTile label="Total Grants" value={stats?.grants_total ?? "—"} />
+          <StatTile label="Active Grants" value={stats?.grants_active ?? "—"} accent />
+          <StatTile label="Total Users" value={stats?.users_total ?? "—"} />
+          <StatTile label="Alert Subs" value={stats?.alerts_enabled ?? "—"} />
+        </div>
+
+        {/* Action tiles */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          <ActionTile
+            href="/admin/grants/new"
+            title="Add Grant"
+            desc="Manually enter a new grant using the template form."
+            cta="Open form →"
+            primary
+          />
+          <ActionTile
+            href="/admin/grants"
+            title="Manage Grants"
+            desc="Browse, edit, or expire existing grants."
+            cta="Open list →"
+          />
+          <ActionTile
+            href="/admin/users"
+            title="Users"
+            desc="See who's signed up, their profile fields, admin status."
+            cta="Open list →"
+          />
+        </div>
+
+        {/* Scraper health */}
+        <section className="border-2 border-black rounded-xl overflow-hidden">
+          <div className="px-5 py-3 border-b-2 border-black flex items-center justify-between">
+            <h2
+              className="text-[11px] uppercase tracking-[0.2em] font-bold text-black"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Recent Scraper Runs
+            </h2>
+            <span
+              className="text-[11px] uppercase tracking-wider text-gray-500"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Last 20
+            </span>
+          </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-brand-100">
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Agency</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Started</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Status</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Found</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>New</th>
-                  <th className="px-5 py-3.5 text-left text-xs font-semibold text-brand-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Error</th>
+              <thead className="bg-gray-50">
+                <tr>
+                  {["Agency", "Started", "Status", "Found", "New", "Error"].map((h) => (
+                    <th
+                      key={h}
+                      className="px-5 py-3 text-left text-[11px] uppercase tracking-wider text-gray-500 font-bold"
+                      style={{ fontFamily: "var(--font-mono)" }}
+                    >
+                      {h}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-brand-100">
-                {(scraperRuns as Array<Record<string, unknown>>).length > 0 ? (
-                  (scraperRuns as Array<Record<string, unknown>>).map((run: Record<string, unknown>) => (
-                    <tr key={run.id as number} className="hover:bg-brand-50 transition-colors">
-                      <td className="px-5 py-3.5 font-semibold text-brand-900">{run.agency as string}</td>
-                      <td className="px-5 py-3.5 text-brand-500">
-                        {run.started_at ? new Date(run.started_at as string).toLocaleString("en-IN") : "-"}
-                      </td>
-                      <td className="px-5 py-3.5">
-                        <span
-                          className={`inline-flex px-2.5 py-0.5 rounded-lg text-xs font-semibold border ${
-                            run.status === "success"
-                              ? "bg-teal-50 text-teal-700 border-teal-200"
-                              : run.status === "failed"
-                              ? "bg-red-50 text-red-700 border-red-200"
-                              : "bg-amber-50 text-amber-700 border-amber-200"
-                          }`}
-                        >
-                          {run.status as string}
-                        </span>
-                      </td>
-                      <td className="px-5 py-3.5 text-brand-600">{run.grants_found as number}</td>
-                      <td className="px-5 py-3.5 text-brand-600">{run.grants_new as number}</td>
-                      <td className="px-5 py-3.5 text-red-500 text-xs max-w-[200px] truncate">
-                        {(run.error_message as string) || "-"}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
+              <tbody className="divide-y divide-gray-200">
+                {loading && (
                   <tr>
-                    <td colSpan={6} className="px-5 py-12 text-center text-brand-400">
-                      No scraper runs yet
+                    <td colSpan={6} className="px-5 py-8 text-center text-gray-400 text-sm">
+                      Loading…
                     </td>
                   </tr>
                 )}
+                {!loading && runs.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-5 py-10 text-center text-gray-400 text-sm">
+                      No scraper runs yet.
+                    </td>
+                  </tr>
+                )}
+                {runs.map((r) => (
+                  <tr key={r.id} className="hover:bg-gray-50">
+                    <td className="px-5 py-3 font-bold text-black">{r.agency}</td>
+                    <td className="px-5 py-3 text-gray-600 text-[13px]">
+                      {r.started_at ? new Date(r.started_at).toLocaleString("en-IN") : "—"}
+                    </td>
+                    <td className="px-5 py-3">
+                      <StatusPill status={r.status} />
+                    </td>
+                    <td className="px-5 py-3 text-gray-700">{r.grants_found}</td>
+                    <td className="px-5 py-3 text-gray-700">{r.grants_new}</td>
+                    <td className="px-5 py-3 text-[#E9283D] text-xs max-w-[220px] truncate">
+                      {r.error_message || "—"}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-        </div>
-      </div>
-
-      {/* Quick actions */}
-      <div className="flex flex-wrap gap-3">
-        <a href="/admin/grants/new" className="btn-primary">
-          Add Grant Manually
-        </a>
+        </section>
       </div>
     </div>
+  );
+}
+
+function StatTile({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: number | string;
+  accent?: boolean;
+}) {
+  const cls = accent ? "bg-black text-white border-black" : "bg-white text-black border-black";
+  return (
+    <div className={`${cls} border-2 rounded-xl p-4`}>
+      <div
+        className="text-[10px] uppercase tracking-[0.15em] opacity-80 mb-1"
+        style={{ fontFamily: "var(--font-mono)" }}
+      >
+        {label}
+      </div>
+      <div
+        className="text-[2rem] font-black leading-none"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function ActionTile({
+  href,
+  title,
+  desc,
+  cta,
+  primary,
+}: {
+  href: string;
+  title: string;
+  desc: string;
+  cta: string;
+  primary?: boolean;
+}) {
+  const cls = primary
+    ? "bg-[#E9283D] text-white border-[#E9283D]"
+    : "bg-white text-black border-black";
+  return (
+    <Link
+      href={href}
+      className={`${cls} border-2 rounded-xl p-5 block hover:opacity-90 transition-opacity`}
+    >
+      <h3
+        className="text-[1.25rem] font-black mb-1"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        {title}
+      </h3>
+      <p className="text-[13px] opacity-80 mb-3 leading-snug">{desc}</p>
+      <span
+        className="text-[11px] uppercase tracking-[0.15em] font-bold"
+        style={{ fontFamily: "var(--font-mono)" }}
+      >
+        {cta}
+      </span>
+    </Link>
+  );
+}
+
+function StatusPill({ status }: { status: string }) {
+  const cls =
+    status === "success"
+      ? "bg-black text-white border-black"
+      : status === "failed"
+      ? "bg-[#E9283D] text-white border-[#E9283D]"
+      : "bg-white text-black border-black";
+  return (
+    <span
+      className={`${cls} inline-flex px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border`}
+      style={{ fontFamily: "var(--font-mono)" }}
+    >
+      {status}
+    </span>
   );
 }
