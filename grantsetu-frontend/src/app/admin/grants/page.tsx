@@ -33,10 +33,26 @@ export default function AdminGrantsListPage() {
       .finally(() => setLoading(false));
   }, [agency, status, search, page]);
 
-  async function handleDelete(id: number, title: string) {
+  async function handleExpire(id: number, title: string) {
     if (!session?.backendToken) return;
     if (!confirm(`Expire grant "${title}"? This sets status to expired.`)) return;
     const res = await fetch(`${API_URL}/api/v1/admin/grants/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${session.backendToken}` },
+    });
+    if (res.ok) {
+      setData((d) =>
+        d ? { ...d, items: d.items.filter((g) => g.id !== id) } : d
+      );
+    } else {
+      alert("Expire failed.");
+    }
+  }
+
+  async function handleHardDelete(id: number, title: string) {
+    if (!session?.backendToken) return;
+    if (!confirm(`Permanently DELETE "${title}"? This removes the row and cannot be undone.`)) return;
+    const res = await fetch(`${API_URL}/api/v1/admin/grants/${id}?hard=true`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${session.backendToken}` },
     });
@@ -191,11 +207,18 @@ export default function AdminGrantsListPage() {
                         Edit
                       </Link>
                       <button
-                        onClick={() => handleDelete(g.id, g.title)}
-                        className="text-[11px] uppercase tracking-wider font-bold text-[#E9283D] hover:underline"
+                        onClick={() => handleExpire(g.id, g.title)}
+                        className="text-[11px] uppercase tracking-wider font-bold text-black hover:text-[#E9283D]"
                         style={{ fontFamily: "var(--font-mono)" }}
                       >
                         Expire
+                      </button>
+                      <button
+                        onClick={() => handleHardDelete(g.id, g.title)}
+                        className="text-[11px] uppercase tracking-wider font-bold text-[#E9283D] hover:underline"
+                        style={{ fontFamily: "var(--font-mono)" }}
+                      >
+                        Delete
                       </button>
                     </td>
                   </tr>

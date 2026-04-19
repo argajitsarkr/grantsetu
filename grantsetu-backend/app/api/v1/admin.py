@@ -95,16 +95,21 @@ async def admin_update_grant(
 @router.delete("/grants/{grant_id}")
 async def admin_delete_grant(
     grant_id: int,
+    hard: bool = False,
     _: None = Depends(require_admin),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """Soft delete a grant (set status to expired)."""
+    """Delete a grant. Default soft-delete (status=expired); pass ?hard=true to remove the row."""
     grant = await get_grant_by_id(db, grant_id)
     if not grant:
         raise HTTPException(status_code=404, detail="Grant not found")
+    if hard:
+        await db.delete(grant)
+        await db.flush()
+        return {"status": "removed", "id": grant_id}
     grant.status = "expired"
     await db.flush()
-    return {"status": "deleted", "id": grant_id}
+    return {"status": "expired", "id": grant_id}
 
 
 @router.get("/users")

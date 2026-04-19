@@ -6,12 +6,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useSession, signOut } from "next-auth/react";
 
 /* ── Dropdown data ── */
-const PLATFORM_ITEMS = [
-  { href: "/grants", label: "Browse Grants", desc: "Search all active grant calls" },
-  { href: "/newsletter", label: "Weekly Newsletter", desc: "Every open grant call, every Monday" },
-  { href: "/dashboard", label: "Dashboard", desc: "Track saved grants & applications", auth: true },
-];
-
 const AGENCIES_ITEMS = [
   { href: "/grants?agency=DBT", label: "DBT", desc: "Department of Biotechnology" },
   { href: "/grants?agency=BIRAC", label: "BIRAC", desc: "Biotech Industry Research Council" },
@@ -43,7 +37,7 @@ function NavDropdown({
   label, items, open, onToggle, isAuthenticated,
 }: {
   label: string;
-  items: typeof PLATFORM_ITEMS;
+  items: typeof AGENCIES_ITEMS;
   open: boolean;
   onToggle: () => void;
   isAuthenticated: boolean;
@@ -171,13 +165,15 @@ export default function Navbar() {
                 onToggle={() => toggleDropdown("resources")}
                 isAuthenticated={isAuthenticated}
               />
-              <NavDropdown
-                label="Platform"
-                items={PLATFORM_ITEMS}
-                open={openDropdown === "platform"}
-                onToggle={() => toggleDropdown("platform")}
-                isAuthenticated={isAuthenticated}
-              />
+              {isAuthenticated && (
+                <Link
+                  href="/dashboard"
+                  className="py-2 text-[13px] font-semibold tracking-[0.06em] uppercase text-black hover:text-[#E9283D] transition-colors duration-200 whitespace-nowrap"
+                  style={{ fontFamily: "var(--font-mono)" }}
+                >
+                  Dashboard
+                </Link>
+              )}
               {isAuthenticated && session.user.isAdmin && (
                 <Link
                   href="/admin"
@@ -262,14 +258,20 @@ export default function Navbar() {
             <div className="lg:hidden border-t-2 border-black pb-6 pt-4">
               <div className="space-y-1">
                 <p className="label-mono px-3 pb-1">Platform</p>
-                {PLATFORM_ITEMS
-                  .filter((item) => !("auth" in item) || isAuthenticated)
-                  .map((item) => (
-                    <Link key={item.href} href={item.href} className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
-                      {item.label}
-                      <span className="block text-xs text-gray-500 font-normal mt-0.5">{item.desc}</span>
-                    </Link>
-                  ))}
+                <Link href="/grants" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
+                  Browse Grants
+                  <span className="block text-xs text-gray-500 font-normal mt-0.5">Search all active grant calls</span>
+                </Link>
+                <Link href="/newsletter" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
+                  Weekly Newsletter
+                  <span className="block text-xs text-gray-500 font-normal mt-0.5">Every open grant call, every Monday</span>
+                </Link>
+                {isAuthenticated && (
+                  <Link href="/dashboard" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
+                    Dashboard
+                    <span className="block text-xs text-gray-500 font-normal mt-0.5">Track saved grants & applications</span>
+                  </Link>
+                )}
 
                 <p className="label-mono px-3 pt-4 pb-1">Agencies</p>
                 <div className="grid grid-cols-2 gap-1 px-1">
