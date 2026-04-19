@@ -333,6 +333,8 @@ export default async function GrantDetailPage({ params }: PageProps) {
                 areaServed: { "@type": "Country", name: "India" },
               },
               ...(grant.deadline && { availableThrough: grant.deadline }),
+              ...(grant.created_at && { datePublished: grant.created_at }),
+              ...(grant.updated_at && { dateModified: grant.updated_at }),
               url: `https://grantsetu.in/grants/${slug}`,
               serviceType: "Research Grant",
               audience: {

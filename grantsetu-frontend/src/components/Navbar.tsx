@@ -126,13 +126,15 @@ export default function Navbar() {
         <div className="max-w-[1400px] mx-auto px-5 sm:px-8">
           <div className="flex items-center justify-between h-[var(--nav-height)]">
             {/* Logo - NUUK: wordmark, heavy, red */}
-            <Link href="/" className="flex items-center flex-shrink-0">
-              <span
-                className="text-[#E9283D] font-black text-[28px] tracking-[-0.03em] uppercase"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                GrantSetu
-              </span>
+            <Link href="/" className="flex items-center flex-shrink-0" aria-label="GrantSetu home">
+              <Image
+                src="/grantsetu-logo.png"
+                alt="GrantSetu"
+                width={160}
+                height={40}
+                priority
+                className="h-9 w-auto"
+              />
             </Link>
 
             {/* Desktop nav */}

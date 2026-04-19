@@ -60,6 +60,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: SITE_URL,
+    languages: {
+      "en-IN": SITE_URL,
+    },
   },
   openGraph: {
     type: "website",
@@ -100,9 +103,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Add these when you register with Google/Bing
-    // google: "your-google-verification-code",
-    // other: { "msvalidate.01": "your-bing-verification-code" },
+    // TODO: replace with real tokens from Search Console + Bing Webmaster after deploy.
+    google: "TODO-gsc-token",
+    other: { "msvalidate.01": "TODO-bing-token" },
   },
   category: "Education",
 };
@@ -161,13 +164,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en-IN" className={inter.variable}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="48x48" />
-        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
-        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.ico?v=2" sizes="48x48" />
+        <link rel="icon" href="/favicon-16x16.png?v=2" sizes="16x16" type="image/png" />
+        <link rel="icon" href="/favicon-32x32.png?v=2" sizes="32x32" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" sizes="180x180" />
+        <link rel="manifest" href="/manifest.json?v=2" />
         <meta name="theme-color" content="#E9283D" />
         <script
           type="application/ld+json"

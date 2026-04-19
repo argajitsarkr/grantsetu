@@ -26,7 +26,7 @@ const FAQ_DATA = [
   },
   {
     q: "Can I get email alerts for new grants?",
-    a: "Yes. Visit the Alerts page to set up free email notifications. Choose your subject areas, career stage, and preferred agencies - you'll receive matching grants weekly or daily.",
+    a: "Yes. Subscribe to the free GrantSetu Weekly Newsletter at /newsletter - every active life-sciences and biotech grant call, delivered every Monday. You can also sign in and configure notification preferences from your dashboard.",
   },
   {
     q: "What grants exist for early career life sciences researchers?",
