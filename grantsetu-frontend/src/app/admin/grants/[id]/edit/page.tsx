@@ -50,7 +50,7 @@ export default function AdminEditGrantPage() {
     (async () => {
       try {
         // Admin fetch by numeric id via list lookup: GET /api/v1/grants supports search,
-        // but easier — fetch directly via the public /grants/{slug} route once we know slug.
+        // but easier - fetch directly via the public /grants/{slug} route once we know slug.
         // Instead, hit the listing with a big filter then find. Simpler: add an admin endpoint
         // later. For now, load via public list and find by id.
         const res = await fetch(

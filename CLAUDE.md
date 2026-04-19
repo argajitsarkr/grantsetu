@@ -255,6 +255,8 @@ Config location on server: `/etc/cloudflared/config.yml`
 3. **Backend dashboard for PI users** — Original request to classify users by domain, suggest grants based on keywords, age, career stage. Profile + recommendations exist but need refinement.
 4. **Google OAuth on production** — Credentials are created but login flow is broken until AUTH_TRUST_HOST is set.
 5. **Old Gilroy fonts** — `public/fonts/gilroy-*.woff2` files are leftover from an earlier design. They are unused but not yet deleted.
+6. **Admin account password flow** — After setting `ADMIN_EMAILS=argajit05@gmail.com` in backend `.env` and restarting the backend, admin status auto-applies on next login/register/sync. If the account was created via Google OAuth and has no password, register at `/auth/signup` with the same email to set one (admin flag re-applies automatically).
+7. **Typography rule** — Use plain hyphen (`-`) in all UI copy, not em-dash (`—`). Enforced 2026-04-19.
 
 ---
 
@@ -286,6 +288,12 @@ Config location on server: `/etc/cloudflared/config.yml`
 
 | Date | Changes |
 |---|---|
+| 2026-04-19 | Typography cleanup: replaced every em-dash (—) with a plain hyphen (-) across the frontend (102 replacements in 22 files) |
+| 2026-04-18 | Auto-promote admins: /users/sync, /auth/register, /auth/login now set is_admin from ADMIN_EMAILS; added GET /api/v1/admin/users |
+| 2026-04-18 | Full admin suite: /admin home redesign (stat tiles + action tiles + scraper health), /admin/grants list with search/filter/pagination, /admin/grants/[id]/edit, /admin/users; new shared <GrantForm> reused by create + edit |
+| 2026-04-18 | /admin route protection via middleware: non-admins redirected to /dashboard, admins skip onboarding |
+| 2026-04-18 | Dashboard rewrite: greeting strip, 4 stat tiles (Matched/Deadlines/Saved/Profile strength), Deadline Radar, Recommended, Saved rows, Activity feed, Profile card, Notification settings (replaces /alerts), Upgrade-to-Pro card linking to /newsletter#pro |
+| 2026-04-18 | Removed /alerts page and all nav/footer/home/sitemap references (backend alert_* tables/fields kept dormant for future Pro feature) |
 | 2026-04-10 | Created CLAUDE.md for the project |
 | 2026-04-10 | Pushed indicium.ai redesign with fonts applied across all pages |
 | 2026-04-09 | Complete indicium.ai-style redesign — navy/blue palette, Inter Display + Roboto Mono fonts, hero video, transparent navbar |

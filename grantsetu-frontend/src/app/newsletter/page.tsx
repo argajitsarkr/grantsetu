@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 
-/* ── Buttondown username — set via env or override here ── */
+/* ── Buttondown username - set via env or override here ── */
 const BUTTONDOWN_USERNAME =
   process.env.NEXT_PUBLIC_BUTTONDOWN_USERNAME || "grantsetu";
 const BUTTONDOWN_ACTION = `https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`;
@@ -23,7 +23,7 @@ const FAQ = [
   },
   {
     q: "How do I pay? I'm in India.",
-    a: "Razorpay. UPI, netbanking, cards, wallets — all Indian payment methods work. You'll get a proper tax invoice.",
+    a: "Razorpay. UPI, netbanking, cards, wallets - all Indian payment methods work. You'll get a proper tax invoice.",
   },
 ];
 
@@ -32,7 +32,7 @@ export default function NewsletterPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  /* ── Buttondown embed submission — posts to their form endpoint ── */
+  /* ── Buttondown embed submission - posts to their form endpoint ── */
   async function handleSubscribe(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
@@ -55,17 +55,17 @@ export default function NewsletterPage() {
   return (
     <div>
       {/* ── Hero ── */}
-      <section className="relative bg-white pt-20 pb-16 sm:pt-28 sm:pb-20 overflow-hidden">
+      <section className="relative bg-white pt-10 pb-10 sm:pt-14 sm:pb-14 overflow-hidden">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8">
           <div
-            className="mb-8 opacity-0 animate-fade-in-up"
+            className="mb-5 opacity-0 animate-fade-in-up"
             style={{ animationDelay: "0.1s", animationFillMode: "forwards" }}
           >
             <span className="label-pill">Weekly Newsletter · Free</span>
           </div>
 
           <h1
-            className="heading-display text-[2.5rem] sm:text-[4.5rem] lg:text-[6rem] text-black opacity-0 animate-fade-in-up leading-[0.95]"
+            className="heading-display text-[1.75rem] sm:text-[3rem] lg:text-[4.25rem] text-black opacity-0 animate-fade-in-up leading-[0.95]"
             style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}
           >
             Every open Indian
@@ -76,7 +76,7 @@ export default function NewsletterPage() {
           </h1>
 
           <p
-            className="mt-8 text-[18px] sm:text-[22px] text-gray-600 max-w-[680px] leading-[1.5] opacity-0 animate-fade-in-up"
+            className="mt-5 text-[15px] sm:text-[18px] text-gray-600 max-w-[680px] leading-[1.5] opacity-0 animate-fade-in-up"
             style={{
               animationDelay: "0.4s",
               animationFillMode: "forwards",
@@ -88,7 +88,7 @@ export default function NewsletterPage() {
 
           {/* ── Buttondown subscribe form ── */}
           <div
-            className="mt-10 opacity-0 animate-fade-in-up"
+            className="mt-6 opacity-0 animate-fade-in-up"
             style={{ animationDelay: "0.5s", animationFillMode: "forwards" }}
           >
             {submitted ? (
@@ -147,7 +147,7 @@ export default function NewsletterPage() {
         </div>
       </section>
 
-      {/* ── What you get — free tier ── */}
+      {/* ── What you get - free tier ── */}
       <section className="bg-black py-24 sm:py-32 border-t-2 border-b-2 border-black">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -185,7 +185,7 @@ export default function NewsletterPage() {
               },
               {
                 t: "Plain-English commentary",
-                d: "What's worth applying to, what's a long shot — written by someone who has actually submitted proposals.",
+                d: "What's worth applying to, what's a long shot - written by someone who has actually submitted proposals.",
               },
             ].map((item, i) => (
               <div
@@ -243,7 +243,7 @@ export default function NewsletterPage() {
             {[
               {
                 t: "Filtered to your field",
-                d: "Only the calls you're actually eligible for — by subject area, career stage, and institution type.",
+                d: "Only the calls you're actually eligible for - by subject area, career stage, and institution type.",
               },
               {
                 t: "Monthly budget template pack",
@@ -251,7 +251,7 @@ export default function NewsletterPage() {
               },
               {
                 t: "Quarterly deep-dive",
-                d: "\"State of Indian Research Funding\" — what's getting funded, what's not, what to pitch next quarter.",
+                d: "\"State of Indian Research Funding\" - what's getting funded, what's not, what to pitch next quarter.",
               },
               {
                 t: "Reply directly to any email",
@@ -282,12 +282,12 @@ export default function NewsletterPage() {
               href="#pro-checkout"
               onClick={(e) => {
                 e.preventDefault();
-                alert("Pro checkout launches soon. Subscribe to the free list above — Pro invitations go out to free subscribers first.");
+                alert("Pro checkout launches soon. Subscribe to the free list above - Pro invitations go out to free subscribers first.");
               }}
               className="inline-flex items-center justify-center bg-white text-[#E9283D] px-10 py-4 rounded-lg font-bold text-[14px] uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
               style={{ fontFamily: "var(--font-mono)" }}
             >
-              Upgrade to Pro — ₹299/year →
+              Upgrade to Pro - ₹299/year →
             </a>
             <p className="text-white/90 text-[14px] max-w-sm leading-relaxed">
               ~₹25/month. Less than one filter coffee. One extra week of awareness on a grant call pays for a decade of subscriptions.
@@ -318,7 +318,7 @@ export default function NewsletterPage() {
               The hardest part was never the science. It was knowing which calls were even open, what the current budget norms were, and whether we were eligible.
             </p>
             <p>
-              Colleagues across Indian universities routinely miss grant calls they would have won — not because they didn&apos;t qualify, but because the information is scattered across{" "}
+              Colleagues across Indian universities routinely miss grant calls they would have won - not because they didn&apos;t qualify, but because the information is scattered across{" "}
               <span className="font-bold text-black">15+ government websites</span>{" "}
               that nobody has time to check weekly.
             </p>

@@ -38,7 +38,7 @@ function ChevronDown({ className }: { className?: string }) {
   );
 }
 
-/* ── Dropdown — NUUK style: white panel, black text, red hover ── */
+/* ── Dropdown - NUUK style: white panel, black text, red hover ── */
 function NavDropdown({
   label, items, open, onToggle, isAuthenticated,
 }: {
@@ -113,7 +113,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── Top ticker banner — NUUK style red strip ── */}
+      {/* ── Top ticker banner - NUUK style red strip ── */}
       <div className="ticker-banner">
         <div className="ticker-track">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -124,14 +124,14 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ── Navbar — NUUK: white, black text, red accents ── */}
+      {/* ── Navbar - NUUK: white, black text, red accents ── */}
       <nav
         ref={navRef}
         className="sticky top-0 z-[9999] bg-white border-b-2 border-black"
       >
         <div className="max-w-[1400px] mx-auto px-5 sm:px-8">
           <div className="flex items-center justify-between h-[var(--nav-height)]">
-            {/* Logo — NUUK: wordmark, heavy, red */}
+            {/* Logo - NUUK: wordmark, heavy, red */}
             <Link href="/" className="flex items-center flex-shrink-0">
               <span
                 className="text-[#E9283D] font-black text-[28px] tracking-[-0.03em] uppercase"
@@ -189,7 +189,7 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Right side — Auth + CTA */}
+            {/* Right side - Auth + CTA */}
             <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
               {status === "loading" && (
                 <div className="h-[40px] w-[120px] bg-gray-100 rounded-lg animate-pulse" />

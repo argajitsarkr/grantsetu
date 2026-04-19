@@ -241,7 +241,7 @@ export default function DashboardPage() {
               </div>
               {radar.length === 0 ? (
                 <p className="text-sm text-gray-500">
-                  No upcoming deadlines — save grants to track them here.
+                  No upcoming deadlines - save grants to track them here.
                 </p>
               ) : (
                 <div className="flex flex-wrap gap-2">
@@ -540,7 +540,7 @@ export default function DashboardPage() {
                 className="block text-center w-full bg-white text-[#E9283D] py-2.5 rounded-lg text-[12px] font-bold uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
-                Upgrade — ₹299/year
+                Upgrade - ₹299/year
               </Link>
               <p
                 className="mt-3 text-[10px] uppercase tracking-wider opacity-80 text-center"

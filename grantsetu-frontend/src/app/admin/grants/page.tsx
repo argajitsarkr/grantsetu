@@ -171,7 +171,7 @@ export default function AdminGrantsListPage() {
                       className="px-4 py-3 text-gray-600 text-[12px]"
                       style={{ fontFamily: "var(--font-mono)" }}
                     >
-                      {g.deadline ? formatDate(g.deadline) : g.deadline_text || "—"}
+                      {g.deadline ? formatDate(g.deadline) : g.deadline_text || "-"}
                     </td>
                     <td className="px-4 py-3">
                       <StatusPill status={g.status} />

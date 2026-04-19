@@ -251,7 +251,7 @@ export default function OnboardingPage() {
               <div>
                 <label className="block text-sm font-medium text-brand-700 mb-1">Research Keywords</label>
                 <p className="text-xs text-brand-400 mb-2">
-                  Add specific topics you work on — we&apos;ll match these against grant descriptions
+                  Add specific topics you work on - we&apos;ll match these against grant descriptions
                 </p>
                 <TagInput
                   tags={form.research_keywords || []}
@@ -270,7 +270,7 @@ export default function OnboardingPage() {
               <div>
                 <label className="block text-sm font-medium text-brand-700 mb-1">Date of Birth</label>
                 <p className="text-xs text-brand-400 mb-2">
-                  Some grants have age limits — this helps us filter out ineligible ones
+                  Some grants have age limits - this helps us filter out ineligible ones
                 </p>
                 <input
                   type="date"
@@ -283,7 +283,7 @@ export default function OnboardingPage() {
               <div>
                 <label className="block text-sm font-medium text-brand-700 mb-2">Preferred Agencies</label>
                 <p className="text-xs text-brand-400 mb-3">
-                  Select agencies you&apos;re most interested in — grants from these will be prioritised
+                  Select agencies you&apos;re most interested in - grants from these will be prioritised
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {AGENCIES.map((agency) => (
@@ -355,7 +355,7 @@ export default function OnboardingPage() {
             onClick={handleSubmit}
             className="text-sm text-brand-400 hover:text-brand-600 transition-colors"
           >
-            Skip for now — I&apos;ll set this up later
+            Skip for now - I&apos;ll set this up later
           </button>
         </div>
       </div>

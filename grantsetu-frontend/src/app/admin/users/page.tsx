@@ -106,19 +106,19 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="px-4 py-3 text-[13px] text-black">{u.name}</td>
                     <td className="px-4 py-3 text-[12px] text-gray-600 max-w-[220px] truncate">
-                      {u.institution || "—"}
+                      {u.institution || "-"}
                     </td>
                     <td
                       className="px-4 py-3 text-[11px] uppercase tracking-wider text-gray-500"
                       style={{ fontFamily: "var(--font-mono)" }}
                     >
-                      {u.career_stage || "—"}
+                      {u.career_stage || "-"}
                     </td>
                     <td
                       className="px-4 py-3 text-[11px] uppercase tracking-wider text-gray-500"
                       style={{ fontFamily: "var(--font-mono)" }}
                     >
-                      {u.auth_provider || "—"}
+                      {u.auth_provider || "-"}
                     </td>
                     <td className="px-4 py-3">
                       {u.is_admin ? (
@@ -129,14 +129,14 @@ export default function AdminUsersPage() {
                           Admin
                         </span>
                       ) : (
-                        <span className="text-gray-400 text-[11px]">—</span>
+                        <span className="text-gray-400 text-[11px]">-</span>
                       )}
                     </td>
                     <td className="px-4 py-3 text-[11px]">
                       {u.onboarding_completed ? (
                         <span className="text-black font-bold">✓</span>
                       ) : (
-                        <span className="text-gray-400">—</span>
+                        <span className="text-gray-400">-</span>
                       )}
                     </td>
                     <td
@@ -149,7 +149,7 @@ export default function AdminUsersPage() {
                             day: "numeric",
                             year: "numeric",
                           })
-                        : "—"}
+                        : "-"}
                     </td>
                   </tr>
                 ))}

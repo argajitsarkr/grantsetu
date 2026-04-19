@@ -1,14 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import GrantForm, { EMPTY_GRANT, type GrantFormValues } from "@/components/GrantForm";
+import GrantForm, { EMPTY_GRANT, mergeGrantValues, type GrantFormValues } from "@/components/GrantForm";
+import JsonImportPanel from "@/components/JsonImportPanel";
 import { API_URL } from "@/lib/constants";
 
 export default function AdminNewGrant() {
   const router = useRouter();
   const { data: session } = useSession();
+  const [values, setValues] = useState<GrantFormValues>(EMPTY_GRANT);
 
   async function handleCreate(values: GrantFormValues) {
     const token = session?.backendToken;
@@ -47,7 +50,16 @@ export default function AdminNewGrant() {
         <p className="mt-2 text-sm text-gray-600 mb-8">
           Fill the template below. Save as Draft to publish later, or Publish now to make it live.
         </p>
-        <GrantForm initial={EMPTY_GRANT} mode="create" onSubmit={handleCreate} />
+        <JsonImportPanel
+          onFill={(partial) => setValues((v) => mergeGrantValues(v, partial))}
+        />
+        <GrantForm
+          initial={EMPTY_GRANT}
+          values={values}
+          onChange={setValues}
+          mode="create"
+          onSubmit={handleCreate}
+        />
       </div>
     </div>
   );

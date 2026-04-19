@@ -72,7 +72,7 @@ export default function AdminDashboard() {
               GrantSetu <span className="text-[#E9283D]">Admin.</span>
             </h1>
             <p className="mt-2 text-sm text-gray-600">
-              Grants, users, scraper health — all in one place.
+              Grants, users, scraper health - all in one place.
             </p>
           </div>
           <Link
@@ -86,10 +86,10 @@ export default function AdminDashboard() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
-          <StatTile label="Total Grants" value={stats?.grants_total ?? "—"} />
-          <StatTile label="Active Grants" value={stats?.grants_active ?? "—"} accent />
-          <StatTile label="Total Users" value={stats?.users_total ?? "—"} />
-          <StatTile label="Alert Subs" value={stats?.alerts_enabled ?? "—"} />
+          <StatTile label="Total Grants" value={stats?.grants_total ?? "-"} />
+          <StatTile label="Active Grants" value={stats?.grants_active ?? "-"} accent />
+          <StatTile label="Total Users" value={stats?.users_total ?? "-"} />
+          <StatTile label="Alert Subs" value={stats?.alerts_enabled ?? "-"} />
         </div>
 
         {/* Action tiles */}
@@ -165,7 +165,7 @@ export default function AdminDashboard() {
                   <tr key={r.id} className="hover:bg-gray-50">
                     <td className="px-5 py-3 font-bold text-black">{r.agency}</td>
                     <td className="px-5 py-3 text-gray-600 text-[13px]">
-                      {r.started_at ? new Date(r.started_at).toLocaleString("en-IN") : "—"}
+                      {r.started_at ? new Date(r.started_at).toLocaleString("en-IN") : "-"}
                     </td>
                     <td className="px-5 py-3">
                       <StatusPill status={r.status} />
@@ -173,7 +173,7 @@ export default function AdminDashboard() {
                     <td className="px-5 py-3 text-gray-700">{r.grants_found}</td>
                     <td className="px-5 py-3 text-gray-700">{r.grants_new}</td>
                     <td className="px-5 py-3 text-[#E9283D] text-xs max-w-[220px] truncate">
-                      {r.error_message || "—"}
+                      {r.error_message || "-"}
                     </td>
                   </tr>
                 ))}

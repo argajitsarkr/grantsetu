@@ -2,21 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Inter Display — heading font ─────────── */
+/* ── Inter Display - heading font ─────────── */
 @font-face { font-family: 'Inter Display'; src: url('/fonts/InterDisplay-Medium.woff2') format('woff2'); font-display: swap; font-weight: 500; font-style: normal; }
 
-/* ── Inter — body font ─────────── */
+/* ── Inter - body font ─────────── */
 @font-face { font-family: 'Inter Local'; src: url('/fonts/Inter-Regular.woff2') format('woff2'); font-display: swap; font-weight: 400; font-style: normal; }
 @font-face { font-family: 'Inter Local'; src: url('/fonts/Inter-Medium.woff2') format('woff2'); font-display: swap; font-weight: 500; font-style: normal; }
 
-/* ── Roboto Mono — labels/captions ─────────── */
+/* ── Roboto Mono - labels/captions ─────────── */
 @font-face { font-family: 'Roboto Mono Local'; src: url('/fonts/RobotoMono-Regular.woff2') format('woff2'); font-display: swap; font-weight: 400; font-style: normal; }
 
-/* ── CSS Variables — NUUK-inspired: Red / Black / White ─────────── */
+/* ── CSS Variables - NUUK-inspired: Red / Black / White ─────────── */
 :root {
-  --color-red:       #E9283D;    /* NUUK crimson red — primary accent */
+  --color-red:       #E9283D;    /* NUUK crimson red - primary accent */
   --color-red-dark:  #C91E30;    /* hover state */
-  --color-black:     #0A0A0A;    /* near-black — dark sections, headings */
+  --color-black:     #0A0A0A;    /* near-black - dark sections, headings */
   --color-white:     #FFFFFF;    /* background */
   --color-gray-50:   #F7F7F7;    /* ultra-light bg */
   --color-gray-200:  #E5E5E5;    /* borders */
@@ -66,7 +66,7 @@
 }
 
 @layer components {
-  /* ─ Buttons — NUUK red ─ */
+  /* ─ Buttons - NUUK red ─ */
   .btn-primary {
     @apply inline-flex items-center justify-center
            text-white px-7 py-3.5 rounded-lg
@@ -125,7 +125,7 @@
            transition-all duration-200;
   }
 
-  /* ─ Cards — NUUK clean white with red hover accent ─ */
+  /* ─ Cards - NUUK clean white with red hover accent ─ */
   .card {
     @apply bg-white rounded-xl border-2 border-gray-100 p-6
            transition-all duration-300;
@@ -143,7 +143,7 @@
     box-shadow: 0 0 40px rgba(233, 40, 61, 0.15);
   }
 
-  /* ─ Mono label — NUUK pill ─ */
+  /* ─ Mono label - NUUK pill ─ */
   .label-mono {
     font-family: var(--font-mono);
     @apply text-xs font-semibold tracking-wider uppercase;
@@ -185,7 +185,7 @@
     @apply max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* ─ Nav dropdown — NUUK: white with black hover ─ */
+  /* ─ Nav dropdown - NUUK: white with black hover ─ */
   .dropdown-panel {
     @apply absolute top-full left-0 mt-3 bg-white border-2 border-black
            rounded-xl shadow-2xl p-4 z-50 min-w-[260px]
@@ -217,7 +217,7 @@
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
   }
 
-  /* ─ Running ticker banner — NUUK top strip ─ */
+  /* ─ Running ticker banner - NUUK top strip ─ */
   .ticker-banner {
     @apply bg-[color:var(--color-red)] text-white py-2.5 overflow-hidden;
     font-family: var(--font-mono);

@@ -21,7 +21,7 @@ export default function Footer() {
             >
               India&apos;s #1 grant discovery platform for{" "}
               <span className="text-white font-semibold">Life Sciences &amp; Biotechnology</span>.
-              Curated calls from DBT, BIRAC, ICMR and more — updated daily.
+              Curated calls from DBT, BIRAC, ICMR and more - updated daily.
             </p>
             <div className="mt-6 inline-flex items-center gap-2 px-3 py-1.5 border border-white/20 rounded-full">
               <span className="w-1.5 h-1.5 rounded-full bg-[#E9283D] animate-pulse" />
@@ -58,7 +58,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Agencies — Life Sci priority */}
+          {/* Agencies - Life Sci priority */}
           <div className="md:col-span-3">
             <h4
               className="text-[11px] tracking-[0.15em] uppercase text-[#E9283D] mb-5 font-semibold"

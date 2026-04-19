@@ -23,7 +23,7 @@ export default auth((req) => {
   if (isAuthenticated && req.auth?.user) {
     const onboardingCompleted = req.auth.user.onboardingCompleted;
 
-    // Admins skip onboarding redirect — they may not need a research profile.
+    // Admins skip onboarding redirect - they may not need a research profile.
     const skipOnboarding = req.auth.user.isAdmin || isAdminPath;
 
     if (

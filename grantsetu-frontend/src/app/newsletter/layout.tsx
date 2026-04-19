@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const TITLE = "GrantSetu Weekly — Every Indian Grant Call, Every Monday";
+const TITLE = "GrantSetu Weekly - Every Indian Grant Call, Every Monday";
 const DESC = "Every open Indian research grant call. One email. Every Monday at 7 AM IST. Curated by a PhD researcher. Free forever, with an optional Pro tier (₹299/year).";
 
 export const metadata: Metadata = {

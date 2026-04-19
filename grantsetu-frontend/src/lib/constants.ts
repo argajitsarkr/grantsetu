@@ -1,7 +1,7 @@
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 /* ──────────────────────────────────────────────────────────────
- * GrantSetu — Life Sciences & Biotechnology Focus
+ * GrantSetu - Life Sciences & Biotechnology Focus
  *
  * Agencies are ordered by relevance to life sciences / biotech research.
  * Primary: DBT, BIRAC, ICMR (core biotech & biomedical)
@@ -61,7 +61,7 @@ export const AGENCY_META: Record<string, { fullName: string; website: string; lo
   },
 };
 
-/* NUUK-style monochrome colors — red/black/white only */
+/* NUUK-style monochrome colors - red/black/white only */
 export const AGENCY_COLORS: Record<string, string> = {
   DBT:   "bg-black text-white border-black",
   BIRAC: "bg-black text-white border-black",

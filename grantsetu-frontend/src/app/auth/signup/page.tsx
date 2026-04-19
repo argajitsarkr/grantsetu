@@ -55,7 +55,7 @@ function SignUpForm() {
         return;
       }
 
-      // Account created — immediately sign in via credentials provider.
+      // Account created - immediately sign in via credentials provider.
       const signInRes = await signIn("credentials", {
         email,
         password,

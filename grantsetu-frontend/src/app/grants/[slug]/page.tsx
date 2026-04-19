@@ -16,12 +16,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   try {
     const grant = await fetchGrant(slug);
-    const desc = grant.summary || `${grant.agency} grant call \u2014 ${grant.title}`;
+    const desc = grant.summary || `${grant.agency} grant call - ${grant.title}`;
     return {
-      title: `${grant.title} — ${grant.agency} Grant`,
+      title: `${grant.title} - ${grant.agency} Grant`,
       description: desc,
       openGraph: {
-        title: `${grant.title} — ${grant.agency}`,
+        title: `${grant.title} - ${grant.agency}`,
         description: desc,
         type: "article",
         url: `https://grantsetu.in/grants/${slug}`,
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
       twitter: {
         card: "summary_large_image",
-        title: `${grant.title} — ${grant.agency}`,
+        title: `${grant.title} - ${grant.agency}`,
         description: desc,
         images: ["https://grantsetu.in/og-image.png"],
       },
@@ -68,7 +68,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
         </nav>
 
         <article>
-          {/* Header — agency logo + badge */}
+          {/* Header - agency logo + badge */}
           <div className="flex flex-wrap items-start gap-4 mb-5">
             {/* Real agency logo strip */}
             <AgencyLogo agency={grant.agency} variant="full" showName={false} />
@@ -88,7 +88,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
             <p className="mt-4 text-lg text-brand-500 leading-relaxed">{grant.summary}</p>
           )}
 
-          {/* Key info cards — pastel colored like Topmate feature cards */}
+          {/* Key info cards - pastel colored like Topmate feature cards */}
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Deadline */}
             <div className="bg-red-50 border border-red-100 rounded-xl p-5">
@@ -194,7 +194,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
             )}
           </div>
 
-          {/* Important Links — organized section */}
+          {/* Important Links - organized section */}
           <section className="mt-10">
             <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-4" style={{ fontFamily: "var(--font-display)" }}>Important Links</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -277,7 +277,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-brand-900 group-hover:text-accent-600 transition-colors">Apply / Login{grant.portal_name ? ` — ${grant.portal_name}` : ""}</p>
+                    <p className="text-sm font-semibold text-brand-900 group-hover:text-accent-600 transition-colors">Apply / Login{grant.portal_name ? ` - ${grant.portal_name}` : ""}</p>
                     <p className="text-xs text-brand-400 truncate">Go to the application portal to submit</p>
                   </div>
                   <svg className="h-4 w-4 text-brand-300 group-hover:text-accent-500 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -294,7 +294,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
           </div>
         </article>
 
-        {/* JSON-LD: BreadcrumbList — enables breadcrumbs in Google results */}
+        {/* JSON-LD: BreadcrumbList - enables breadcrumbs in Google results */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

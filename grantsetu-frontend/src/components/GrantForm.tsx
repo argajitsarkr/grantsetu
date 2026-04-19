@@ -96,18 +96,45 @@ function Label({ children }: { children: React.ReactNode }) {
 const inputCls =
   "w-full border-2 border-gray-200 rounded-lg px-3 py-2 text-[14px] text-black focus:border-[#E9283D] focus:ring-2 focus:ring-[#E9283D]/20 outline-none transition-colors";
 
+export function mergeGrantValues(
+  current: GrantFormValues,
+  incoming: Partial<GrantFormValues>
+): GrantFormValues {
+  const next: GrantFormValues = { ...current };
+  (Object.keys(incoming) as (keyof GrantFormValues)[]).forEach((k) => {
+    const v = incoming[k];
+    if (v === undefined) return;
+    if (Array.isArray(v) && v.length === 0) return;
+    if (v === null) return;
+    // @ts-expect-error - dynamic assignment with validated key
+    next[k] = v;
+  });
+  return next;
+}
+
 export default function GrantForm({
   initial,
+  values: controlledValues,
+  onChange,
   onSubmit,
   submitLabel,
   mode,
 }: {
   initial: GrantFormValues;
+  values?: GrantFormValues;
+  onChange?: (v: GrantFormValues) => void;
   onSubmit: (values: GrantFormValues) => Promise<void>;
   submitLabel?: string;
   mode: "create" | "edit";
 }) {
-  const [values, setValues] = useState<GrantFormValues>(initial);
+  const [internal, setInternal] = useState<GrantFormValues>(initial);
+  const isControlled = controlledValues !== undefined && onChange !== undefined;
+  const values = isControlled ? (controlledValues as GrantFormValues) : internal;
+  const setValues = (updater: GrantFormValues | ((prev: GrantFormValues) => GrantFormValues)) => {
+    const next = typeof updater === "function" ? (updater as (p: GrantFormValues) => GrantFormValues)(values) : updater;
+    if (isControlled) onChange!(next);
+    else setInternal(next);
+  };
   const [submitting, setSubmitting] = useState<null | "draft" | "publish" | "save">(null);
   const [error, setError] = useState("");
 
