@@ -216,13 +216,37 @@ Config location on server: `/etc/cloudflared/config.yml`
 | GET | `/api/v1/admin/stats` | Admin stats |
 | GET | `/api/v1/admin/scrapers/health` | Scraper run history |
 | POST | `/api/v1/admin/grants` | Manually create a grant |
+| GET | `/api/v1/blog` | List blog posts (filters: page, per_page, category, featured, search) - published only |
+| GET | `/api/v1/blog/{slug}` | Public blog post detail |
+| GET | `/api/v1/admin/blog` | Admin blog list (includes drafts) |
+| POST | `/api/v1/admin/blog` | Create post (auto-slug from title) |
+| GET | `/api/v1/admin/blog/{id}` | Admin post by id |
+| PUT | `/api/v1/admin/blog/{id}` | Update post (regenerates slug on title change) |
+| DELETE | `/api/v1/admin/blog/{id}` | Hard-delete post |
 | GET | `/api/v1/health` | Health check |
+
+---
+
+## Blog System
+
+Full blog feature shipped 2026-04-20 (migration `005`):
+
+- **Public**: `/blog` (featured hero + 3-col grid, Ali Abdaal-style) and `/blog/[slug]` (react-markdown + remark-gfm)
+- **Admin**: `/admin/blog` (list + delete), `/admin/blog/new`, `/admin/blog/[id]/edit` - all use shared `<BlogForm>` with live markdown preview
+- **Content**: Markdown body (headings, bold/italic, links, images, lists, tables, code blocks), cover image URL, excerpt, tags, category, author, read-time, status (draft/published), featured flag
+- **SEO per post**: canonical URL, OpenGraph article cards, Twitter summary_large_image, BlogPosting JSON-LD (headline/datePublished/dateModified/author/publisher/image), added to `sitemap.xml` with `lastmod`
+- **Styling**: `.blog-prose` class in `globals.css` handles rendered-markdown typography (matches NUUK red/black palette)
+- **Slug generation**: python-slugify `slugify()` on title, collision-safe via `_unique_slug()` appending `-2`, `-3`, ...
+- **Backend files**: `models/blog_post.py`, `schemas/blog_post.py`, `api/v1/blog.py` (public + admin routers), `alembic/versions/005_add_blog_posts.py`
+- **Post-deploy**: `docker compose exec backend alembic upgrade head` runs migration 005
+
+**Writing flow**: Sign in as admin → `/admin/blog/new` → fill form (Markdown body has a "Preview →" toggle) → set Status = Published → Save. SSR revalidates every 5 min, sitemap every 60 min.
 
 ---
 
 ## SEO & LLMO
 
-- **JSON-LD**: Organization + WebSite (with SearchAction) in `layout.tsx`; GovernmentService + BreadcrumbList on each grant detail page
+- **JSON-LD**: Organization + WebSite (with SearchAction) in `layout.tsx`; GovernmentService + BreadcrumbList on each grant detail page; BlogPosting on each blog post
 - **OpenGraph / Twitter Cards**: On every page
 - **Sitemap**: Dynamic at `/sitemap.xml` (generated from grant slugs)
 - **robots.txt**: Dynamic at `/robots.txt`
@@ -288,6 +312,9 @@ Config location on server: `/etc/cloudflared/config.yml`
 
 | Date | Changes |
 |---|---|
+| 2026-04-20 | Blog system: public /blog + /blog/[slug] with react-markdown, admin CRUD at /admin/blog (+ shared BlogForm with live preview), new blog_posts table (migration 005), BlogPosting JSON-LD, sitemap + navbar + admin-home wiring |
+| 2026-04-20 | Rebrand + SEO tightening: new GrantSetu logo image in navbar, refreshed favicons with ?v=2 cache-bust, FAQPage JSON-LD on home, enriched GovernmentService schema (datePublished/dateModified/areaServed), hreflang en-IN, verification tokens stubbed, rewritten llms.txt, docs/seo-launch-checklist.md |
+| 2026-04-20 | Platform navbar link removed (folded into Dashboard); admin grants list gained hard-delete button (DELETE /admin/grants/{id}?hard=true) alongside soft expire |
 | 2026-04-19 | Typography cleanup: replaced every em-dash (—) with a plain hyphen (-) across the frontend (102 replacements in 22 files) |
 | 2026-04-18 | Auto-promote admins: /users/sync, /auth/register, /auth/login now set is_admin from ADMIN_EMAILS; added GET /api/v1/admin/users |
 | 2026-04-18 | Full admin suite: /admin home redesign (stat tiles + action tiles + scraper health), /admin/grants list with search/filter/pagination, /admin/grants/[id]/edit, /admin/users; new shared <GrantForm> reused by create + edit |
