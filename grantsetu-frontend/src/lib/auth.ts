@@ -57,7 +57,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/auth/signin",
   },
   callbacks: {
-    async jwt({ token, account, profile, user }) {
+    async jwt({ token, account, profile, user, trigger, session }) {
+      // updateSession() from the client: merge allowed fields into the token
+      // so middleware sees the new onboarding/admin state on the next request.
+      if (trigger === "update" && session) {
+        const s = session as {
+          onboardingCompleted?: boolean;
+          isAdmin?: boolean;
+        };
+        if (typeof s.onboardingCompleted === "boolean") {
+          token.onboardingCompleted = s.onboardingCompleted;
+        }
+        if (typeof s.isAdmin === "boolean") {
+          token.isAdmin = s.isAdmin;
+        }
+        return token;
+      }
+
       // Credentials path: the authorize() callback returned a user with an
       // already-signed backend token and DB-derived flags.
       if (account?.provider === "credentials" && user) {

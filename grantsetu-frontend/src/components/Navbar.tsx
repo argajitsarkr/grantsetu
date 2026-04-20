@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 
 /* ── Dropdown data ── */
@@ -82,6 +83,8 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const { data: session, status } = useSession();
+  const pathname = usePathname();
+  const onAuthPage = pathname?.startsWith("/auth") ?? false;
 
   /* Close dropdowns on outside click + scroll */
   useEffect(() => {
@@ -199,7 +202,7 @@ export default function Navbar() {
               {status === "loading" && (
                 <div className="h-[40px] w-[120px] bg-gray-100 rounded-lg animate-pulse" />
               )}
-              {status === "unauthenticated" && (
+              {status === "unauthenticated" && !onAuthPage && (
                 <>
                   <Link
                     href="/auth/signin"

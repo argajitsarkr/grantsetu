@@ -69,7 +69,9 @@ export default function OnboardingPage() {
       });
       // Update the session so middleware knows onboarding is done
       await updateSession({ onboardingCompleted: true });
-      router.push("/dashboard");
+      // Hard-redirect so middleware re-reads the refreshed session cookie
+      // and doesn't bounce us back to /onboarding.
+      window.location.assign("/dashboard");
     } catch (err) {
       setError("Failed to save your profile. Please try again.");
       console.error(err);
