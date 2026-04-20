@@ -93,7 +93,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Action tiles */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           <ActionTile
             href="/admin/grants/new"
             title="Add Grant"
@@ -106,6 +106,12 @@ export default function AdminDashboard() {
             title="Manage Grants"
             desc="Browse, edit, or expire existing grants."
             cta="Open list →"
+          />
+          <ActionTile
+            href="/admin/blog"
+            title="Blog Posts"
+            desc="Write and publish guides, deep-dives, and weekly roundups."
+            cta="Open editor →"
           />
           <ActionTile
             href="/admin/users"

@@ -13,3 +13,4 @@ from app.models.user import User  # noqa: E402, F401
 from app.models.saved_grant import SavedGrant  # noqa: E402, F401
 from app.models.alert_log import AlertLog  # noqa: E402, F401
 from app.models.scraper_run import ScraperRun  # noqa: E402, F401
+from app.models.blog_post import BlogPost  # noqa: E402, F401

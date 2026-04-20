@@ -121,3 +121,38 @@ export interface UserUpdate {
   alert_frequency?: string;
   alert_agencies?: string[];
 }
+
+export interface BlogPost {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  cover_image_url: string | null;
+  body_markdown: string;
+  author_name: string;
+  category: string | null;
+  tags: string[];
+  status: string;
+  is_featured: boolean;
+  read_minutes: number | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BlogPostListItem {
+  id: number;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  cover_image_url: string | null;
+  author_name: string;
+  category: string | null;
+  tags: string[];
+  status: string;
+  is_featured: boolean;
+  read_minutes: number | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}

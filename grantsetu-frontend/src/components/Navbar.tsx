@@ -147,6 +147,13 @@ export default function Navbar() {
                 Grants
               </Link>
               <Link
+                href="/blog"
+                className="py-2 text-[13px] font-semibold tracking-[0.06em] uppercase text-black hover:text-[#E9283D] transition-colors duration-200 whitespace-nowrap"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Blog
+              </Link>
+              <Link
                 href="/newsletter"
                 className="py-2 text-[13px] font-semibold tracking-[0.06em] uppercase text-black hover:text-[#E9283D] transition-colors duration-200 whitespace-nowrap"
                 style={{ fontFamily: "var(--font-mono)" }}
@@ -263,6 +270,10 @@ export default function Navbar() {
                 <Link href="/grants" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
                   Browse Grants
                   <span className="block text-xs text-gray-500 font-normal mt-0.5">Search all active grant calls</span>
+                </Link>
+                <Link href="/blog" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
+                  Blog
+                  <span className="block text-xs text-gray-500 font-normal mt-0.5">Guides, deep-dives, weekly roundups</span>
                 </Link>
                 <Link href="/newsletter" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
                   Weekly Newsletter

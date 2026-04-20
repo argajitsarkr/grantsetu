@@ -93,7 +93,11 @@
       "Bash(command -v gh)",
       "Bash(gh --version)",
       "Bash(curl -s \"http://localhost:3000/_next/static/chunks/app/layout.js\")",
-      "Bash(curl -s \"http://localhost:3000/_next/static/chunks/app/page.js\")"
+      "Bash(curl -s \"http://localhost:3000/_next/static/chunks/app/page.js\")",
+      "Bash(python -c ' *)",
+      "Bash(python)",
+      "Bash(python3)",
+      "Bash(wait)"
     ]
   }
 }
