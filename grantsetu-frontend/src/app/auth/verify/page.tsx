@@ -11,16 +11,34 @@ type Status = "idle" | "ok" | "error" | "resending" | "resent";
 function VerifyInner() {
   const params = useSearchParams();
   const { update } = useSession();
+  const token = params.get("token");
   const ok = params.get("ok");
   const error = params.get("error");
-  const [status, setStatus] = useState<Status>(error ? "error" : ok ? "ok" : "idle");
+  const [status, setStatus] = useState<Status>(
+    error ? "error" : ok ? "ok" : token ? "idle" : "error"
+  );
   const [email, setEmail] = useState("");
 
   useEffect(() => {
     if (ok) {
       update({ emailVerified: true }).catch(() => {});
+      return;
     }
-  }, [ok, update]);
+    if (token && !error) {
+      // Hand off to the backend which verifies + redirects back with ?ok=1 or ?error=...
+      window.location.replace(
+        `${API_URL}/api/v1/auth/verify?token=${encodeURIComponent(token)}`
+      );
+    }
+  }, [ok, token, error, update]);
+
+  if (token && !ok && !error) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center px-5 py-16">
+        <p className="text-sm text-gray-600">Verifying your email…</p>
+      </div>
+    );
+  }
 
   async function resend(e: React.FormEvent) {
     e.preventDefault();
