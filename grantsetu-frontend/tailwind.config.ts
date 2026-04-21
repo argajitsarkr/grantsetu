@@ -73,8 +73,8 @@ const config: Config = {
       fontFamily: {
         // Topmate body — Inter
         sans: ["Inter", "Inter Fallback", "system-ui", "-apple-system", "sans-serif"],
-        // Topmate headings — Gilroy
-        display: ["gilroy", "gilroy Fallback", "Arial", "sans-serif"],
+        // Headings — Inter Display
+        display: ["Inter Display", "Inter", "system-ui", "Arial", "sans-serif"],
         mono: ["JetBrains Mono", "Consolas", "monospace"],
       },
       borderRadius: {
