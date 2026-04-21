@@ -1,6 +1,8 @@
 # CLAUDE.md — GrantSetu Project Guide
 
 > **READ THIS BEFORE MAKING ANY CHANGES.**
+>
+> This file is the single source of truth for the current state of the project. The **Changelog** at the bottom is kept up-to-date with every session — check it first to understand what shipped most recently and what is pending. Update it before you end any session that changes code, schema, config, or deployment.
 
 ---
 
@@ -154,6 +156,8 @@ GOOGLE_CLIENT_ID=<same-as-frontend>
 GOOGLE_CLIENT_SECRET=<same-as-frontend>
 NEXTAUTH_SECRET=<same-as-frontend>
 DB_PASSWORD=<postgres-password>
+RESEND_API_KEY=re_xxx                            # from resend.com dashboard
+EMAIL_FROM=GrantSetu <noreply@grantsetu.in>      # sender; domain must be verified in Resend
 ```
 
 > **Note:** Inside Docker, hostnames are `db`, `redis` (service names), not `localhost`.
@@ -223,6 +227,13 @@ Config location on server: `/etc/cloudflared/config.yml`
 | GET | `/api/v1/admin/blog/{id}` | Admin post by id |
 | PUT | `/api/v1/admin/blog/{id}` | Update post (regenerates slug on title change) |
 | DELETE | `/api/v1/admin/blog/{id}` | Hard-delete post |
+| POST | `/api/v1/auth/register` | Sign up with email + password (also sends verification email) |
+| POST | `/api/v1/auth/login` | Sign in with email + password |
+| POST | `/api/v1/auth/send-verification` | Re-issue verification link (60s cooldown, no enumeration) |
+| GET | `/api/v1/auth/verify?token=...` | Verify email by token → 302 back to `/auth/verify?ok=1` |
+| POST | `/api/v1/auth/forgot-password` | Send password reset link (60s cooldown, no enumeration) |
+| POST | `/api/v1/auth/reset-password` | Set new password from reset token (1 h TTL) |
+| POST | `/api/v1/auth/change-password` | Authed user changes own password (requires current password) |
 | GET | `/api/v1/health` | Health check |
 
 ---
@@ -241,6 +252,30 @@ Full blog feature shipped 2026-04-20 (migration `005`):
 - **Post-deploy**: `docker compose exec backend alembic upgrade head` runs migration 005
 
 **Writing flow**: Sign in as admin → `/admin/blog/new` → fill form (Markdown body has a "Preview →" toggle) → set Status = Published → Save. SSR revalidates every 5 min, sitemap every 60 min.
+
+---
+
+## Auth & Email Verification
+
+**Providers**: Google OAuth (via NextAuth) and email + password (Credentials provider, bcrypt hashes, HS256 JWT signed with `NEXTAUTH_SECRET`). Both paths issue the same token shape, so backend deps (`get_current_user`, `require_admin`) accept either.
+
+**Email verification** (shipped 2026-04-21, migration 006):
+- New credentials signups get a verification email; `users.email_verified` starts `false`, token stored in `email_verification_token` + `email_verification_sent_at`.
+- **Soft enforcement**: unverified users can still log in and see the dashboard, but a yellow `VerifyEmailBanner` sits at the top of `/dashboard`, `/profile`, and `/onboarding` until they click the link.
+- Google OAuth users are auto-verified (already email-verified by Google) — `/users/sync` sets `email_verified=true` on create and self-heals older rows.
+- Flow: email link points to `{FRONTEND_URL}/auth/verify?token=...` → frontend page 302s to `{API_URL}/api/v1/auth/verify?token=...` → backend flips `email_verified=true`, nulls the token, 302s back to `/auth/verify?ok=1` → frontend calls `useSession().update({ emailVerified: true })` so the banner disappears without a full re-login.
+
+**Forgot password**: `/auth/forgot` → backend issues a reset token (1-hour TTL, stored in `password_reset_token` + `password_reset_expires_at`) → email link to `/auth/reset?token=...` → user sets new password → token burned (nulled), "password changed" courtesy email sent → user redirected to `/auth/signin?reset=1`.
+
+**Change password** (logged-in user): Section on `/profile` calls `POST /auth/change-password` with `Authorization: Bearer ${backendToken}`. Hidden automatically for Google-only users (no `password_hash`). Emits "password changed" courtesy email.
+
+**Rate limiting**: Both `send-verification` and `forgot-password` enforce a 60-second cooldown per user using the `email_verification_sent_at` column as a shared rate-limit marker. Both endpoints always return 200 to avoid account enumeration.
+
+**Dev mode**: If `RESEND_API_KEY` is empty (local dev), `app/services/email_service.py` logs the rendered email + action link to stdout and returns success — the full flow is testable without live sends.
+
+**NextAuth propagation**: `emailVerified: boolean` flows through jwt callback (credentials + Google + `trigger === "update"` branches) → session callback → `session.user.emailVerified` in the client. Type augmentation lives in `src/types/next-auth.d.ts`.
+
+**Resend domain setup on grantsetu.in**: Resend dashboard → Add Domain → **Auto configure** (Cloudflare integration) adds MX + SPF TXT + DKIM TXT records in one click. Until all three verify, emails still send but from Resend's shared domain (weaker deliverability).
 
 ---
 
@@ -281,6 +316,8 @@ Full blog feature shipped 2026-04-20 (migration `005`):
 5. **Old Gilroy fonts** — `public/fonts/gilroy-*.woff2` files are leftover from an earlier design. They are unused but not yet deleted.
 6. **Admin account password flow** — After setting `ADMIN_EMAILS=argajit05@gmail.com` in backend `.env` and restarting the backend, admin status auto-applies on next login/register/sync. If the account was created via Google OAuth and has no password, register at `/auth/signup` with the same email to set one (admin flag re-applies automatically).
 7. **Typography rule** — Use plain hyphen (`-`) in all UI copy, not em-dash (`—`). Enforced 2026-04-19.
+8. **Resend DKIM/SPF verification pending on production** — Until all three Resend DNS records (MX + SPF TXT + DKIM TXT) show green in the Resend dashboard, emails send from Resend's shared fallback domain and deliverability is weaker. Fix: Resend → Domains → `grantsetu.in` → **Auto configure** (Cloudflare integration) or paste records manually into Cloudflare DNS as "DNS only" (grey cloud, not orange).
+9. **Soft-enforced email verification** — Unverified users can still log in and access the dashboard; only the yellow banner prompts them. If spam signups become a problem, flip to strict enforcement by adding an `if not user.email_verified: raise HTTPException(...)` check in `POST /auth/login` (backend auth.py).
 
 ---
 
@@ -312,6 +349,7 @@ Full blog feature shipped 2026-04-20 (migration `005`):
 
 | Date | Changes |
 |---|---|
+| 2026-04-21 | Fix /auth/verify: page was not calling the backend on a raw `?token=...` — it defaulted to the "Link expired" branch so every real link looked broken. On mount with a token the page now 302s to `GET /api/v1/auth/verify?token=...`, which checks the DB and redirects back with `?ok=1` or `?error=invalid`. (commit 25f263e) |
 | 2026-04-21 | Email verification + forgot-password + change-password via Resend: new credentials users get a verification email (soft enforcement), Google OAuth users auto-verified, `/auth/forgot` + `/auth/reset` pages, Change Password section on /profile, yellow VerifyEmailBanner on dashboard/profile/onboarding. Migration 006 adds email_verified + 4 token columns to `users` and backfills Google users. Post-deploy: set `RESEND_API_KEY` + `EMAIL_FROM` in backend .env, add SPF+DKIM TXT records for grantsetu.in in Cloudflare DNS (Resend dashboard generates them), then `docker compose exec backend alembic upgrade head`. |
 | 2026-04-20 | Blog system: public /blog + /blog/[slug] with react-markdown, admin CRUD at /admin/blog (+ shared BlogForm with live preview), new blog_posts table (migration 005), BlogPosting JSON-LD, sitemap + navbar + admin-home wiring |
 | 2026-04-20 | Rebrand + SEO tightening: new GrantSetu logo image in navbar, refreshed favicons with ?v=2 cache-bust, FAQPage JSON-LD on home, enriched GovernmentService schema (datePublished/dateModified/areaServed), hreflang en-IN, verification tokens stubbed, rewritten llms.txt, docs/seo-launch-checklist.md |
