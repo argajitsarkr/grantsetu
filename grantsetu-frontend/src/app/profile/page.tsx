@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import TagInput from "@/components/TagInput";
 import VerifyEmailBanner from "@/components/VerifyEmailBanner";
 import ChangePasswordSection from "@/components/ChangePasswordSection";
+import DeleteAccountSection from "@/components/DeleteAccountSection";
 import {
   SUBJECT_AREAS,
   CAREER_STAGES,
@@ -397,6 +398,8 @@ export default function ProfilePage() {
               {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
+
+          <DeleteAccountSection />
         </div>
       </div>
     </div>

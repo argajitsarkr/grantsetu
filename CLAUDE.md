@@ -234,6 +234,7 @@ Config location on server: `/etc/cloudflared/config.yml`
 | POST | `/api/v1/auth/forgot-password` | Send password reset link (60s cooldown, no enumeration) |
 | POST | `/api/v1/auth/reset-password` | Set new password from reset token (1 h TTL) |
 | POST | `/api/v1/auth/change-password` | Authed user changes own password (requires current password) |
+| DELETE | `/api/v1/users/me` | Permanently delete the authenticated user (cascades saved_grants + alert_logs) |
 | GET | `/api/v1/health` | Health check |
 
 ---
@@ -349,6 +350,7 @@ Full blog feature shipped 2026-04-20 (migration `005`):
 
 | Date | Changes |
 |---|---|
+| 2026-04-21 | Account deletion: `DELETE /api/v1/users/me` + Danger-zone section on /profile with "type DELETE to confirm" gate. Saved grants + alert logs cascade via existing FKs. Verify page now awaits `update({ emailVerified: true })` and hard-reloads `/dashboard` so the banner clears immediately after a fresh verification. |
 | 2026-04-21 | Fix /auth/verify: page was not calling the backend on a raw `?token=...` — it defaulted to the "Link expired" branch so every real link looked broken. On mount with a token the page now 302s to `GET /api/v1/auth/verify?token=...`, which checks the DB and redirects back with `?ok=1` or `?error=invalid`. (commit 25f263e) |
 | 2026-04-21 | Email verification + forgot-password + change-password via Resend: new credentials users get a verification email (soft enforcement), Google OAuth users auto-verified, `/auth/forgot` + `/auth/reset` pages, Change Password section on /profile, yellow VerifyEmailBanner on dashboard/profile/onboarding. Migration 006 adds email_verified + 4 token columns to `users` and backfills Google users. Post-deploy: set `RESEND_API_KEY` + `EMAIL_FROM` in backend .env, add SPF+DKIM TXT records for grantsetu.in in Cloudflare DNS (Resend dashboard generates them), then `docker compose exec backend alembic upgrade head`. |
 | 2026-04-20 | Blog system: public /blog + /blog/[slug] with react-markdown, admin CRUD at /admin/blog (+ shared BlogForm with live preview), new blog_posts table (migration 005), BlogPosting JSON-LD, sitemap + navbar + admin-home wiring |

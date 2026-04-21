@@ -72,6 +72,20 @@ async def update_profile(
     return UserResponse.model_validate(user)
 
 
+@router.delete("/me", status_code=204)
+async def delete_me(
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> None:
+    """Permanently delete the authenticated user and all their data.
+
+    saved_grants and alert_logs cascade via ondelete=CASCADE on the FK.
+    """
+    await db.delete(user)
+    await db.flush()
+    return None
+
+
 @router.get("/grants/saved", response_model=list[GrantListResponse])
 async def list_saved_grants(
     user: User = Depends(get_current_user),

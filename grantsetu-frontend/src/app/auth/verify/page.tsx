@@ -21,7 +21,18 @@ function VerifyInner() {
 
   useEffect(() => {
     if (ok) {
-      update({ emailVerified: true }).catch(() => {});
+      // Await the session refresh, then hard-reload so every page (banner,
+      // middleware, SSR) sees emailVerified=true on the next request.
+      (async () => {
+        try {
+          await update({ emailVerified: true });
+        } catch {
+          // ignore - we'll still redirect
+        }
+        setTimeout(() => {
+          window.location.assign("/dashboard");
+        }, 1200);
+      })();
       return;
     }
     if (token && !error) {
