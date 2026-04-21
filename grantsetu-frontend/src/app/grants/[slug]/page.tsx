@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { fetchGrant } from "@/lib/api";
 import AgencyBadge from "@/components/AgencyBadge";
 import AgencyLogo from "@/components/AgencyLogo";
@@ -16,12 +18,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   try {
     const grant = await fetchGrant(slug);
-    const desc = grant.summary || `${grant.agency} grant call \u2014 ${grant.title}`;
+    const desc = grant.summary || `${grant.agency} grant call - ${grant.title}`;
     return {
-      title: `${grant.title} — ${grant.agency} Grant`,
+      title: `${grant.title} - ${grant.agency} Grant`,
       description: desc,
       openGraph: {
-        title: `${grant.title} — ${grant.agency}`,
+        title: `${grant.title} - ${grant.agency}`,
         description: desc,
         type: "article",
         url: `https://grantsetu.in/grants/${slug}`,
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
       twitter: {
         card: "summary_large_image",
-        title: `${grant.title} — ${grant.agency}`,
+        title: `${grant.title} - ${grant.agency}`,
         description: desc,
         images: ["https://grantsetu.in/og-image.png"],
       },
@@ -68,7 +70,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
         </nav>
 
         <article>
-          {/* Header — agency logo + badge */}
+          {/* Header - agency logo + badge */}
           <div className="flex flex-wrap items-start gap-4 mb-5">
             {/* Real agency logo strip */}
             <AgencyLogo agency={grant.agency} variant="full" showName={false} />
@@ -88,10 +90,10 @@ export default async function GrantDetailPage({ params }: PageProps) {
             <p className="mt-4 text-lg text-brand-500 leading-relaxed">{grant.summary}</p>
           )}
 
-          {/* Key info cards — pastel colored like Topmate feature cards */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Key info cards - equal-width flex layout packs cards into a single row */}
+          <div className="mt-8 flex flex-wrap gap-4">
             {/* Deadline */}
-            <div className="bg-red-50 border border-red-100 rounded-xl p-5">
+            <div className="flex-1 min-w-[200px] bg-red-50 border border-red-100 rounded-xl p-5">
               <p className="text-xs font-semibold text-red-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Deadline</p>
               <div className="mt-2">
                 <DeadlineBadge deadline={grant.deadline} deadlineText={grant.deadline_text} />
@@ -103,7 +105,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
 
             {/* Budget */}
             {(grant.budget_min || grant.budget_max) && (
-              <div className="bg-teal-50 border border-teal-100 rounded-xl p-5">
+              <div className="flex-1 min-w-[200px] bg-teal-50 border border-teal-100 rounded-xl p-5">
                 <p className="text-xs font-semibold text-teal-500 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Funding</p>
                 <p className="mt-2 text-xl font-bold text-teal-700">
                   {grant.budget_min && grant.budget_max
@@ -117,7 +119,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
 
             {/* Duration */}
             {grant.duration_months && (
-              <div className="bg-purple-50 border border-purple-100 rounded-xl p-5">
+              <div className="flex-1 min-w-[200px] bg-purple-50 border border-purple-100 rounded-xl p-5">
                 <p className="text-xs font-semibold text-purple-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Duration</p>
                 <p className="mt-2 text-xl font-bold text-purple-700">
                   {grant.duration_months} months
@@ -127,7 +129,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
 
             {/* Age limit */}
             {grant.age_limit && (
-              <div className="bg-amber-50 border border-amber-100 rounded-xl p-5">
+              <div className="flex-1 min-w-[200px] bg-amber-50 border border-amber-100 rounded-xl p-5">
                 <p className="text-xs font-semibold text-amber-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Age Limit</p>
                 <p className="mt-2 text-xl font-bold text-amber-700">
                   {grant.age_limit} years
@@ -140,7 +142,9 @@ export default async function GrantDetailPage({ params }: PageProps) {
           {grant.eligibility_summary && (
             <section className="mt-8">
               <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-3" style={{ fontFamily: "var(--font-display)" }}>Eligibility</h2>
-              <p className="text-brand-600 leading-relaxed">{grant.eligibility_summary}</p>
+              <div className="blog-prose text-justify">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{grant.eligibility_summary}</ReactMarkdown>
+              </div>
             </section>
           )}
 
@@ -148,7 +152,9 @@ export default async function GrantDetailPage({ params }: PageProps) {
           {grant.description && (
             <section className="mt-8">
               <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-3" style={{ fontFamily: "var(--font-display)" }}>Description</h2>
-              <p className="text-brand-600 whitespace-pre-line leading-relaxed">{grant.description}</p>
+              <div className="blog-prose text-justify">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{grant.description}</ReactMarkdown>
+              </div>
             </section>
           )}
 
@@ -194,7 +200,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
             )}
           </div>
 
-          {/* Important Links — organized section */}
+          {/* Important Links - organized section */}
           <section className="mt-10">
             <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-4" style={{ fontFamily: "var(--font-display)" }}>Important Links</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -277,7 +283,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-brand-900 group-hover:text-accent-600 transition-colors">Apply / Login{grant.portal_name ? ` — ${grant.portal_name}` : ""}</p>
+                    <p className="text-sm font-semibold text-brand-900 group-hover:text-accent-600 transition-colors">Apply / Login{grant.portal_name ? ` - ${grant.portal_name}` : ""}</p>
                     <p className="text-xs text-brand-400 truncate">Go to the application portal to submit</p>
                   </div>
                   <svg className="h-4 w-4 text-brand-300 group-hover:text-accent-500 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -294,7 +300,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
           </div>
         </article>
 
-        {/* JSON-LD: BreadcrumbList — enables breadcrumbs in Google results */}
+        {/* JSON-LD: BreadcrumbList - enables breadcrumbs in Google results */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -333,6 +339,8 @@ export default async function GrantDetailPage({ params }: PageProps) {
                 areaServed: { "@type": "Country", name: "India" },
               },
               ...(grant.deadline && { availableThrough: grant.deadline }),
+              ...(grant.created_at && { datePublished: grant.created_at }),
+              ...(grant.updated_at && { dateModified: grant.updated_at }),
               url: `https://grantsetu.in/grants/${slug}`,
               serviceType: "Research Grant",
               audience: {

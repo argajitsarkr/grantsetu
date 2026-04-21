@@ -2,15 +2,15 @@ import Link from "next/link";
 import { AGENCIES, PRIMARY_AGENCIES } from "@/lib/constants";
 import AgencyLogo from "@/components/AgencyLogo";
 
-/* ── FAQ data — Life Sci / Biotech focus ── */
+/* ── FAQ data - Life Sci / Biotech focus ── */
 const FAQ_DATA = [
   {
     q: "What is GrantSetu?",
-    a: "GrantSetu is India's #1 free grant discovery platform for Life Sciences and Biotechnology researchers. It aggregates active grant calls from DBT, BIRAC, ICMR and allied agencies — the agencies that fund biotech, biomedical, and life science research in India — into a single searchable interface, updated daily.",
+    a: "GrantSetu is India's #1 free grant discovery platform for Life Sciences and Biotechnology researchers. It aggregates active grant calls from DBT, BIRAC, ICMR and allied agencies - the agencies that fund biotech, biomedical, and life science research in India - into a single searchable interface, updated daily.",
   },
   {
     q: "Which agencies does GrantSetu track?",
-    a: "GrantSetu focuses on agencies relevant to Life Sciences and Biotechnology: DBT (Department of Biotechnology — primary), BIRAC (Biotech Industry Research Assistance Council — primary), ICMR (Indian Council of Medical Research — primary), CSIR (biosciences labs), Ministry of AYUSH, DST (life-sci programmes), and ANRF (cross-disciplinary).",
+    a: "GrantSetu focuses on agencies relevant to Life Sciences and Biotechnology: DBT (Department of Biotechnology - primary), BIRAC (Biotech Industry Research Assistance Council - primary), ICMR (Indian Council of Medical Research - primary), CSIR (biosciences labs), Ministry of AYUSH, DST (life-sci programmes), and ANRF (cross-disciplinary).",
   },
   {
     q: "Is GrantSetu free to use?",
@@ -26,7 +26,7 @@ const FAQ_DATA = [
   },
   {
     q: "Can I get email alerts for new grants?",
-    a: "Yes. Visit the Alerts page to set up free email notifications. Choose your subject areas, career stage, and preferred agencies — you'll receive matching grants weekly or daily.",
+    a: "Yes. Subscribe to the free GrantSetu Weekly Newsletter at /newsletter - every active life-sciences and biotech grant call, delivered every Monday. You can also sign in and configure notification preferences from your dashboard.",
   },
   {
     q: "What grants exist for early career life sciences researchers?",
@@ -51,17 +51,17 @@ const faqJsonLd = {
 export default function HomePage() {
   return (
     <div>
-      {/* ── Hero — NUUK: huge bold black on white ── */}
-      <section className="relative bg-white pt-20 pb-20 sm:pt-28 sm:pb-28 overflow-hidden">
+      {/* ── Hero - NUUK: huge bold black on white ── */}
+      <section className="relative bg-white pt-6 pb-10 sm:pt-14 sm:pb-16 overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Label pill */}
-          <div className="mb-8 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.1s", animationFillMode: "forwards" }}>
+          <div className="mb-4 sm:mb-5 opacity-0 animate-fade-in-up" style={{ animationDelay: "0.1s", animationFillMode: "forwards" }}>
             <span className="label-pill">Life Sciences · Biotechnology</span>
           </div>
 
-          {/* Giant display heading — NUUK style */}
+          {/* Giant display heading - NUUK style */}
           <h1
-            className="heading-display text-[3rem] sm:text-[5rem] lg:text-[7rem] text-black opacity-0 animate-fade-in-up"
+            className="heading-display text-[1.85rem] sm:text-[3.5rem] lg:text-[5rem] text-black opacity-0 animate-fade-in-up"
             style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}
           >
             India&apos;s <span className="text-[#E9283D]">Grant Engine</span>
@@ -73,29 +73,29 @@ export default function HomePage() {
 
           {/* Subtitle */}
           <p
-            className="mt-10 text-[18px] sm:text-[22px] text-gray-600 max-w-[680px] leading-[1.5] opacity-0 animate-fade-in-up"
+            className="mt-4 sm:mt-6 text-[14px] sm:text-[18px] text-gray-600 max-w-[680px] leading-[1.5] opacity-0 animate-fade-in-up"
             style={{ animationDelay: "0.4s", animationFillMode: "forwards", fontFamily: "var(--font-body)" }}
           >
             Every active grant call from <span className="font-bold text-black">DBT, BIRAC, ICMR</span> and allied
-            agencies — curated daily for biotech, biomedical &amp; life science researchers.
+            agencies - curated daily for biotech, biomedical &amp; life science researchers.
           </p>
 
           {/* CTAs */}
           <div
-            className="mt-12 flex flex-col sm:flex-row items-start gap-4 opacity-0 animate-fade-in-up"
+            className="mt-5 sm:mt-7 flex flex-col sm:flex-row items-start gap-3 sm:gap-4 opacity-0 animate-fade-in-up"
             style={{ animationDelay: "0.6s", animationFillMode: "forwards" }}
           >
             <Link href="/grants" className="btn-primary">
               Browse Grants →
             </Link>
-            <Link href="/alerts" className="btn-secondary">
-              Set Up Alerts
+            <Link href="/newsletter" className="btn-secondary">
+              Get Weekly Newsletter
             </Link>
           </div>
 
           {/* Mono tagline bottom */}
           <div
-            className="mt-20 flex flex-col sm:flex-row items-start gap-6 sm:items-center sm:gap-12 opacity-0 animate-fade-in"
+            className="mt-10 flex flex-col sm:flex-row items-start gap-6 sm:items-center sm:gap-12 opacity-0 animate-fade-in"
             style={{ animationDelay: "1s", animationFillMode: "forwards" }}
           >
             <div>
@@ -126,7 +126,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Agencies strip — NUUK black band ── */}
+      {/* ── Agencies strip - NUUK black band ── */}
       <section className="bg-black py-20 border-t-2 border-b-2 border-black">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -146,7 +146,7 @@ export default function HomePage() {
               </h2>
             </div>
             <p className="text-white/60 text-[15px] max-w-sm">
-              Prioritised by relevance to life sciences and biotechnology — not by alphabet.
+              Prioritised by relevance to life sciences and biotechnology - not by alphabet.
             </p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
@@ -172,7 +172,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Statement — NUUK oversized quote ── */}
+      {/* ── Statement - NUUK oversized quote ── */}
       <section className="bg-white py-28 sm:py-40">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
           <span className="label-pill mb-10 inline-flex">Why GrantSetu</span>
@@ -186,7 +186,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Process — 4 steps, NUUK grid on red ── */}
+      {/* ── Process - 4 steps, NUUK grid on red ── */}
       <section className="bg-[#E9283D] py-24 sm:py-32">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
@@ -206,9 +206,9 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border-t-2 border-white/30">
             {[
-              { num: "01", title: "Discover", desc: "We aggregate grant calls from DBT, BIRAC, ICMR & allied agencies — daily." },
-              { num: "02", title: "Filter & Match", desc: "Filter by subject area, career stage, budget, deadline — all life-sci tuned." },
-              { num: "03", title: "Get Alerts", desc: "Email alerts for matching grants — weekly or daily, your choice." },
+              { num: "01", title: "Discover", desc: "We aggregate grant calls from DBT, BIRAC, ICMR & allied agencies - daily." },
+              { num: "02", title: "Filter & Match", desc: "Filter by subject area, career stage, budget, deadline - all life-sci tuned." },
+              { num: "03", title: "Get Alerts", desc: "Email alerts for matching grants - weekly or daily, your choice." },
               { num: "04", title: "Apply", desc: "Direct link to the official portal. Never miss a deadline again." },
             ].map((step, i) => (
               <div
@@ -233,7 +233,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Features — NUUK 2x2 on white ── */}
+      {/* ── Features - NUUK 2x2 on white ── */}
       <section className="py-24 sm:py-32 bg-white">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
@@ -251,8 +251,8 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 border-2 border-black">
             {[
-              { title: "Life Sci · Biotech Focus", desc: "DBT, BIRAC, ICMR prioritised — with 24 life sciences subject areas from genomics to synthetic biology." },
-              { title: "Free Email Alerts", desc: "Get matched grants in your inbox — choose your subject, career stage, and frequency." },
+              { title: "Life Sci · Biotech Focus", desc: "DBT, BIRAC, ICMR prioritised - with 24 life sciences subject areas from genomics to synthetic biology." },
+              { title: "Free Email Alerts", desc: "Get matched grants in your inbox - choose your subject, career stage, and frequency." },
               { title: "NE India Friendly", desc: "Built by a PhD researcher from Tripura. Special focus on grants for Northeast India institutions." },
               { title: "Daily Updates", desc: "Automated daily checks across all tracked agency portals. Deadlines refresh automatically." },
             ].map((feature, i) => (
@@ -273,7 +273,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Stats — NUUK red band ── */}
+      {/* ── Stats - NUUK red band ── */}
       <section className="bg-black py-20 sm:py-24">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 border-t-2 border-b-2 border-white/20 divide-x-2 divide-white/20">
@@ -331,7 +331,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CTA — NUUK red full-bleed ── */}
+      {/* ── CTA - NUUK red full-bleed ── */}
       <section className="bg-[#E9283D] py-28 sm:py-36">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="heading-display text-[2.5rem] sm:text-[4.5rem] lg:text-[6rem] text-white">
@@ -340,15 +340,15 @@ export default function HomePage() {
             biotech grant again.
           </h2>
           <p className="mt-10 text-[18px] sm:text-[20px] text-white/90 max-w-[600px] mx-auto leading-relaxed">
-            Set up email alerts and get matched grants delivered weekly — completely free, forever.
+            Join the weekly newsletter and get matched grants delivered every Monday - completely free, forever.
           </p>
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/alerts"
+              href="/newsletter"
               className="inline-flex items-center justify-center bg-white text-[#E9283D] px-10 py-4 rounded-lg font-bold text-[15px] uppercase tracking-wider transition-all duration-200 hover:bg-black hover:text-white"
               style={{ fontFamily: "var(--font-mono)" }}
             >
-              Set Up Alerts →
+              Subscribe →
             </Link>
             <Link
               href="/grants"

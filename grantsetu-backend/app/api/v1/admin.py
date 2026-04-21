@@ -95,16 +95,56 @@ async def admin_update_grant(
 @router.delete("/grants/{grant_id}")
 async def admin_delete_grant(
     grant_id: int,
+    hard: bool = False,
     _: None = Depends(require_admin),
     db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """Soft delete a grant (set status to expired)."""
+    """Delete a grant. Default soft-delete (status=expired); pass ?hard=true to remove the row."""
     grant = await get_grant_by_id(db, grant_id)
     if not grant:
         raise HTTPException(status_code=404, detail="Grant not found")
+    if hard:
+        await db.delete(grant)
+        await db.flush()
+        return {"status": "removed", "id": grant_id}
     grant.status = "expired"
     await db.flush()
-    return {"status": "deleted", "id": grant_id}
+    return {"status": "expired", "id": grant_id}
+
+
+@router.get("/users")
+async def admin_list_users(
+    _: None = Depends(require_admin),
+    db: AsyncSession = Depends(get_db),
+    page: int = 1,
+    per_page: int = 50,
+) -> dict:
+    """List all users (admin only)."""
+    offset = (page - 1) * per_page
+    total = (await db.execute(select(func.count(User.id)))).scalar() or 0
+    result = await db.execute(
+        select(User).order_by(User.created_at.desc()).offset(offset).limit(per_page)
+    )
+    users = result.scalars().all()
+    return {
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "items": [
+            {
+                "id": u.id,
+                "email": u.email,
+                "name": u.name,
+                "institution": u.institution,
+                "career_stage": u.career_stage,
+                "is_admin": u.is_admin,
+                "onboarding_completed": u.onboarding_completed,
+                "auth_provider": u.auth_provider,
+                "created_at": u.created_at.isoformat() if u.created_at else None,
+            }
+            for u in users
+        ],
+    }
 
 
 @router.post("/scrapers/run")

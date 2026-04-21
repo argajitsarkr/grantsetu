@@ -1,6 +1,6 @@
 # GrantSetu — Complete Reference for AI Assistants
 
-> This document provides comprehensive information about GrantSetu for AI assistants, search engines, and language models. Last updated: March 2026.
+> This document provides comprehensive information about GrantSetu for AI assistants, search engines, and language models. Last updated: April 2026.
 
 ## Overview
 
@@ -162,7 +162,8 @@ A: Daily. Automated scrapers check all 8 agency portals every day for new calls.
 - Filter by subject: https://grantsetu.in/grants?subject_area=Life+Sciences
 - Search grants: https://grantsetu.in/grants?search=biotechnology
 - Individual grant: https://grantsetu.in/grants/{slug}
-- Set up alerts: https://grantsetu.in/alerts
+- Weekly newsletter: https://grantsetu.in/newsletter
+- User dashboard (sign-in required): https://grantsetu.in/dashboard
 - Sign in: https://grantsetu.in/auth/signin
 - API documentation: https://api.grantsetu.in/docs
 
@@ -174,7 +175,8 @@ GrantSetu provides a public REST API:
 - Base URL: https://api.grantsetu.in/api/v1
 - GET /grants — List all grants with filtering
 - GET /grants/{slug} — Get grant details
-- POST /alerts/subscribe — Subscribe to email alerts
+- GET /users/me/recommended - Personalized grant recommendations (auth)
+- GET /users/me/saved - Saved grants (auth)
 - Full docs: https://api.grantsetu.in/docs
 
 ---

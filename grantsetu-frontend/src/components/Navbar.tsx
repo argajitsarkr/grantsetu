@@ -3,16 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 
 /* ── Dropdown data ── */
-const PLATFORM_ITEMS = [
-  { href: "/grants", label: "Browse Grants", desc: "Search all active grant calls" },
-  { href: "/newsletter", label: "Weekly Newsletter", desc: "Every open grant call, every Monday" },
-  { href: "/alerts", label: "Email Alerts", desc: "Matched grants to your inbox" },
-  { href: "/dashboard", label: "Dashboard", desc: "Track saved grants & applications", auth: true },
-];
-
 const AGENCIES_ITEMS = [
   { href: "/grants?agency=DBT", label: "DBT", desc: "Department of Biotechnology" },
   { href: "/grants?agency=BIRAC", label: "BIRAC", desc: "Biotech Industry Research Council" },
@@ -39,12 +33,12 @@ function ChevronDown({ className }: { className?: string }) {
   );
 }
 
-/* ── Dropdown — NUUK style: white panel, black text, red hover ── */
+/* ── Dropdown - NUUK style: white panel, black text, red hover ── */
 function NavDropdown({
   label, items, open, onToggle, isAuthenticated,
 }: {
   label: string;
-  items: typeof PLATFORM_ITEMS;
+  items: typeof AGENCIES_ITEMS;
   open: boolean;
   onToggle: () => void;
   isAuthenticated: boolean;
@@ -89,6 +83,8 @@ export default function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const { data: session, status } = useSession();
+  const pathname = usePathname();
+  const onAuthPage = pathname?.startsWith("/auth") ?? false;
 
   /* Close dropdowns on outside click + scroll */
   useEffect(() => {
@@ -114,7 +110,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── Top ticker banner — NUUK style red strip ── */}
+      {/* ── Top ticker banner - NUUK style red strip ── */}
       <div className="ticker-banner">
         <div className="ticker-track">
           {Array.from({ length: 6 }).map((_, i) => (
@@ -125,21 +121,23 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ── Navbar — NUUK: white, black text, red accents ── */}
+      {/* ── Navbar - NUUK: white, black text, red accents ── */}
       <nav
         ref={navRef}
         className="sticky top-0 z-[9999] bg-white border-b-2 border-black"
       >
         <div className="max-w-[1400px] mx-auto px-5 sm:px-8">
           <div className="flex items-center justify-between h-[var(--nav-height)]">
-            {/* Logo — NUUK: wordmark, heavy, red */}
-            <Link href="/" className="flex items-center flex-shrink-0">
-              <span
-                className="text-[#E9283D] font-black text-[28px] tracking-[-0.03em] uppercase"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                GrantSetu
-              </span>
+            {/* Logo - NUUK: wordmark, heavy, red */}
+            <Link href="/" className="flex items-center flex-shrink-0" aria-label="GrantSetu home">
+              <Image
+                src="/grantsetu-logo.png"
+                alt="GrantSetu"
+                width={160}
+                height={40}
+                priority
+                className="h-9 w-auto"
+              />
             </Link>
 
             {/* Desktop nav */}
@@ -150,6 +148,13 @@ export default function Navbar() {
                 style={{ fontFamily: "var(--font-mono)" }}
               >
                 Grants
+              </Link>
+              <Link
+                href="/blog"
+                className="py-2 text-[13px] font-semibold tracking-[0.06em] uppercase text-black hover:text-[#E9283D] transition-colors duration-200 whitespace-nowrap"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Blog
               </Link>
               <Link
                 href="/newsletter"
@@ -172,13 +177,15 @@ export default function Navbar() {
                 onToggle={() => toggleDropdown("resources")}
                 isAuthenticated={isAuthenticated}
               />
-              <NavDropdown
-                label="Platform"
-                items={PLATFORM_ITEMS}
-                open={openDropdown === "platform"}
-                onToggle={() => toggleDropdown("platform")}
-                isAuthenticated={isAuthenticated}
-              />
+              {isAuthenticated && (
+                <Link
+                  href="/dashboard"
+                  className="py-2 text-[13px] font-semibold tracking-[0.06em] uppercase text-black hover:text-[#E9283D] transition-colors duration-200 whitespace-nowrap"
+                  style={{ fontFamily: "var(--font-mono)" }}
+                >
+                  Dashboard
+                </Link>
+              )}
               {isAuthenticated && session.user.isAdmin && (
                 <Link
                   href="/admin"
@@ -190,12 +197,12 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Right side — Auth + CTA */}
+            {/* Right side - Auth + CTA */}
             <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
               {status === "loading" && (
                 <div className="h-[40px] w-[120px] bg-gray-100 rounded-lg animate-pulse" />
               )}
-              {status === "unauthenticated" && (
+              {status === "unauthenticated" && !onAuthPage && (
                 <>
                   <Link
                     href="/auth/signin"
@@ -263,14 +270,24 @@ export default function Navbar() {
             <div className="lg:hidden border-t-2 border-black pb-6 pt-4">
               <div className="space-y-1">
                 <p className="label-mono px-3 pb-1">Platform</p>
-                {PLATFORM_ITEMS
-                  .filter((item) => !("auth" in item) || isAuthenticated)
-                  .map((item) => (
-                    <Link key={item.href} href={item.href} className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
-                      {item.label}
-                      <span className="block text-xs text-gray-500 font-normal mt-0.5">{item.desc}</span>
-                    </Link>
-                  ))}
+                <Link href="/grants" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
+                  Browse Grants
+                  <span className="block text-xs text-gray-500 font-normal mt-0.5">Search all active grant calls</span>
+                </Link>
+                <Link href="/blog" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
+                  Blog
+                  <span className="block text-xs text-gray-500 font-normal mt-0.5">Guides, deep-dives, weekly roundups</span>
+                </Link>
+                <Link href="/newsletter" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
+                  Weekly Newsletter
+                  <span className="block text-xs text-gray-500 font-normal mt-0.5">Every open grant call, every Monday</span>
+                </Link>
+                {isAuthenticated && (
+                  <Link href="/dashboard" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
+                    Dashboard
+                    <span className="block text-xs text-gray-500 font-normal mt-0.5">Track saved grants & applications</span>
+                  </Link>
+                )}
 
                 <p className="label-mono px-3 pt-4 pb-1">Agencies</p>
                 <div className="grid grid-cols-2 gap-1 px-1">

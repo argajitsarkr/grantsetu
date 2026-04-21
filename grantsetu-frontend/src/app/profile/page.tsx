@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import TagInput from "@/components/TagInput";
+import VerifyEmailBanner from "@/components/VerifyEmailBanner";
+import ChangePasswordSection from "@/components/ChangePasswordSection";
+import DeleteAccountSection from "@/components/DeleteAccountSection";
 import {
   SUBJECT_AREAS,
   CAREER_STAGES,
@@ -118,6 +121,7 @@ export default function ProfilePage() {
   return (
     <div className="container-main py-10">
       <div className="max-w-2xl mx-auto">
+        <VerifyEmailBanner />
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-[#0A0A0A]" style={{ fontFamily: "var(--font-display)" }}>Edit Profile</h1>
@@ -171,6 +175,8 @@ export default function ProfilePage() {
               </div>
             </div>
           </section>
+
+          <ChangePasswordSection />
 
           {/* Institution */}
           <section className="bg-white border border-brand-200 rounded-2xl p-6 shadow-card">
@@ -392,6 +398,8 @@ export default function ProfilePage() {
               {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
+
+          <DeleteAccountSection />
         </div>
       </div>
     </div>

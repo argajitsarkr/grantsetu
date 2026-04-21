@@ -147,6 +147,11 @@ function SignInForm() {
             >
               {submitting ? "Signing in…" : "Sign in →"}
             </button>
+            <div className="text-center">
+              <Link href="/auth/forgot" className="text-[12px] text-gray-600 hover:text-[#E9283D] hover:underline">
+                Forgot password? →
+              </Link>
+            </div>
           </form>
 
           <p className="text-center text-[13px] text-gray-600 pt-2 border-t border-gray-100">

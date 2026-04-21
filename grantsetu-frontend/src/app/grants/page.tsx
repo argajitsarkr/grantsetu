@@ -7,14 +7,14 @@ import SearchBar from "@/components/SearchBar";
 import Pagination from "@/components/Pagination";
 
 export const metadata = {
-  title: "Browse Life Sciences & Biotech Research Grants — DBT, BIRAC, ICMR",
+  title: "Browse Life Sciences & Biotech Research Grants - DBT, BIRAC, ICMR",
   description:
     "Search and filter active Life Sciences & Biotechnology grant calls from DBT, BIRAC, ICMR and allied agencies. Filter by subject area, career stage, budget, and deadline. Updated daily from official portals.",
   alternates: {
     canonical: "https://grantsetu.in/grants",
   },
   openGraph: {
-    title: "Browse Life Sciences & Biotech Grants — GrantSetu",
+    title: "Browse Life Sciences & Biotech Grants - GrantSetu",
     description: "Active grant calls from DBT, BIRAC, ICMR and allied agencies. Filter by subject, career stage, budget & deadline.",
     url: "https://grantsetu.in/grants",
   },

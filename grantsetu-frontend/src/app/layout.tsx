@@ -16,11 +16,11 @@ const SITE_URL = "https://grantsetu.in";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "GrantSetu — India's Research Grants Hub for Life Sciences & Biotechnology",
-    template: "%s | GrantSetu — Life Sciences & Biotech Grants India",
+    default: "GrantSetu - India's Research Grants Hub for Life Sciences & Biotechnology",
+    template: "%s | GrantSetu - Life Sciences & Biotech Grants India",
   },
   description:
-    "GrantSetu is India's #1 free grant discovery platform for Life Sciences and Biotechnology researchers. Browse active grant calls from DBT, BIRAC, ICMR and allied agencies — curated daily for biotech, biomedical and life science research.",
+    "GrantSetu is India's #1 free grant discovery platform for Life Sciences and Biotechnology researchers. Browse active grant calls from DBT, BIRAC, ICMR and allied agencies - curated daily for biotech, biomedical and life science research.",
   keywords: [
     "Life sciences grants India",
     "Biotechnology grants India",
@@ -60,13 +60,16 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: SITE_URL,
+    languages: {
+      "en-IN": SITE_URL,
+    },
   },
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: SITE_URL,
     siteName: "GrantSetu",
-    title: "GrantSetu — India's Research Grants Hub for Life Sciences & Biotechnology",
+    title: "GrantSetu - India's Research Grants Hub for Life Sciences & Biotechnology",
     description:
       "India's #1 free grant discovery platform for Life Sciences & Biotechnology. DBT, BIRAC, ICMR grants curated daily from official portals.",
     images: [
@@ -74,16 +77,16 @@ export const metadata: Metadata = {
         url: `${SITE_URL}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "GrantSetu — Indian Research Grant Discovery Platform",
+        alt: "GrantSetu - Indian Research Grant Discovery Platform",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GrantSetu — Life Sciences & Biotech Grants India",
+    title: "GrantSetu - Life Sciences & Biotech Grants India",
     description:
-      "India's #1 grant platform for Life Sciences & Biotechnology. DBT · BIRAC · ICMR — updated daily.",
+      "India's #1 grant platform for Life Sciences & Biotechnology. DBT · BIRAC · ICMR - updated daily.",
     images: [`${SITE_URL}/og-image.png`],
     creator: "@grantsetu",
     site: "@grantsetu",
@@ -100,14 +103,14 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Add these when you register with Google/Bing
-    // google: "your-google-verification-code",
-    // other: { "msvalidate.01": "your-bing-verification-code" },
+    // TODO: replace with real tokens from Search Console + Bing Webmaster after deploy.
+    google: "TODO-gsc-token",
+    other: { "msvalidate.01": "TODO-bing-token" },
   },
   category: "Education",
 };
 
-/* ── Organization JSON-LD — appears on every page ── */
+/* ── Organization JSON-LD - appears on every page ── */
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -115,7 +118,7 @@ const organizationJsonLd = {
   url: SITE_URL,
   logo: `${SITE_URL}/grantsetu-logo.png`,
   description:
-    "India's #1 free grant discovery platform for Life Sciences and Biotechnology — curating calls from DBT, BIRAC, ICMR and allied agencies.",
+    "India's #1 free grant discovery platform for Life Sciences and Biotechnology - curating calls from DBT, BIRAC, ICMR and allied agencies.",
   foundingDate: "2026",
   founder: {
     "@type": "Person",
@@ -138,13 +141,13 @@ const organizationJsonLd = {
   },
 };
 
-/* ── WebSite JSON-LD with SearchAction — enables Google Sitelinks Searchbox ── */
+/* ── WebSite JSON-LD with SearchAction - enables Google Sitelinks Searchbox ── */
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "GrantSetu",
   url: SITE_URL,
-  description: "Discover Indian government research grants for Life Sciences & Biotechnology — DBT, BIRAC, ICMR and more.",
+  description: "Discover Indian government research grants for Life Sciences & Biotechnology - DBT, BIRAC, ICMR and more.",
   potentialAction: {
     "@type": "SearchAction",
     target: {
@@ -161,13 +164,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en-IN" className={inter.variable}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="48x48" />
-        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
-        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/favicon.ico?v=2" sizes="48x48" />
+        <link rel="icon" href="/favicon-16x16.png?v=2" sizes="16x16" type="image/png" />
+        <link rel="icon" href="/favicon-32x32.png?v=2" sizes="32x32" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" sizes="180x180" />
+        <link rel="manifest" href="/manifest.json?v=2" />
         <meta name="theme-color" content="#E9283D" />
         <script
           type="application/ld+json"

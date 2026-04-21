@@ -11,6 +11,7 @@ declare module "next-auth" {
       image?: string | null;
       onboardingCompleted?: boolean;
       isAdmin?: boolean;
+      emailVerified?: boolean;
     };
   }
 }
@@ -20,6 +21,7 @@ declare module "next-auth/jwt" {
     backendToken?: string;
     onboardingCompleted?: boolean;
     isAdmin?: boolean;
+    emailVerified?: boolean;
     userId?: number;
   }
 }

@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
     VLLM_BASE_URL: str = "http://localhost:8000/v1"
     RESEND_API_KEY: str = ""
+    EMAIL_FROM: str = "GrantSetu <noreply@grantsetu.in>"
     FRONTEND_URL: str = "http://localhost:3000"
     ADMIN_EMAILS: str = ""
     CORS_ORIGINS: str = "http://localhost:3000"

@@ -6,24 +6,35 @@ export default auth((req) => {
   const isAuthenticated = !!req.auth;
   const path = nextUrl.pathname;
 
-  // Protected routes require authentication
-  const protectedPaths = ["/dashboard", "/profile", "/onboarding"];
+  const protectedPaths = ["/dashboard", "/profile", "/onboarding", "/admin"];
   const isProtected = protectedPaths.some((p) => path.startsWith(p));
+  const isAdminPath = path.startsWith("/admin");
 
   if (isProtected && !isAuthenticated) {
-    return NextResponse.redirect(new URL("/auth/signin", nextUrl));
+    const signinUrl = new URL("/auth/signin", nextUrl);
+    signinUrl.searchParams.set("callbackUrl", path);
+    return NextResponse.redirect(signinUrl);
   }
 
-  // Redirect to onboarding if not completed
+  if (isAdminPath && isAuthenticated && !req.auth?.user?.isAdmin) {
+    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+  }
+
   if (isAuthenticated && req.auth?.user) {
     const onboardingCompleted = req.auth.user.onboardingCompleted;
 
-    // If on a protected route (not onboarding) and onboarding not done → redirect
-    if (!onboardingCompleted && !path.startsWith("/onboarding") && isProtected) {
+    // Admins skip onboarding redirect - they may not need a research profile.
+    const skipOnboarding = req.auth.user.isAdmin || isAdminPath;
+
+    if (
+      !onboardingCompleted &&
+      !skipOnboarding &&
+      !path.startsWith("/onboarding") &&
+      isProtected
+    ) {
       return NextResponse.redirect(new URL("/onboarding", nextUrl));
     }
 
-    // If onboarding is done and user is on /onboarding → redirect to dashboard
     if (onboardingCompleted && path.startsWith("/onboarding")) {
       return NextResponse.redirect(new URL("/dashboard", nextUrl));
     }
@@ -33,5 +44,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/profile/:path*", "/onboarding/:path*"],
+  matcher: ["/dashboard/:path*", "/profile/:path*", "/onboarding/:path*", "/admin/:path*"],
 };

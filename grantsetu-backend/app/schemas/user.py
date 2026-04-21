@@ -56,6 +56,7 @@ class UserResponse(BaseModel):
     alert_frequency: str
     alert_agencies: list[str] = Field(default_factory=list)
     is_admin: bool
+    email_verified: bool = False
     created_at: datetime
 
     model_config = {"from_attributes": True}
