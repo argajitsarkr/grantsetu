@@ -1,15 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { API_URL } from "@/lib/constants";
 
+type UiStatus = "idle" | "sending" | "sent" | "error";
+
 export default function VerifyEmailBanner() {
   const { data: session } = useSession();
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<UiStatus>("idle");
+  // Ground truth from /users/me. null = unknown (don't render yet).
+  const [verified, setVerified] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const token = session?.backendToken;
+    if (!token) {
+      setVerified(null);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/v1/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: "no-store",
+        });
+        if (!res.ok) {
+          if (!cancelled) setVerified(true); // hide banner on error - safer than nagging verified users
+          return;
+        }
+        const data = await res.json();
+        if (!cancelled) setVerified(Boolean(data.email_verified));
+      } catch {
+        if (!cancelled) setVerified(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.backendToken]);
 
   if (!session?.user?.email) return null;
-  if (session.user.emailVerified !== false) return null;
+  if (verified !== false) return null;
 
   async function resend() {
     if (!session?.user?.email) return;
