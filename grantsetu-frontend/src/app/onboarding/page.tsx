@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import TagInput from "@/components/TagInput";
+import VerifyEmailBanner from "@/components/VerifyEmailBanner";
 import {
   SUBJECT_AREAS,
   CAREER_STAGES,
@@ -83,6 +84,7 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-[70vh] py-12 px-4">
       <div className="max-w-2xl mx-auto">
+        <VerifyEmailBanner />
         {/* Header */}
         <div className="text-center mb-10">
           <h1 className="text-display-sm font-bold text-[#0A0A0A] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>

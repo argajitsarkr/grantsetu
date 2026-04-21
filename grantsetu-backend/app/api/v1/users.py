@@ -31,6 +31,9 @@ async def sync_user(data: UserSync, db: AsyncSession = Depends(get_db)) -> UserR
         user.auth_provider = data.auth_provider
         if is_admin_email and not user.is_admin:
             user.is_admin = True
+        # Google OAuth users are verified by Google - self-heal if previously false.
+        if data.auth_provider == "google" and not user.email_verified:
+            user.email_verified = True
     else:
         user = User(
             name=data.name,
@@ -38,6 +41,7 @@ async def sync_user(data: UserSync, db: AsyncSession = Depends(get_db)) -> UserR
             image_url=data.image_url,
             auth_provider=data.auth_provider,
             is_admin=is_admin_email,
+            email_verified=(data.auth_provider == "google"),
         )
         db.add(user)
 

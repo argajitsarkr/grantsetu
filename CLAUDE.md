@@ -312,6 +312,7 @@ Full blog feature shipped 2026-04-20 (migration `005`):
 
 | Date | Changes |
 |---|---|
+| 2026-04-21 | Email verification + forgot-password + change-password via Resend: new credentials users get a verification email (soft enforcement), Google OAuth users auto-verified, `/auth/forgot` + `/auth/reset` pages, Change Password section on /profile, yellow VerifyEmailBanner on dashboard/profile/onboarding. Migration 006 adds email_verified + 4 token columns to `users` and backfills Google users. Post-deploy: set `RESEND_API_KEY` + `EMAIL_FROM` in backend .env, add SPF+DKIM TXT records for grantsetu.in in Cloudflare DNS (Resend dashboard generates them), then `docker compose exec backend alembic upgrade head`. |
 | 2026-04-20 | Blog system: public /blog + /blog/[slug] with react-markdown, admin CRUD at /admin/blog (+ shared BlogForm with live preview), new blog_posts table (migration 005), BlogPosting JSON-LD, sitemap + navbar + admin-home wiring |
 | 2026-04-20 | Rebrand + SEO tightening: new GrantSetu logo image in navbar, refreshed favicons with ?v=2 cache-bust, FAQPage JSON-LD on home, enriched GovernmentService schema (datePublished/dateModified/areaServed), hreflang en-IN, verification tokens stubbed, rewritten llms.txt, docs/seo-launch-checklist.md |
 | 2026-04-20 | Platform navbar link removed (folded into Dashboard); admin grants list gained hard-delete button (DELETE /admin/grants/{id}?hard=true) alongside soft expire |

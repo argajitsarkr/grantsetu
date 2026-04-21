@@ -45,6 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             backendToken: data.access_token,
             onboardingCompleted: data.user.onboarding_completed,
             isAdmin: data.user.is_admin,
+            emailVerified: data.user.email_verified,
           } as unknown as { id: string };
         } catch (err) {
           console.error("Credentials authorize failed:", err);
@@ -64,12 +65,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const s = session as {
           onboardingCompleted?: boolean;
           isAdmin?: boolean;
+          emailVerified?: boolean;
         };
         if (typeof s.onboardingCompleted === "boolean") {
           token.onboardingCompleted = s.onboardingCompleted;
         }
         if (typeof s.isAdmin === "boolean") {
           token.isAdmin = s.isAdmin;
+        }
+        if (typeof s.emailVerified === "boolean") {
+          token.emailVerified = s.emailVerified;
         }
         return token;
       }
@@ -81,11 +86,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           backendToken?: string;
           onboardingCompleted?: boolean;
           isAdmin?: boolean;
+          emailVerified?: boolean;
           id?: string;
         };
         if (u.backendToken) token.backendToken = u.backendToken;
         token.onboardingCompleted = u.onboardingCompleted ?? false;
         token.isAdmin = u.isAdmin ?? false;
+        token.emailVerified = u.emailVerified ?? false;
         if (u.id) token.userId = Number(u.id);
         return token;
       }
@@ -109,6 +116,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             token.userId = userData.id;
             token.onboardingCompleted = userData.onboarding_completed;
             token.isAdmin = userData.is_admin;
+            token.emailVerified = userData.email_verified ?? true;
           }
         } catch (err) {
           console.error("Failed to sync user to backend:", err);
@@ -141,6 +149,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.onboardingCompleted = token.onboardingCompleted ?? false;
         session.user.isAdmin = token.isAdmin ?? false;
+        (session.user as unknown as { emailVerified: boolean }).emailVerified =
+          token.emailVerified ?? false;
         if (token.sub) {
           session.user.id = token.sub;
         }

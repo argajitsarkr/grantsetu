@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import GrantCard from "@/components/GrantCard";
+import VerifyEmailBanner from "@/components/VerifyEmailBanner";
 import {
   fetchCurrentUser,
   fetchRecommendedGrants,
@@ -167,6 +168,7 @@ export default function DashboardPage() {
 
   return (
     <div className="bg-white min-h-screen">
+      <VerifyEmailBanner />
       <div className="max-w-[1400px] mx-auto px-5 sm:px-8 py-10">
         {/* ── Greeting strip ── */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
