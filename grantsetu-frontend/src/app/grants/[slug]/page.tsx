@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { fetchGrant } from "@/lib/api";
 import AgencyBadge from "@/components/AgencyBadge";
 import AgencyLogo from "@/components/AgencyLogo";
@@ -88,10 +90,10 @@ export default async function GrantDetailPage({ params }: PageProps) {
             <p className="mt-4 text-lg text-brand-500 leading-relaxed">{grant.summary}</p>
           )}
 
-          {/* Key info cards - pastel colored like Topmate feature cards */}
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Key info cards - equal-width flex layout packs cards into a single row */}
+          <div className="mt-8 flex flex-wrap gap-4">
             {/* Deadline */}
-            <div className="bg-red-50 border border-red-100 rounded-xl p-5">
+            <div className="flex-1 min-w-[200px] bg-red-50 border border-red-100 rounded-xl p-5">
               <p className="text-xs font-semibold text-red-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Deadline</p>
               <div className="mt-2">
                 <DeadlineBadge deadline={grant.deadline} deadlineText={grant.deadline_text} />
@@ -103,7 +105,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
 
             {/* Budget */}
             {(grant.budget_min || grant.budget_max) && (
-              <div className="bg-teal-50 border border-teal-100 rounded-xl p-5">
+              <div className="flex-1 min-w-[200px] bg-teal-50 border border-teal-100 rounded-xl p-5">
                 <p className="text-xs font-semibold text-teal-500 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Funding</p>
                 <p className="mt-2 text-xl font-bold text-teal-700">
                   {grant.budget_min && grant.budget_max
@@ -117,7 +119,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
 
             {/* Duration */}
             {grant.duration_months && (
-              <div className="bg-purple-50 border border-purple-100 rounded-xl p-5">
+              <div className="flex-1 min-w-[200px] bg-purple-50 border border-purple-100 rounded-xl p-5">
                 <p className="text-xs font-semibold text-purple-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Duration</p>
                 <p className="mt-2 text-xl font-bold text-purple-700">
                   {grant.duration_months} months
@@ -127,7 +129,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
 
             {/* Age limit */}
             {grant.age_limit && (
-              <div className="bg-amber-50 border border-amber-100 rounded-xl p-5">
+              <div className="flex-1 min-w-[200px] bg-amber-50 border border-amber-100 rounded-xl p-5">
                 <p className="text-xs font-semibold text-amber-400 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>Age Limit</p>
                 <p className="mt-2 text-xl font-bold text-amber-700">
                   {grant.age_limit} years
@@ -140,7 +142,9 @@ export default async function GrantDetailPage({ params }: PageProps) {
           {grant.eligibility_summary && (
             <section className="mt-8">
               <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-3" style={{ fontFamily: "var(--font-display)" }}>Eligibility</h2>
-              <p className="text-brand-600 leading-relaxed">{grant.eligibility_summary}</p>
+              <div className="blog-prose text-justify">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{grant.eligibility_summary}</ReactMarkdown>
+              </div>
             </section>
           )}
 
@@ -148,7 +152,9 @@ export default async function GrantDetailPage({ params }: PageProps) {
           {grant.description && (
             <section className="mt-8">
               <h2 className="text-lg font-bold text-[#0A0A0A] tracking-heading mb-3" style={{ fontFamily: "var(--font-display)" }}>Description</h2>
-              <p className="text-brand-600 whitespace-pre-line leading-relaxed">{grant.description}</p>
+              <div className="blog-prose text-justify">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{grant.description}</ReactMarkdown>
+              </div>
             </section>
           )}
 
