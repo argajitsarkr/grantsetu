@@ -10,7 +10,7 @@ import logging
 import time
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -199,7 +199,7 @@ async def verify_payment(
     return SubscriptionResponse.model_validate(sub)
 
 
-@router.post("/payment-failed", status_code=204)
+@router.post("/payment-failed", status_code=204, response_class=Response)
 async def mark_payment_failed(
     payload: PaymentFailedRequest,
     user: User = Depends(get_current_user),
