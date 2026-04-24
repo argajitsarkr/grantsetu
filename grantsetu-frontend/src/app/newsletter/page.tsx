@@ -1,6 +1,18 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import RazorpayCheckout from "@/components/RazorpayCheckout";
+import { API_URL } from "@/lib/constants";
+
+interface Pricing {
+  price_paise: number;
+  currency: string;
+  early_bird: boolean;
+  spots_remaining: number | null;
+  early_bird_cap: number;
+}
 
 /* ── Buttondown username - set via env or override here ── */
 const BUTTONDOWN_USERNAME =
@@ -31,6 +43,22 @@ export default function NewsletterPage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [pricing, setPricing] = useState<Pricing | null>(null);
+  const [proSuccess, setProSuccess] = useState(false);
+  const [proError, setProError] = useState<string | null>(null);
+  const { data: session, status: sessionStatus } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/v1/billing/pricing`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data) setPricing(data);
+      })
+      .catch(() => {
+        // Silent — UI falls back to the static ₹299 copy.
+      });
+  }, []);
 
   /* ── Buttondown embed submission - posts to their form endpoint ── */
   async function handleSubscribe(e: FormEvent<HTMLFormElement>) {
@@ -212,17 +240,27 @@ export default function NewsletterPage() {
                 className="text-[11px] tracking-[0.2em] uppercase text-white/80 mb-3 font-semibold"
                 style={{ fontFamily: "var(--font-mono)" }}
               >
-                Launch Price · First 100 Subscribers
+                {pricing && !pricing.early_bird
+                  ? "Pro Annual Subscription"
+                  : `Launch Price · First ${pricing?.early_bird_cap ?? 100} Subscribers`}
               </p>
               <h2 className="heading-display text-[2rem] sm:text-[3.25rem] text-white leading-[1]">
                 GrantSetu Weekly
                 <br />
                 <span className="underline decoration-white decoration-4 underline-offset-4">Pro.</span>
               </h2>
+              {pricing?.early_bird && pricing.spots_remaining !== null && (
+                <p
+                  className="mt-4 text-[13px] uppercase tracking-wider text-white font-semibold"
+                  style={{ fontFamily: "var(--font-mono)" }}
+                >
+                  {pricing.spots_remaining} of {pricing.early_bird_cap} early-bird spots left
+                </p>
+              )}
             </div>
             <div className="text-right">
               <p className="heading-display text-[3rem] sm:text-[4.5rem] text-white leading-[0.9]">
-                ₹299
+                ₹{pricing ? Math.round(pricing.price_paise / 100) : 299}
               </p>
               <p
                 className="text-[13px] uppercase tracking-wider text-white/80 font-semibold"
@@ -277,22 +315,43 @@ export default function NewsletterPage() {
             ))}
           </div>
 
-          <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-            <a
-              href="#pro-checkout"
-              onClick={(e) => {
-                e.preventDefault();
-                alert("Pro checkout launches soon. Subscribe to the free list above - Pro invitations go out to free subscribers first.");
-              }}
-              className="inline-flex items-center justify-center bg-white text-[#E9283D] px-10 py-4 rounded-lg font-bold text-[14px] uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              Upgrade to Pro - ₹299/year →
-            </a>
+          <div className="mt-12 flex flex-col sm:flex-row items-start sm:items-center gap-6" id="pro-checkout">
+            {proSuccess ? (
+              <div className="inline-flex items-center gap-3 bg-white text-black px-6 py-4 rounded-lg">
+                <span className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-[#E9283D] text-white font-bold">✓</span>
+                <div>
+                  <p className="font-bold text-[15px]">You&apos;re Pro for 1 year.</p>
+                  <p className="text-[13px] text-gray-600 mt-0.5">Check your inbox — Monday digest + Pro deep-dives are on the way.</p>
+                </div>
+              </div>
+            ) : sessionStatus === "authenticated" && session?.backendToken ? (
+              <RazorpayCheckout
+                token={session.backendToken as string}
+                onSuccess={() => {
+                  setProSuccess(true);
+                  setProError(null);
+                }}
+                onError={(msg) => setProError(msg)}
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => router.push("/auth/signin?callbackUrl=/newsletter%23pro-checkout")}
+                className="inline-flex items-center justify-center bg-white text-[#E9283D] px-10 py-4 rounded-lg font-bold text-[14px] uppercase tracking-wider hover:bg-black hover:text-white transition-colors"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Sign in to upgrade →
+              </button>
+            )}
             <p className="text-white/90 text-[14px] max-w-sm leading-relaxed">
               ~₹25/month. Less than one filter coffee. One extra week of awareness on a grant call pays for a decade of subscriptions.
             </p>
           </div>
+          {proError && (
+            <p className="mt-4 text-[13px] text-white bg-black/20 rounded-lg px-4 py-3 max-w-md">
+              {proError}
+            </p>
+          )}
         </div>
       </section>
 

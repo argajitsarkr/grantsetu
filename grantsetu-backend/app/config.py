@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     ADMIN_USERNAME: str = "admin"
     ADMIN_PASSWORD: str = "admin123"
+    RAZORPAY_KEY_ID: str = ""
+    RAZORPAY_KEY_SECRET: str = ""
+    BUTTONDOWN_API_KEY: str = ""
+    PRO_EARLY_BIRD_PRICE_PAISE: int = 29900
+    PRO_REGULAR_PRICE_PAISE: int = 49900
+    PRO_EARLY_BIRD_CAP: int = 100
 
     @property
     def admin_email_list(self) -> list[str]:

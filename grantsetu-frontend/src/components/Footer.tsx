@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NewsletterSignup from "./NewsletterSignup";
 
 export default function Footer() {
   return (
@@ -31,6 +32,15 @@ export default function Footer() {
               >
                 Life Sci · Biotech Focus
               </span>
+            </div>
+            <div className="mt-7 max-w-xs">
+              <p
+                className="text-[11px] uppercase tracking-[0.15em] text-[#E9283D] mb-3 font-semibold"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Weekly Digest
+              </p>
+              <NewsletterSignup variant="footer" source="footer" />
             </div>
           </div>
 

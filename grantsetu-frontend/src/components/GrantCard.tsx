@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { GrantListItem } from "@/types";
 import AgencyBadge from "./AgencyBadge";
 import DeadlineBadge from "./DeadlineBadge";
+import ShareButton from "./ShareButton";
 import { formatINR, AGENCY_META } from "@/lib/constants";
 
 interface GrantCardProps {
@@ -126,6 +127,13 @@ export default function GrantCard({ grant }: GrantCardProps) {
             PDF
           </a>
         )}
+
+        <ShareButton
+          url={`https://grantsetu.in/grants/${grant.slug}`}
+          title={grant.title}
+          deadline={grant.deadline}
+          variant="icon-only"
+        />
 
         <Link
           href={`/grants/${grant.slug}`}

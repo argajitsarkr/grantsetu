@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AGENCIES, PRIMARY_AGENCIES } from "@/lib/constants";
 import AgencyLogo from "@/components/AgencyLogo";
+import NewsletterSignup from "@/components/NewsletterSignup";
 
 /* ── FAQ data - Life Sci / Biotech focus ── */
 const FAQ_DATA = [
@@ -122,6 +123,16 @@ export default function HomePage() {
                 Always Free
               </p>
             </div>
+          </div>
+
+          {/* ── Newsletter signup card ── */}
+          <div className="mt-14">
+            <NewsletterSignup
+              variant="card"
+              source="home"
+              heading="Every open Indian life-sci grant. One email. Every Monday."
+              subheading="Curated by a PhD researcher. No AI, no spam — just the calls that matter, with deadlines and budget ranges."
+            />
           </div>
         </div>
       </section>

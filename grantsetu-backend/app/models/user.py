@@ -33,6 +33,9 @@ class User(Base):
     auth_provider: Mapped[str | None] = mapped_column(String(20))
     password_hash: Mapped[str | None] = mapped_column(String(255))
     is_admin: Mapped[bool] = mapped_column(Boolean, server_default="false")
+    subscription_tier: Mapped[str] = mapped_column(
+        String(20), nullable=False, server_default="free"
+    )
     email_verified: Mapped[bool] = mapped_column(Boolean, server_default="false", nullable=False)
     email_verification_token: Mapped[str | None] = mapped_column(String(64), index=True)
     email_verification_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
