@@ -7,7 +7,6 @@ import SearchBar from "@/components/SearchBar";
 import Pagination from "@/components/Pagination";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 60;
 
 export const metadata = {
   title: "Browse Life Sciences & Biotech Research Grants - DBT, BIRAC, ICMR",

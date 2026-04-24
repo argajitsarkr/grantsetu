@@ -12,7 +12,6 @@ import NewsletterSignup from "@/components/NewsletterSignup";
 import { formatINR, formatDate, daysUntil, AGENCY_META } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 60;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
