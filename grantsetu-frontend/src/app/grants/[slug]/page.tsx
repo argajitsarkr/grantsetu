@@ -8,7 +8,11 @@ import AgencyBadge from "@/components/AgencyBadge";
 import AgencyLogo from "@/components/AgencyLogo";
 import DeadlineBadge from "@/components/DeadlineBadge";
 import ShareButton from "@/components/ShareButton";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import { formatINR, formatDate, daysUntil, AGENCY_META } from "@/lib/constants";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -296,7 +300,24 @@ export default async function GrantDetailPage({ params }: PageProps) {
 
           {/* Share */}
           <div className="mt-6 flex items-center gap-3">
-            <ShareButton url={`https://grantsetu.in/grants/${grant.slug}`} title={grant.title} />
+            <ShareButton url={`https://grantsetu.in/grants/${grant.slug}`} title={grant.title} deadline={grant.deadline} />
+          </div>
+
+          {/* Newsletter CTA */}
+          <div className="mt-10 rounded-xl border border-brand-100 bg-brand-50 p-5 sm:p-6">
+            <p
+              className="text-[11px] uppercase tracking-[0.15em] text-accent-600 mb-2 font-semibold"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
+              Never miss a call
+            </p>
+            <h3
+              className="text-[18px] sm:text-[20px] font-bold text-brand-700 mb-3"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              Get every open Indian life-sci grant in your inbox, every Monday.
+            </h3>
+            <NewsletterSignup variant="inline" source="grant-detail" />
           </div>
         </article>
 

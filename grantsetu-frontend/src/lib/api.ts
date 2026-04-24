@@ -3,6 +3,7 @@ import type { Grant, GrantListItem, PaginatedResponse, AgencyCount, GrantFilters
 
 async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, {
+    next: { revalidate: 60 },
     ...options,
     headers: {
       "Content-Type": "application/json",
