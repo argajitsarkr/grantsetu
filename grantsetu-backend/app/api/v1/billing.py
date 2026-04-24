@@ -10,7 +10,7 @@ import logging
 import time
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -199,21 +199,21 @@ async def verify_payment(
     return SubscriptionResponse.model_validate(sub)
 
 
-@router.post("/payment-failed", status_code=204, response_class=Response)
+@router.post("/payment-failed")
 async def mark_payment_failed(
     payload: PaymentFailedRequest,
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
-) -> None:
+) -> dict:
     """Observability-only: record a dismissed/failed checkout attempt."""
     result = await db.execute(
         select(Subscription).where(Subscription.razorpay_order_id == payload.razorpay_order_id)
     )
     sub = result.scalar_one_or_none()
     if not sub or sub.user_id != user.id:
-        return
+        return {"status": "ignored"}
     if sub.status == "paid":
-        return
+        return {"status": "already_paid"}
     sub.status = "failed"
     await db.commit()
     logger.info(
@@ -222,3 +222,4 @@ async def mark_payment_failed(
         payload.error_code,
         payload.error_description,
     )
+    return {"status": "recorded"}
