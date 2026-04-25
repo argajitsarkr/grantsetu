@@ -17,13 +17,6 @@ const AGENCIES_ITEMS = [
   { href: "/grants?agency=ANRF", label: "ANRF", desc: "Anusandhan National Research Foundation" },
 ];
 
-const RESOURCES_ITEMS = [
-  { href: "/grants?subject_area=Biotechnology", label: "Biotechnology", desc: "Core biotech, synbio, agri-biotech" },
-  { href: "/grants?subject_area=Medical+Research", label: "Medical Research", desc: "Clinical, translational, public health" },
-  { href: "/grants?subject_area=Drug+Discovery", label: "Drug Discovery", desc: "Pharmacology, vaccines, therapeutics" },
-  { href: "/grants?career_stage=Early+Career", label: "Early Career", desc: "PM-ECRG, Ramalingaswami, INSPIRE" },
-];
-
 /* ── Chevron icon ── */
 function ChevronDown({ className }: { className?: string }) {
   return (
@@ -170,13 +163,16 @@ export default function Navbar() {
                 onToggle={() => toggleDropdown("agencies")}
                 isAuthenticated={isAuthenticated}
               />
-              <NavDropdown
-                label="Research Areas"
-                items={RESOURCES_ITEMS}
-                open={openDropdown === "resources"}
-                onToggle={() => toggleDropdown("resources")}
-                isAuthenticated={isAuthenticated}
-              />
+              <Link
+                href="/studio"
+                className="flex items-center gap-1.5 py-2 text-[13px] font-semibold tracking-[0.06em] uppercase text-black hover:text-[#E9283D] transition-colors duration-200 whitespace-nowrap"
+                style={{ fontFamily: "var(--font-mono)" }}
+              >
+                Studio
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#E9283D] text-white tracking-wider">
+                  SOON
+                </span>
+              </Link>
               {isAuthenticated && (
                 <Link
                   href="/dashboard"
@@ -281,6 +277,13 @@ export default function Navbar() {
                 <Link href="/newsletter" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
                   Weekly Newsletter
                   <span className="block text-xs text-gray-500 font-normal mt-0.5">Every open grant call, every Monday</span>
+                </Link>
+                <Link href="/studio" className="flex items-start gap-2 py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
+                  <span className="flex-1">
+                    Studio
+                    <span className="block text-xs text-gray-500 font-normal mt-0.5">Collaborative grant writing - waitlist open</span>
+                  </span>
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#E9283D] text-white tracking-wider mt-1" style={{ fontFamily: "var(--font-mono)" }}>SOON</span>
                 </Link>
                 {isAuthenticated && (
                   <Link href="/dashboard" className="block py-2.5 px-3 text-black font-semibold rounded-lg hover:bg-gray-50 hover:text-[#E9283D] transition-colors text-[15px]" onClick={() => setMobileOpen(false)}>
