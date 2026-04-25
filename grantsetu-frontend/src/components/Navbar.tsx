@@ -115,7 +115,7 @@ export default function Navbar() {
         <div className="ticker-track">
           {Array.from({ length: 6 }).map((_, i) => (
             <span key={i} className="text-[12px] font-semibold uppercase tracking-wider">
-              🧬 India&apos;s #1 Grant Platform for Life Sciences & Biotechnology&nbsp;&nbsp;•&nbsp;&nbsp;Updated Daily from DBT, BIRAC, ICMR
+              India&apos;s #1 Grant Platform for Life Sciences & Biotechnology&nbsp;&nbsp;•&nbsp;&nbsp;Updated Daily from DBT, BIRAC, ICMR
             </span>
           ))}
         </div>

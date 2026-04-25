@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import NewsletterSignup from "./NewsletterSignup";
 
 export default function Footer() {
@@ -9,12 +10,13 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-4">
             <Link href="/" className="inline-block mb-5">
-              <span
-                className="text-[#E9283D] font-black text-[28px] uppercase tracking-tight"
-                style={{ fontFamily: "var(--font-display)", letterSpacing: "-0.02em" }}
-              >
-                GrantSetu
-              </span>
+              <Image
+                src="/grantsetu-logo-footer.png"
+                alt="GrantSetu"
+                width={160}
+                height={48}
+                className="h-12 w-auto"
+              />
             </Link>
             <p
               className="text-white/60 text-[14px] leading-relaxed max-w-xs"
