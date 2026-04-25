@@ -1,12 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { Component, ReactNode, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { API_URL } from "@/lib/constants";
 import type { BlogPost } from "@/types";
+
+class PreviewErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="border-2 border-[#E9283D] bg-[#E9283D]/5 rounded-lg p-6 text-[13px] text-[#E9283D]">
+          <p className="font-bold mb-1">Preview failed to render.</p>
+          <p className="text-black/70">
+            The Markdown body contains something this renderer cannot handle. Edit the body and try again.
+          </p>
+          <pre className="mt-3 text-[11px] text-black/60 whitespace-pre-wrap break-words">
+            {String(this.state.error.message || this.state.error)}
+          </pre>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+function preventEnterSubmit(e: React.KeyboardEvent<HTMLInputElement>) {
+  if (e.key === "Enter") e.preventDefault();
+}
 
 interface Props {
   initial?: Partial<BlogPost>;
@@ -25,7 +52,9 @@ export default function BlogForm({ initial, mode, postId }: Props) {
   const [bodyMarkdown, setBodyMarkdown] = useState(initial?.body_markdown || "");
   const [authorName, setAuthorName] = useState(initial?.author_name || "GrantSetu Team");
   const [category, setCategory] = useState(initial?.category || "");
-  const [tagsText, setTagsText] = useState((initial?.tags || []).join(", "));
+  const [tagsText, setTagsText] = useState(
+    Array.isArray(initial?.tags) ? initial!.tags.join(", ") : ""
+  );
   const [status, setStatus] = useState(initial?.status || "draft");
   const [isFeatured, setIsFeatured] = useState(!!initial?.is_featured);
   const [readMinutes, setReadMinutes] = useState<number | "">(initial?.read_minutes || "");
@@ -97,6 +126,7 @@ export default function BlogForm({ initial, mode, postId }: Props) {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              onKeyDown={preventEnterSubmit}
               className="w-full h-[48px] px-4 border-2 border-black rounded-lg text-[16px] focus:outline-none focus:border-[#E9283D]"
               placeholder="How to win your first DBT grant"
             />
@@ -117,6 +147,7 @@ export default function BlogForm({ initial, mode, postId }: Props) {
               type="url"
               value={coverImageUrl}
               onChange={(e) => setCoverImageUrl(e.target.value)}
+              onKeyDown={preventEnterSubmit}
               className="w-full h-[48px] px-4 border-2 border-black rounded-lg text-[14px] focus:outline-none focus:border-[#E9283D]"
               placeholder="https://..."
             />
@@ -141,9 +172,11 @@ export default function BlogForm({ initial, mode, postId }: Props) {
             </div>
             {preview ? (
               <div className="blog-prose border-2 border-black rounded-lg p-6 min-h-[400px] bg-white">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {bodyMarkdown || "*Nothing to preview yet.*"}
-                </ReactMarkdown>
+                <PreviewErrorBoundary>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {bodyMarkdown || "*Nothing to preview yet.*"}
+                  </ReactMarkdown>
+                </PreviewErrorBoundary>
               </div>
             ) : (
               <textarea
@@ -205,6 +238,7 @@ export default function BlogForm({ initial, mode, postId }: Props) {
                 type="text"
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
+                onKeyDown={preventEnterSubmit}
                 className="w-full h-[44px] px-3 border-2 border-black rounded-lg text-[14px] focus:outline-none focus:border-[#E9283D]"
               />
             </Field>
@@ -227,6 +261,7 @@ export default function BlogForm({ initial, mode, postId }: Props) {
                 type="text"
                 value={tagsText}
                 onChange={(e) => setTagsText(e.target.value)}
+                onKeyDown={preventEnterSubmit}
                 className="w-full h-[44px] px-3 border-2 border-black rounded-lg text-[14px] focus:outline-none focus:border-[#E9283D]"
                 placeholder="dbt, early-career, proposal-writing"
               />
@@ -239,6 +274,7 @@ export default function BlogForm({ initial, mode, postId }: Props) {
                 onChange={(e) =>
                   setReadMinutes(e.target.value === "" ? "" : Number(e.target.value))
                 }
+                onKeyDown={preventEnterSubmit}
                 className="w-full h-[44px] px-3 border-2 border-black rounded-lg text-[14px] focus:outline-none focus:border-[#E9283D]"
               />
             </Field>
