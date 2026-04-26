@@ -52,7 +52,7 @@ const FAQ = [
   },
   {
     q: "How much will it cost?",
-    a: "Studio is bundled in GrantSetu Pro (₹499/year). The first 100 waitlist members lock in the early-bird price of ₹299/year for life.",
+    a: "Studio Pro is ₹2,499/year at public launch - one flat price for the full workspace, all templates, the budget calculators, and auto-fill. Waitlist members get early access before launch.",
   },
 ];
 
@@ -111,7 +111,7 @@ export default function StudioPage() {
             What you get
           </p>
           <h2
-            className="text-[2rem] sm:text-[3rem] font-black leading-[1] tracking-tight max-w-3xl"
+            className="text-white text-[2rem] sm:text-[3rem] font-black leading-[1] tracking-tight max-w-3xl"
             style={{ fontFamily: "var(--font-display)" }}
           >
             BUILT FOR THE WAY INDIAN GRANTS ACTUALLY GET WRITTEN.
@@ -126,7 +126,7 @@ export default function StudioPage() {
                   {f.label}
                 </p>
                 <h3
-                  className="text-[20px] sm:text-[22px] font-black leading-tight"
+                  className="text-white text-[20px] sm:text-[22px] font-black leading-tight"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   {f.title}
@@ -148,13 +148,13 @@ export default function StudioPage() {
             Pro feature
           </p>
           <h2
-            className="text-[2rem] sm:text-[3rem] font-black leading-[1] tracking-tight max-w-3xl"
+            className="text-white text-[2rem] sm:text-[3rem] font-black leading-[1] tracking-tight max-w-3xl"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            STUDIO IS INCLUDED IN GRANTSETU PRO.
+            STUDIO PRO - ₹2,499/YEAR.
           </h2>
           <p className="mt-6 text-[16px] sm:text-[18px] leading-relaxed max-w-2xl text-white/90">
-            One subscription unlocks the workspace, the budget calculators, the auto-fill, and every Pro feature we ship. The first 100 waitlist members lock in early-bird pricing of ₹299/year for life.
+            ₹2,499/year unlocks the full collaborative workspace, every grant-portal template, the budget calculators, biodata + publication auto-fill, version history, and priority support. One flat price - no per-seat fees, no hidden add-ons. Waitlist members get early access before public launch.
           </p>
           <ul
             className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-3xl text-[14px] font-semibold"
@@ -192,13 +192,6 @@ export default function StudioPage() {
                 Sign in to reserve →
               </Link>
             )}
-            <Link
-              href="/newsletter#pro"
-              className="inline-flex items-center justify-center h-[52px] px-8 border-2 border-white text-white text-[14px] font-bold rounded-lg hover:bg-white hover:text-[#E9283D] uppercase tracking-wider transition-colors"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              See Pro pricing
-            </Link>
           </div>
         </div>
       </section>
@@ -216,7 +209,7 @@ export default function StudioPage() {
             variant="card"
             source="studio-waitlist"
             heading="Be first in line when Studio opens."
-            subheading="We'll email you the moment Studio is ready. The first 100 waitlist members lock in ₹299/year for life. No spam - just one email when there's news."
+            subheading="Studio Pro is ₹2,499/year at launch. Waitlist members get early access before public release. No spam - just one email when there's news."
           />
         </div>
       </section>
@@ -261,7 +254,7 @@ export default function StudioPage() {
       <section className="bg-black text-white">
         <div className="max-w-[1200px] mx-auto px-5 sm:px-8 py-20 sm:py-28 text-center">
           <h2
-            className="text-[2.25rem] sm:text-[3.5rem] font-black leading-[1] tracking-tight"
+            className="text-white text-[2.25rem] sm:text-[3.5rem] font-black leading-[1] tracking-tight"
             style={{ fontFamily: "var(--font-display)" }}
           >
             STOP EMAILING DRAFTS.<br />
