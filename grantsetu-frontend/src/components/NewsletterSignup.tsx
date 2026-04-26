@@ -1,10 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-
-const BUTTONDOWN_USERNAME =
-  process.env.NEXT_PUBLIC_BUTTONDOWN_USERNAME || "grantsetu";
-const BUTTONDOWN_ACTION = `https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`;
+import { API_URL } from "@/lib/constants";
 
 interface NewsletterSignupProps {
   variant?: "inline" | "footer" | "card";
@@ -13,6 +10,8 @@ interface NewsletterSignupProps {
   subheading?: string;
 }
 
+type Status = "idle" | "loading" | "created" | "existed" | "error";
+
 export default function NewsletterSignup({
   variant = "inline",
   source,
@@ -20,36 +19,45 @@ export default function NewsletterSignup({
   subheading,
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubscribe(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
-    const form = e.currentTarget;
+    setStatus("loading");
+    setErrorMsg("");
     try {
-      const body = new FormData(form);
-      if (source) body.append("tag", source);
-      await fetch(BUTTONDOWN_ACTION, { method: "POST", mode: "no-cors", body });
-      setSubmitted(true);
-    } catch {
-      setSubmitted(true);
-    } finally {
-      setLoading(false);
+      const res = await fetch(`${API_URL}/api/v1/newsletter/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: source || null }),
+      });
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        throw new Error(txt.slice(0, 200) || `Subscribe failed (${res.status})`);
+      }
+      const data = (await res.json()) as { status?: string };
+      setStatus(data.status === "existed" ? "existed" : "created");
+    } catch (err) {
+      setStatus("error");
+      setErrorMsg(err instanceof Error ? err.message : "Subscribe failed.");
     }
   }
 
+  const submitted = status === "created" || status === "existed";
+  const loading = status === "loading";
+
+  const successCopy =
+    status === "existed"
+      ? "Already on the list - thanks!"
+      : "Subscribed. Check your inbox to confirm.";
+
   if (variant === "footer") {
     if (submitted) {
-      return (
-        <p className="text-[13px] text-white/70">
-          ✓ Subscribed. Check your inbox.
-        </p>
-      );
+      return <p className="text-[13px] text-white/70">✓ {successCopy}</p>;
     }
     return (
       <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
-        {source && <input type="hidden" name="tag" value={source} />}
         <input
           type="email"
           name="email"
@@ -65,8 +73,11 @@ export default function NewsletterSignup({
           disabled={loading}
           className="rounded-md bg-[#E9283D] px-3 py-2 text-[13px] font-semibold text-white hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          {loading ? "Subscribing…" : "Subscribe free"}
+          {loading ? "Subscribing..." : "Subscribe free"}
         </button>
+        {status === "error" && (
+          <p className="text-[12px] text-[#E9283D]">{errorMsg}</p>
+        )}
       </form>
     );
   }
@@ -89,15 +100,16 @@ export default function NewsletterSignup({
         )}
         {submitted ? (
           <div className="mt-5 inline-flex items-center gap-2 text-[14px] font-semibold text-black">
-            <span className="inline-block h-5 w-5 rounded-full bg-[#E9283D] text-white text-center leading-5">✓</span>
-            Subscribed. First issue arrives Monday 7 AM IST.
+            <span className="inline-block h-5 w-5 rounded-full bg-[#E9283D] text-white text-center leading-5">
+              ✓
+            </span>
+            {successCopy}
           </div>
         ) : (
           <form
             onSubmit={handleSubscribe}
             className="mt-5 flex flex-col sm:flex-row gap-3"
           >
-            {source && <input type="hidden" name="tag" value={source} />}
             <input
               type="email"
               name="email"
@@ -113,9 +125,14 @@ export default function NewsletterSignup({
               disabled={loading}
               className="btn-primary whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {loading ? "Subscribing…" : "Subscribe free →"}
+              {loading ? "Subscribing..." : "Subscribe free →"}
             </button>
           </form>
+        )}
+        {status === "error" && (
+          <p className="mt-3 text-[13px] text-[#E9283D] font-semibold">
+            {errorMsg}
+          </p>
         )}
         <p
           className="mt-3 text-[11px] uppercase tracking-[0.15em] text-gray-500"
@@ -131,33 +148,37 @@ export default function NewsletterSignup({
   if (submitted) {
     return (
       <div className="rounded-lg border border-brand-100 bg-brand-50 px-4 py-3 text-sm text-brand-600">
-        ✓ Subscribed. Check your inbox for the confirmation email.
+        ✓ {successCopy}
       </div>
     );
   }
   return (
-    <form
-      onSubmit={handleSubscribe}
-      className="flex flex-col sm:flex-row gap-2 items-stretch"
-    >
-      {source && <input type="hidden" name="tag" value={source} />}
-      <input
-        type="email"
-        name="email"
-        required
-        autoComplete="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="you@institute.ac.in"
-        className="flex-1 rounded-md border border-brand-200 px-3 py-2 text-sm text-brand-600 placeholder:text-brand-300 focus:outline-none focus:ring-2 focus:ring-accent-500/30"
-      />
-      <button
-        type="submit"
-        disabled={loading}
-        className="rounded-md bg-black px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
+    <div className="space-y-2">
+      <form
+        onSubmit={handleSubscribe}
+        className="flex flex-col sm:flex-row gap-2 items-stretch"
       >
-        {loading ? "Subscribing…" : "Get weekly digest"}
-      </button>
-    </form>
+        <input
+          type="email"
+          name="email"
+          required
+          autoComplete="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@institute.ac.in"
+          className="flex-1 rounded-md border border-brand-200 px-3 py-2 text-sm text-brand-600 placeholder:text-brand-300 focus:outline-none focus:ring-2 focus:ring-accent-500/30"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="rounded-md bg-black px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
+        >
+          {loading ? "Subscribing..." : "Get weekly digest"}
+        </button>
+      </form>
+      {status === "error" && (
+        <p className="text-[12px] text-[#E9283D] font-semibold">{errorMsg}</p>
+      )}
+    </div>
   );
 }
