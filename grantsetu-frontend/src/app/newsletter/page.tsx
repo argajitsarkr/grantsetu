@@ -14,10 +14,6 @@ interface Pricing {
   early_bird_cap: number;
 }
 
-/* ── Buttondown username - set via env or override here ── */
-const BUTTONDOWN_USERNAME =
-  process.env.NEXT_PUBLIC_BUTTONDOWN_USERNAME || "grantsetu";
-const BUTTONDOWN_ACTION = `https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`;
 
 /* ── FAQ ── */
 const FAQ = [
@@ -60,20 +56,23 @@ export default function NewsletterPage() {
       });
   }, []);
 
-  /* ── Buttondown embed submission - posts to their form endpoint ── */
+  /* ── Subscribe via our backend, which calls Buttondown REST API ── */
   async function handleSubscribe(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
-    const form = e.currentTarget;
     try {
-      await fetch(BUTTONDOWN_ACTION, {
+      const res = await fetch(`${API_URL}/api/v1/newsletter/subscribe`, {
         method: "POST",
-        mode: "no-cors",
-        body: new FormData(form),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "newsletter" }),
       });
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        throw new Error(txt.slice(0, 200) || `Subscribe failed (${res.status})`);
+      }
       setSubmitted(true);
     } catch {
-      // no-cors hides errors; we optimistically mark success.
+      // Optimistic success on network blip; real errors surface via the inline form.
       setSubmitted(true);
     } finally {
       setLoading(false);
@@ -141,9 +140,6 @@ export default function NewsletterPage() {
             ) : (
               <form
                 onSubmit={handleSubscribe}
-                action={BUTTONDOWN_ACTION}
-                method="post"
-                target="popupwindow"
                 className="flex flex-col sm:flex-row items-stretch gap-3 max-w-xl"
               >
                 <input
@@ -496,9 +492,6 @@ export default function NewsletterPage() {
           {!submitted && (
             <form
               onSubmit={handleSubscribe}
-              action={BUTTONDOWN_ACTION}
-              method="post"
-              target="popupwindow"
               className="mt-10 flex flex-col sm:flex-row items-stretch gap-3 max-w-lg mx-auto"
             >
               <input
@@ -506,6 +499,8 @@ export default function NewsletterPage() {
                 name="email"
                 required
                 autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@institute.ac.in"
                 className="flex-1 border-2 border-white rounded-lg px-5 py-3.5 text-[15px] text-black bg-white placeholder:text-gray-400 focus:ring-2 focus:ring-white/50 outline-none"
               />
