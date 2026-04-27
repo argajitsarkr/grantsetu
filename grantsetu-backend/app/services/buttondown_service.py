@@ -24,7 +24,12 @@ def _headers() -> dict[str, str]:
     }
 
 
-async def subscribe(email: str, tags: list[str] | None = None) -> dict:
+async def subscribe(
+    email: str,
+    tags: list[str] | None = None,
+    ip_address: str | None = None,
+    referrer_url: str | None = None,
+) -> dict:
     """Subscribe `email` to the Buttondown newsletter, optionally tagging.
 
     Returns:
@@ -46,7 +51,11 @@ async def subscribe(email: str, tags: list[str] | None = None) -> dict:
     # type="unactivated" forces Buttondown to send the double opt-in
     # confirmation email. Without this, API-created subscribers default to
     # "regular" (already-confirmed) and no confirmation mail is dispatched.
-    payload = {"email_address": email, "tags": tags, "type": "unactivated"}
+    payload: dict = {"email_address": email, "tags": tags, "type": "unactivated"}
+    if ip_address:
+        payload["ip_address"] = ip_address
+    if referrer_url:
+        payload["referrer_url"] = referrer_url
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
             resp = await client.post(
