@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import NewsletterSignup from "./NewsletterSignup";
+import VisitorCounter from "./VisitorCounter";
 
 export default function Footer() {
   return (
@@ -131,8 +132,13 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Visitor counter */}
+        <div className="mt-14 flex justify-center">
+          <VisitorCounter />
+        </div>
+
         {/* Divider */}
-        <div className="mt-14 mb-8 h-px bg-white/10" />
+        <div className="mt-6 mb-8 h-px bg-white/10" />
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <p

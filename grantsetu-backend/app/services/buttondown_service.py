@@ -43,7 +43,10 @@ async def subscribe(email: str, tags: list[str] | None = None) -> dict:
         )
         return {"ok": True, "status": "created"}
 
-    payload = {"email_address": email, "tags": tags}
+    # type="unactivated" forces Buttondown to send the double opt-in
+    # confirmation email. Without this, API-created subscribers default to
+    # "regular" (already-confirmed) and no confirmation mail is dispatched.
+    payload = {"email_address": email, "tags": tags, "type": "unactivated"}
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
             resp = await client.post(

@@ -11,6 +11,7 @@ from app.api.v1.blog import router as blog_router
 from app.api.v1.grants import router as grants_router
 from app.api.v1.health import router as health_router
 from app.api.v1.newsletter import router as newsletter_router
+from app.api.v1.stats import router as stats_router
 from app.api.v1.users import router as users_router
 
 v1_router = APIRouter(prefix="/api/v1")
@@ -24,3 +25,4 @@ v1_router.include_router(blog_router)
 v1_router.include_router(admin_router)
 v1_router.include_router(blog_admin_router)
 v1_router.include_router(newsletter_router)
+v1_router.include_router(stats_router)
