@@ -29,6 +29,7 @@ export default function AdminUsersPage() {
   const [data, setData] = useState<UsersResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   useEffect(() => {
     const token = session?.backendToken;
@@ -43,6 +44,39 @@ export default function AdminUsersPage() {
       .catch((e) => console.error(e))
       .finally(() => setLoading(false));
   }, [session, page]);
+
+  async function handleDelete(u: AdminUser) {
+    const token = session?.backendToken;
+    if (!token) return;
+    if (
+      !confirm(
+        `Permanently delete ${u.email}?\n\nThis cascades to their saved grants, alerts, and subscriptions. Cannot be undone.`
+      )
+    ) {
+      return;
+    }
+    setDeletingId(u.id);
+    try {
+      const r = await fetch(`${API_URL}/api/v1/admin/users/${u.id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!r.ok) {
+        const body = await r.json().catch(() => ({ detail: r.statusText }));
+        alert(`Delete failed: ${body.detail || r.statusText}`);
+        return;
+      }
+      setData((d) =>
+        d
+          ? { ...d, total: d.total - 1, items: d.items.filter((x) => x.id !== u.id) }
+          : d
+      );
+    } catch (e) {
+      alert(`Delete failed: ${(e as Error).message}`);
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   const pages = data ? Math.max(1, Math.ceil(data.total / data.per_page)) : 1;
 
@@ -68,7 +102,7 @@ export default function AdminUsersPage() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50">
                 <tr>
-                  {["Email", "Name", "Institution", "Stage", "Provider", "Admin", "Onboarded", "Joined"].map(
+                  {["Email", "Name", "Institution", "Stage", "Provider", "Admin", "Onboarded", "Joined", ""].map(
                     (h) => (
                       <th
                         key={h}
@@ -84,14 +118,14 @@ export default function AdminUsersPage() {
               <tbody className="divide-y divide-gray-200">
                 {loading && (
                   <tr>
-                    <td colSpan={8} className="px-4 py-10 text-center text-gray-400">
+                    <td colSpan={9} className="px-4 py-10 text-center text-gray-400">
                       Loading…
                     </td>
                   </tr>
                 )}
                 {!loading && data?.items.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-4 py-10 text-center text-gray-400">
+                    <td colSpan={9} className="px-4 py-10 text-center text-gray-400">
                       No users yet.
                     </td>
                   </tr>
@@ -150,6 +184,23 @@ export default function AdminUsersPage() {
                             year: "numeric",
                           })
                         : "-"}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {u.is_admin ? (
+                        <span className="text-gray-300 text-[11px]" title="Admin accounts cannot be deleted from this UI">
+                          -
+                        </span>
+                      ) : (
+                        <button
+                          onClick={() => handleDelete(u)}
+                          disabled={deletingId === u.id}
+                          className="text-[11px] uppercase tracking-wider font-bold text-[#E9283D] hover:text-white hover:bg-[#E9283D] border-2 border-[#E9283D] px-2.5 py-1 rounded-md transition-colors disabled:opacity-40"
+                          style={{ fontFamily: "var(--font-mono)" }}
+                          aria-label={`Delete ${u.email}`}
+                        >
+                          {deletingId === u.id ? "..." : "Delete"}
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

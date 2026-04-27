@@ -4,11 +4,11 @@ import time
 
 import bcrypt
 import jwt
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.deps import require_admin
+from app.api.deps import _decode_token, _extract_token, require_admin
 from app.config import settings
 from app.database import get_db
 from app.models.grant import Grant
@@ -145,6 +145,38 @@ async def admin_list_users(
             for u in users
         ],
     }
+
+
+@router.delete("/users/{user_id}", status_code=204)
+async def admin_delete_user(
+    user_id: int,
+    request: Request,
+    _: None = Depends(require_admin),
+    db: AsyncSession = Depends(get_db),
+) -> None:
+    """Hard-delete a user account. saved_grants / alert_logs / subscriptions
+    cascade via FK ondelete=CASCADE.
+
+    Safety:
+    - Cannot delete self.
+    - Cannot delete other admin accounts (must demote first via DB).
+    """
+    target = await db.get(User, user_id)
+    if target is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if target.is_admin:
+        raise HTTPException(status_code=400, detail="Cannot delete an admin account")
+
+    # Resolve caller email from token to block self-delete (admin_token has no email).
+    token = _extract_token(request)
+    caller_email = _decode_token(token).get("email") if token else None
+    if caller_email and caller_email.lower() == target.email.lower():
+        raise HTTPException(status_code=400, detail="Cannot delete your own account from here")
+
+    await db.delete(target)
+    await db.flush()
+    return None
 
 
 @router.post("/scrapers/run")

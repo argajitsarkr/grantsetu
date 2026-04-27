@@ -58,20 +58,27 @@ export default function OnboardingPage() {
     return true;
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(skip = false) {
     if (!session?.backendToken) return;
     setSaving(true);
     setError("");
 
+    // Strip empty strings + empty arrays so the backend's typed fields
+    // (e.g. date_of_birth: date | None) don't reject "" with a 422.
+    const payload: UserUpdate & { onboarding_completed: boolean } = {
+      onboarding_completed: true,
+    };
+    if (!skip) {
+      for (const [k, v] of Object.entries(form) as [keyof UserUpdate, unknown][]) {
+        if (v === "" || v === null || v === undefined) continue;
+        if (Array.isArray(v) && v.length === 0) continue;
+        (payload as Record<string, unknown>)[k] = v;
+      }
+    }
+
     try {
-      await updateProfile(session.backendToken, {
-        ...form,
-        onboarding_completed: true,
-      });
-      // Update the session so middleware knows onboarding is done
+      await updateProfile(session.backendToken, payload);
       await updateSession({ onboardingCompleted: true });
-      // Hard-redirect so middleware re-reads the refreshed session cookie
-      // and doesn't bounce us back to /onboarding.
       window.location.assign("/dashboard");
     } catch (err) {
       setError("Failed to save your profile. Please try again.");
@@ -142,7 +149,7 @@ export default function OnboardingPage() {
                   type="text"
                   value={form.institution || ""}
                   onChange={(e) => updateField("institution", e.target.value)}
-                  placeholder="e.g. Tripura University"
+                  placeholder="e.g. Indian Institute of Technology Roorkee"
                   className="w-full border border-brand-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-accent-500/40 focus:border-accent-500"
                 />
               </div>
@@ -343,7 +350,7 @@ export default function OnboardingPage() {
             ) : (
               <button
                 type="button"
-                onClick={handleSubmit}
+                onClick={() => handleSubmit(false)}
                 disabled={saving}
                 className="px-6 py-2.5 text-sm font-semibold text-white bg-accent-500 rounded-xl hover:bg-accent-600 transition-colors disabled:opacity-50"
               >
@@ -356,8 +363,9 @@ export default function OnboardingPage() {
         {/* Skip link */}
         <div className="text-center mt-4">
           <button
-            onClick={handleSubmit}
-            className="text-sm text-brand-400 hover:text-brand-600 transition-colors"
+            onClick={() => handleSubmit(true)}
+            disabled={saving}
+            className="text-sm text-brand-400 hover:text-brand-600 transition-colors disabled:opacity-50"
           >
             Skip for now - I&apos;ll set this up later
           </button>

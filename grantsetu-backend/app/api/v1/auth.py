@@ -27,7 +27,7 @@ from app.config import settings
 from app.database import get_db
 from app.models.user import User
 from app.schemas.user import UserResponse
-from app.services import email_service
+from app.services import buttondown_service, email_service
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -96,6 +96,12 @@ async def register(data: RegisterRequest, db: AsyncSession = Depends(get_db)) ->
     await db.refresh(user)
 
     email_service.send_verification_email(user.email, user.name, verification_token)
+
+    # Non-fatal newsletter auto-subscribe (Buttondown double opt-in via type=unactivated).
+    try:
+        await buttondown_service.subscribe(user.email, tags=["signup-credentials"])
+    except Exception:  # noqa: BLE001
+        pass
 
     return AuthResponse(
         access_token=_sign_token(user),

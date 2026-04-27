@@ -12,6 +12,7 @@ from app.models.saved_grant import SavedGrant
 from app.models.user import User
 from app.schemas.grant import GrantListResponse
 from app.schemas.user import UserResponse, UserSync, UserUpdate
+from app.services import buttondown_service
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -24,6 +25,7 @@ async def sync_user(data: UserSync, db: AsyncSession = Depends(get_db)) -> UserR
     user = result.scalar_one_or_none()
     is_admin_email = email in [e.lower() for e in settings.admin_email_list]
 
+    is_new_user = user is None
     if user:
         user.name = data.name
         if data.image_url:
@@ -47,6 +49,14 @@ async def sync_user(data: UserSync, db: AsyncSession = Depends(get_db)) -> UserR
 
     await db.flush()
     await db.refresh(user)
+
+    # Auto-subscribe new users to the newsletter (Buttondown double opt-in handles consent).
+    if is_new_user:
+        try:
+            await buttondown_service.subscribe(user.email, tags=[f"signup-{data.auth_provider}"])
+        except Exception:  # noqa: BLE001
+            pass
+
     return UserResponse.model_validate(user)
 
 
