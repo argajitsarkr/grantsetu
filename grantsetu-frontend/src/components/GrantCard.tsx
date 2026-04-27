@@ -13,7 +13,7 @@ export default function GrantCard({ grant }: GrantCardProps) {
   const agencyMeta = AGENCY_META[grant.agency];
 
   return (
-    <article className="card card-hover group">
+    <article className="card card-hover group !p-4 sm:!p-6">
       <div className="flex flex-wrap items-center gap-2 mb-3">
         <AgencyBadge agency={grant.agency} />
         {grant.scheme_name && (
@@ -25,7 +25,7 @@ export default function GrantCard({ grant }: GrantCardProps) {
       </div>
 
       <Link href={`/grants/${grant.slug}`}>
-        <h3 className="text-base sm:text-lg font-semibold text-[#0A0A0A] group-hover:text-accent-500 leading-snug tracking-heading transition-colors" style={{ fontFamily: "var(--font-display)" }}>
+        <h3 className="text-base sm:text-lg font-semibold text-[#0A0A0A] md:group-hover:text-accent-500 leading-snug tracking-heading transition-colors" style={{ fontFamily: "var(--font-display)" }}>
           {grant.title}
         </h3>
       </Link>
@@ -52,7 +52,7 @@ export default function GrantCard({ grant }: GrantCardProps) {
             <svg className="h-3.5 w-3.5 text-brand-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            {grant.duration_months} months
+            Duration: {grant.duration_months} mo
           </span>
         )}
       </div>

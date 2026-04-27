@@ -53,10 +53,10 @@ export default async function GrantsPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="container-main pt-12 pb-8">
+    <div className="container-main pt-6 sm:pt-12 pb-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-display-sm font-bold text-[#0A0A0A] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Research Grants</h1>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-display-sm font-bold text-[#0A0A0A] tracking-heading" style={{ fontFamily: "var(--font-display)" }}>Research Grants</h1>
         <p className="text-sm text-brand-500 mt-1">
           {data ? `${data.total} grants found` : "Browse active grant calls from Indian funding agencies"}
         </p>
@@ -69,7 +69,7 @@ export default async function GrantsPage({ searchParams }: PageProps) {
         </Suspense>
       </div>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col gap-4 md:flex-row md:gap-8">
         <Suspense fallback={null}>
           <GrantFilters />
         </Suspense>
