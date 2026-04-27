@@ -69,11 +69,15 @@ async def subscribe(email: str, tags: list[str] | None = None) -> dict:
                         )
                 return {"ok": True, "status": "existed"}
             logger.error(
-                "[buttondown_service] subscribe failed (%s): %s",
+                "[buttondown_service] subscribe failed status=%s body=%s payload=%s",
                 resp.status_code,
-                resp.text[:200],
+                resp.text[:500],
+                payload,
             )
-            return {"ok": False, "error": f"upstream {resp.status_code}"}
+            return {
+                "ok": False,
+                "error": f"upstream {resp.status_code}: {resp.text[:200]}",
+            }
     except Exception as err:  # noqa: BLE001
         logger.exception("[buttondown_service] subscribe exception: %s", err)
         return {"ok": False, "error": str(err)}
