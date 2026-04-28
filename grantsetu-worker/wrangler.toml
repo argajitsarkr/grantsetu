@@ -1,0 +1,23 @@
+name = "grantsetu-downtime"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+# Routes the Worker handles. www and apex both go through the fallback;
+# api.grantsetu.in is intentionally NOT listed - we want the API to fail
+# cleanly with JSON so frontend / SDK clients see a parseable 5xx, not HTML.
+routes = [
+  { pattern = "grantsetu.in/*",     zone_name = "grantsetu.in" },
+  { pattern = "www.grantsetu.in/*", zone_name = "grantsetu.in" },
+]
+
+# Workers Free tier (100k requests/day) is more than enough for this use case.
+# No KV / D1 / Durable Objects needed - the Worker is stateless and proxies to
+# Buttondown for any persistence.
+
+[vars]
+# Buttondown tag applied to outage-notify signups. Stays distinct from the
+# product newsletter tags (footer, home, grant-detail, studio-waitlist, pro).
+OUTAGE_TAG = "outage-notify"
+
+# BUTTONDOWN_API_KEY is set as a secret, NOT a plain var:
+#   npx wrangler secret put BUTTONDOWN_API_KEY
