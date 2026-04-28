@@ -89,9 +89,27 @@ async def list_grants(
 
     # Sorting
     if sort == "deadline_asc":
+        # Tiered order so visitors see actionable grants first:
+        #   0) Upcoming (deadline in the future) - soonest first
+        #   1) Rolling / no deadline
+        #   2) Expired (deadline in the past) - most-recently-expired first
+        now = datetime.now(timezone.utc)
+        deadline_bucket = case(
+            (Grant.deadline.is_(None), 1),
+            (Grant.deadline >= now, 0),
+            else_=2,
+        )
         query = query.order_by(
-            case((Grant.deadline.is_(None), 1), else_=0),
-            Grant.deadline.asc(),
+            deadline_bucket.asc(),
+            # Within bucket 0 ascending pulls soonest-upcoming to top;
+            # within bucket 2 the same ascending keys would surface
+            # oldest-expired first, so flip with a secondary descending key
+            # that only fires for the expired bucket.
+            case(
+                (Grant.deadline >= now, Grant.deadline),
+                else_=None,
+            ).asc().nulls_last(),
+            Grant.deadline.desc().nulls_last(),
         )
     elif sort == "deadline_desc":
         query = query.order_by(Grant.deadline.desc().nulls_last())
