@@ -21,21 +21,11 @@ export default auth((req) => {
   }
 
   if (isAuthenticated && req.auth?.user) {
-    const onboardingCompleted = req.auth.user.onboardingCompleted;
-
-    // Admins skip onboarding redirect - they may not need a research profile.
-    const skipOnboarding = req.auth.user.isAdmin || isAdminPath;
-
-    if (
-      !onboardingCompleted &&
-      !skipOnboarding &&
-      !path.startsWith("/onboarding") &&
-      isProtected
-    ) {
-      return NextResponse.redirect(new URL("/onboarding", nextUrl));
-    }
-
-    if (onboardingCompleted && path.startsWith("/onboarding")) {
+    // Soft onboarding: new users land on /dashboard with a yellow
+    // "complete your profile" nudge instead of being force-redirected.
+    // Only the inverse still applies - completed users hitting /onboarding
+    // get bounced back to /dashboard.
+    if (req.auth.user.onboardingCompleted && path.startsWith("/onboarding")) {
       return NextResponse.redirect(new URL("/dashboard", nextUrl));
     }
   }
