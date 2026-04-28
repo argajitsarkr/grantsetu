@@ -77,16 +77,18 @@ export default function OnboardingPage() {
     setSaving(true);
     setError("");
 
-    const payload: UserUpdate & { onboarding_completed: boolean } = {
-      onboarding_completed: true,
-    };
+    const cleanFields: Record<string, unknown> = {};
     if (!skip) {
-      for (const [k, v] of Object.entries(form) as [keyof UserUpdate, unknown][]) {
+      for (const [k, v] of Object.entries(form)) {
         if (v === "" || v === null || v === undefined) continue;
         if (Array.isArray(v) && v.length === 0) continue;
-        (payload as Record<string, unknown>)[k] = v;
+        cleanFields[k] = v;
       }
     }
+    const payload = {
+      ...cleanFields,
+      onboarding_completed: true,
+    } as UserUpdate & { onboarding_completed: boolean };
 
     try {
       await updateProfile(session.backendToken, payload);
