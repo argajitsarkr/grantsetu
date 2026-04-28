@@ -51,7 +51,7 @@ export default async function BlogIndexPage() {
         <span className="label-pill">Blog</span>
         <h1
           className="heading-display mt-5 text-[2.25rem] sm:text-[3.5rem] lg:text-[4.5rem] text-black leading-[1.02]"
-          style={{ fontFamily: "var(--font-display)" }}
+          style={{ fontFamily: "var(--font-roobert)", fontWeight: 700 }}
         >
           Grant craft, <span className="text-[#E9283D]">unpacked.</span>
         </h1>
@@ -90,7 +90,7 @@ export default async function BlogIndexPage() {
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span
                           className="text-[#E9283D] text-[5rem] font-black"
-                          style={{ fontFamily: "var(--font-display)" }}
+                          style={{ fontFamily: "var(--font-roobert)", fontWeight: 700 }}
                         >
                           GS
                         </span>
@@ -116,7 +116,7 @@ export default async function BlogIndexPage() {
                     </div>
                     <h2
                       className="mt-4 text-[1.75rem] sm:text-[2.25rem] font-black text-black leading-[1.1] group-hover:text-[#E9283D] transition-colors"
-                      style={{ fontFamily: "var(--font-display)" }}
+                      style={{ fontFamily: "var(--font-roobert)", fontWeight: 700 }}
                     >
                       {featured.title}
                     </h2>
@@ -167,7 +167,7 @@ export default async function BlogIndexPage() {
                         <div className="absolute inset-0 flex items-center justify-center">
                           <span
                             className="text-[#E9283D] text-[3rem] font-black"
-                            style={{ fontFamily: "var(--font-display)" }}
+                            style={{ fontFamily: "var(--font-roobert)", fontWeight: 700 }}
                           >
                             GS
                           </span>
@@ -185,7 +185,7 @@ export default async function BlogIndexPage() {
                       )}
                       <h3
                         className="mt-3 text-[1.15rem] font-black text-black leading-[1.2] group-hover:text-[#E9283D] transition-colors line-clamp-3"
-                        style={{ fontFamily: "var(--font-display)" }}
+                        style={{ fontFamily: "var(--font-roobert)", fontWeight: 700 }}
                       >
                         {post.title}
                       </h3>

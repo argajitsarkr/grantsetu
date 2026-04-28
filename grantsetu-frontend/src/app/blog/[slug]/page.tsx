@@ -130,7 +130,7 @@ export default async function BlogPostPage({
 
         <h1
           className="mt-5 text-[2rem] sm:text-[3rem] lg:text-[3.5rem] font-black text-black leading-[1.05]"
-          style={{ fontFamily: "var(--font-display)" }}
+          style={{ fontFamily: "var(--font-roobert)", fontWeight: 700 }}
         >
           {post.title}
         </h1>

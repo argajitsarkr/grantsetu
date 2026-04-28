@@ -105,6 +105,26 @@
   .roobert-scope b {
     font-weight: 700;
   }
+  /* Beat the .blog-prose rules that hard-set var(--font-display) on
+     rendered-markdown headings - same specificity, declared later wins. */
+  .roobert-scope .blog-prose,
+  .roobert-scope .blog-prose h1,
+  .roobert-scope .blog-prose h2,
+  .roobert-scope .blog-prose h3,
+  .roobert-scope .blog-prose h4,
+  .roobert-scope .blog-prose h5,
+  .roobert-scope .blog-prose h6,
+  .roobert-scope .blog-prose p,
+  .roobert-scope .blog-prose li,
+  .roobert-scope .blog-prose blockquote {
+    font-family: var(--font-roobert);
+  }
+  .roobert-scope .blog-prose h1,
+  .roobert-scope .blog-prose h2,
+  .roobert-scope .blog-prose h3,
+  .roobert-scope .blog-prose h4 {
+    font-weight: 700;
+  }
 
   /* ─ Buttons - NUUK red ─ */
   .btn-primary {
