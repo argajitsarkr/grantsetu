@@ -61,7 +61,7 @@ export default async function GrantDetailPage({ params }: PageProps) {
   const deadlineDays = grant.deadline ? daysUntil(grant.deadline) : null;
 
   return (
-    <div className="container-main py-8">
+    <div className="roobert-scope container-main py-8">
       <div className="max-w-4xl">
         {/* Breadcrumb */}
         <nav className="text-sm text-brand-400 mb-6 flex items-center gap-2" aria-label="Breadcrumb">

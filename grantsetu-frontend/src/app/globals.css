@@ -12,6 +12,16 @@
 /* ── Roboto Mono - labels/captions ─────────── */
 @font-face { font-family: 'Roboto Mono Local'; src: url('/fonts/RobotoMono-Regular.woff2') format('woff2'); font-display: swap; font-weight: 400; font-style: normal; }
 
+/* ── Roobert variable - grants pages body + headings ─────────── */
+@font-face {
+  font-family: 'Roobert';
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url('/fonts/roobert-proportional-vf.woff2') format('woff2 supports variations'),
+       url('/fonts/roobert-proportional-vf.woff2') format('woff2-variations');
+}
+
 /* ── CSS Variables - NUUK-inspired: Red / Black / White ─────────── */
 :root {
   --color-red:       #E9283D;    /* NUUK crimson red - primary accent */
@@ -27,6 +37,7 @@
   --font-display-alt:'Inter Display', 'Inter', system-ui, sans-serif;
   --font-body:       'Inter Local', 'Inter', system-ui, sans-serif;
   --font-mono:       'Roboto Mono Local', 'Roboto Mono', monospace;
+  --font-roobert:    'Roobert', 'Inter Local', 'Inter', system-ui, sans-serif;
   --nav-height:      72px;
   --nav-height-mob:  60px;
 }
@@ -66,6 +77,35 @@
 }
 
 @layer components {
+  /* ─ Roobert scope - applied on /grants and /grants/[slug] only ─ */
+  .roobert-scope,
+  .roobert-scope p,
+  .roobert-scope span,
+  .roobert-scope li,
+  .roobert-scope a,
+  .roobert-scope div,
+  .roobert-scope label,
+  .roobert-scope input,
+  .roobert-scope select,
+  .roobert-scope textarea,
+  .roobert-scope button {
+    font-family: var(--font-roobert);
+  }
+  .roobert-scope h1,
+  .roobert-scope h2,
+  .roobert-scope h3,
+  .roobert-scope h4,
+  .roobert-scope h5,
+  .roobert-scope h6 {
+    font-family: var(--font-roobert);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .roobert-scope strong,
+  .roobert-scope b {
+    font-weight: 700;
+  }
+
   /* ─ Buttons - NUUK red ─ */
   .btn-primary {
     @apply inline-flex items-center justify-center
