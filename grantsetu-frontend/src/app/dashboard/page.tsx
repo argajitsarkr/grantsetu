@@ -275,11 +275,11 @@ export default function DashboardPage() {
             </section>
 
             {/* Recommended */}
-            <section>
+            <section className="roobert-scope">
               <div className="flex items-center justify-between mb-4">
                 <h2
                   className="text-[1.5rem] font-black text-black"
-                  style={{ fontFamily: "var(--font-display)" }}
+                  style={{ fontFamily: "var(--font-roobert)", fontWeight: 700 }}
                 >
                   Recommended for you
                 </h2>

@@ -46,7 +46,7 @@ export default async function BlogIndexPage() {
   const rest = items.filter((p) => !featured || p.id !== featured.id);
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="roobert-scope bg-white min-h-screen">
       <section className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-8">
         <span className="label-pill">Blog</span>
         <h1

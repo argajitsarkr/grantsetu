@@ -93,7 +93,7 @@ export default async function BlogPostPage({
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="roobert-scope bg-white min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
