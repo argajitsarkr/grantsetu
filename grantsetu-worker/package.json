@@ -1,0 +1,14 @@
+{
+  "name": "grantsetu-worker",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Tiny Cloudflare Worker that fronts grantsetu.in and 302-redirects to a GitHub Pages maintenance site when the origin is offline.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}

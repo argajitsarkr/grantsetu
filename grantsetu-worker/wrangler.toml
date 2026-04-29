@@ -1,0 +1,16 @@
+name = "grantsetu-downtime"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# Routes the Worker is bound to. www and apex both go through it.
+# api.grantsetu.in is intentionally NOT listed so JSON clients see Cloudflare's
+# parseable 5xx instead of an HTML redirect.
+routes = [
+  { pattern = "grantsetu.in/*",     zone_name = "grantsetu.in" },
+  { pattern = "www.grantsetu.in/*", zone_name = "grantsetu.in" },
+]
+
+[vars]
+# Where to send visitors when the home-server origin is unreachable.
+# Edit this if the GitHub Pages path changes.
+FALLBACK_URL = "https://argajitsarkr.github.io/grantsetu-offline/"
