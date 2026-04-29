@@ -34,20 +34,23 @@ GrantSetu aggregates active research grant calls from 8 Indian government fundin
 
 ---
 
-## Design System (indicium.ai-inspired)
+## Design System (NUUK-inspired, Roobert content scope)
 
 | Element | Value |
 |---|---|
-| Primary navy | `#05073F` |
-| Electric blue | `#2451F3` |
-| Soft purple | `#BBBAFB` |
-| Display font | Inter Display Medium (`--font-display`) - headings |
-| Body font | Inter Regular/Medium (`--font-body`) - body text |
+| Primary accent | NUUK red `#E9283D` |
+| Body / heading ink | Near-black `#0A0A0A` |
+| Background | White `#FFFFFF`, dark sections use near-black |
+| Display font (default) | Inter Display Medium (`--font-display`) - global headings |
+| Body font (default) | Inter Regular/Medium (`--font-body`) - global body |
 | Mono font | Roboto Mono Regular (`--font-mono`) - labels, badges, table headers |
-| Hero | Full-screen background video with poster fallback (hero-poster.avif) |
-| Navbar | Transparent → dark on scroll, white text, dropdown menus |
+| **Content font (scoped)** | **Roobert variable 300-900 (`--font-roobert`)** - applied via `.roobert-scope` on `/grants`, `/grants/[slug]`, `/blog`, `/blog/[slug]`, dashboard "Recommended for you" section, and the home page root |
+| Hero | NUUK red/black/white palette (replaced the older indicium navy) |
+| Navbar | Transparent -> dark on scroll, white text, dropdown menus |
 
-Font files live in `grantsetu-frontend/public/fonts/`. The `@font-face` rules are in `globals.css` and expose CSS variables. **All headings** must use `style={{ fontFamily: "var(--font-display)" }}`. **All labels/badges** must use `style={{ fontFamily: "var(--font-mono)" }}`. Body text inherits automatically.
+Font files live in `grantsetu-frontend/public/fonts/` (`InterDisplay-Medium.woff2`, `Inter-Regular.woff2`, `Inter-Medium.woff2`, `RobotoMono-Regular.woff2`, `roobert-proportional-vf.woff2`). The `@font-face` rules are in `globals.css` and expose CSS variables. **Inside `.roobert-scope`** (grants, blog, home, dashboard recommendations) every `h1`-`h6`, `p`, `li`, `a`, `input`, `button` resolves to Roobert; `<strong>`/`<b>`/headings use weight 700, paragraphs use 400. **Outside `.roobert-scope`** (navbar, footer, admin, auth) keep the original convention: headings use `style={{ fontFamily: "var(--font-display)" }}` and labels/badges use `style={{ fontFamily: "var(--font-mono)" }}`.
+
+**Home page 4-stat band copy** (`/` -> dark stats strip): `7 / Agencies Tracked`, `24 / Life Sci Subjects`, `Weekly / Update Cadence`, `₹0 / Core Tier`. The earlier values `24h / Update Cycle` and `₹0 / Cost. Forever.` are wrong post-Pro-paywall and post-weekly-cadence and should not come back.
 
 ---
 
@@ -198,6 +201,31 @@ bash deploy.sh status         # container status + memory
 bash deploy.sh down           # stop everything
 ```
 
+### Outage fallback (Cloudflare Worker + GitHub Pages)
+
+Power cuts at the user's location take the home server (and the tunnel) offline. To avoid losing visitors during outages, traffic is fronted by a tiny Cloudflare Worker that 302-redirects to a branded GitHub Pages maintenance site when the origin is unreachable.
+
+**Worker** - `grantsetu-worker/` at repo root (separate npm package, deployed via wrangler from the laptop, not the server).
+- Name: `grantsetu-downtime`. Routes: `grantsetu.in/*`, `www.grantsetu.in/*`. **`api.grantsetu.in` is intentionally NOT routed** so JSON clients see Cloudflare's parseable 5xx instead of an HTML redirect.
+- ~15 lines of logic. Tries `fetch(request)` to the tunnel; on tunnel-down statuses (`502, 503, 520, 521, 522, 523, 524, 525, 526, 530`) or fetch-throw, returns `Response.redirect(env.FALLBACK_URL, 302)`. Otherwise passthrough.
+- 530 was added after a real outage where the visible "Error 1033 - Cloudflare Tunnel error" page was served as HTTP 530 and slipped through the original allowlist of 521-526.
+- Var binding `FALLBACK_URL = https://argajitsarkr.github.io/grantsetu-offline/`. No secrets - the Worker doesn't talk to Buttondown directly.
+- Deploy: `bash deploy.sh worker` (laptop). One-time setup: `cd grantsetu-worker && npm install && npx wrangler login && npx wrangler deploy`.
+
+**Maintenance site** - lives in the *separate* portfolio repo `argajitsarkr/argajitsarkr.github.io` at folder `grantsetu-offline/index.html`. Hosted free at `https://argajitsarkr.github.io/grantsetu-offline/`.
+- Single self-contained HTML page, no build step. Roobert variable font loaded from the portfolio's existing `../fonts/roobert-proportional-vf.woff2` (same origin, so it works while grantsetu.in is down).
+- Layout: sticky header with brand mark + pulsing red "Server offline" pill; hero with massive "Caught in a thunderstorm." headline + 3 meta items (power-cut icon, time icon, email icon); the email-capture card sits in the hero's right column; "While you wait" dark value-prop strip with 3 numbered tiles (Curated / Matched / Weekly); footer with social links.
+- Email form posts directly to Buttondown's public embed-subscribe endpoint `https://buttondown.com/api/emails/embed-subscribe/grantsetu` with hidden `tag=outage-notify`. No backend, no API key in client.
+- A live "Status update / X minutes ago" counter resets per page load.
+
+**Re-engagement workflow after every outage:**
+1. Wait for power and the tunnel to come back. Refresh `grantsetu.in` to confirm the Worker is passing through transparently.
+2. Buttondown -> Subscribers -> filter `tag: outage-notify`.
+3. Emails -> New email. Recipients = filtered segment. Subject like *"GrantSetu is back online"*. Send.
+4. Optional: bulk-untag those subscribers so the next outage lands as a fresh batch.
+
+**Editing content**: change `argajitsarkr.github.io/grantsetu-offline/index.html` and push - GitHub Pages republishes within a minute. The Worker doesn't need a redeploy; it just redirects.
+
 ### Cloudflare Tunnel
 
 Tunnel ID: `83fae86d-d17a-4a33-bc9e-8bf012046afa`
@@ -245,6 +273,31 @@ Config location on server: `/etc/cloudflared/config.yml`
 | POST | `/api/v1/billing/verify` | Auth. Verifies HMAC signature, flips subscription to paid, sets user tier=pro, tags in Buttondown |
 | POST | `/api/v1/billing/payment-failed` | Auth. Observability: marks failed/dismissed checkouts (204) |
 | GET | `/api/v1/health` | Health check |
+| POST | `/api/v1/stats/visit` | Visitor counter increment (see Site stats section) |
+| GET | `/api/v1/stats/visits` | Read-only `{total, unique}` for the footer pill |
+
+---
+
+## Site stats / visitor counter
+
+Lightweight Redis-backed visitor counter shipped 2026-04-29.
+
+- **Endpoints** (in `app/api/v1/stats.py`, registered on the v1 router):
+  - `POST /api/v1/stats/visit` - increments `grantsetu:visits:total` and adds a SHA-256 fingerprint of `(ip, user-agent)` to `grantsetu:visits:unique` (Redis HyperLogLog). Returns `{total, unique}`.
+  - `GET /api/v1/stats/visits` - read-only; returns the same shape.
+- **Frontend** - `<VisitorCounter />` in `grantsetu-frontend/src/components/VisitorCounter.tsx`. POSTs once per browser session (gated by `sessionStorage`), GETs on subsequent loads. Mounted in the footer above the divider as a "LIVE - N visitors - M views" pill.
+- HyperLogLog gives an approximate (~0.81% error) unique-count without storing any PII; only hashed fingerprints land in Redis.
+
+---
+
+## Grants default sort
+
+**`deadline_asc`** is tiered, not pure ascending. The DB column `status='active'` is not auto-flipped when a deadline passes, so a naive ascending order would float already-expired grants to the top of `/grants`. The tiered sort in `app/services/grant_service.py` orders:
+1. Upcoming (deadline >= now) - soonest first
+2. Rolling / no deadline
+3. Expired (deadline < now) - most recently expired first
+
+If you ever want to hide expired grants entirely, add `Grant.deadline >= now` to the conditions when `status='active'` is requested instead of changing the sort.
 
 ---
 
@@ -274,6 +327,12 @@ Full blog feature shipped 2026-04-20 (migration `005`):
 - Buttondown dashboard config: Settings → Subscribers → enable "Confirmation emails" (double opt-in) and write a Welcome email. Free tier covers up to 1,000 subscribers.
 - **Production state (2026-04-26)**: Buttondown sending domain = `newsletter.grantsetu.in` (Managed setup, NS-delegated to `ns1/ns2.onbuttondown.com`). From address = `argajit@newsletter.grantsetu.in`. Pipeline verified end-to-end via the live site - subscribers land in Buttondown with correct source tags. Apex `grantsetu.in` DNS reserved for Resend (auth emails) + future use.
 - Outbound (cold-reach playbook): build a CSV (`email,name,affiliation`) → Buttondown → Subscribers → Import with a batch tag (`outreach-2026-04`) → New email → filter recipients to that tag only → track opens/clicks/unsubs in Analytics.
+- **Firewall + spam-validation pattern (shipped 2026-04-29, applies to every API-side subscribe):** Buttondown blocks API-created subscribers when the request lacks an `ip_address` (logs as `subscriber_blocked`). The fix lives in `app/services/buttondown_service.py`:
+  - Payload always sets `type: "unactivated"` (else Buttondown skips the confirmation email entirely - the bug that "no confirmation email arrives but Buttondown shows the subscriber").
+  - Backend forwards `ip_address` (from `cf-connecting-ip` -> `x-forwarded-for[0]` -> `request.client.host`) and `referrer_url` (from `referer` header).
+  - After a successful create, an internal `_send_confirmation` helper POSTs to Buttondown to fire the confirmation email immediately. Tries three known endpoint shapes in order (`/subscribers/{email}/send-reminder`, `/subscribers/{email}/emails` with `{type: "reminder"}`, `/subscribers/{email}/emit-event` with `{event: "remind"}`) and logs which one worked - this insulates us from minor Buttondown API renames.
+  - Same payload shape is used by the outage Worker's GitHub Pages embed form (different transport, same fields).
+- **Buttondown dashboard config (one-time, already done):** Settings -> Firewall -> set **Auditing mode: Enabled** (not Aggressive - Aggressive false-positives Indian gmail addresses). Add the home server's outbound IPv4 + IPv6 to the IP-exempt list (`curl -s https://api.ipify.org` and `curl -s https://api64.ipify.org` from the server). Keep Attack mode on.
 
 **Pro paywall (Razorpay, shipped pre-May-4 launch, migration 007)**
 - **Pricing rule**: count `subscriptions WHERE tier='pro' AND status='paid'`. If `< PRO_EARLY_BIRD_CAP` (100) → `PRO_EARLY_BIRD_PRICE_PAISE` (₹299). Else → `PRO_REGULAR_PRICE_PAISE` (₹499). Price locked at order-creation (Razorpay order amount is immutable).
@@ -384,6 +443,8 @@ Full blog feature shipped 2026-04-20 (migration `005`):
 
 | Date | Changes |
 |---|---|
+| 2026-04-30 | (a) Outage fallback live: tiny Cloudflare Worker `grantsetu-downtime` on grantsetu.in/* + www.grantsetu.in/* (~15 lines, redirects on 502/503/520-526/530 or fetch-throw to the GitHub Pages maintenance site at argajitsarkr.github.io/grantsetu-offline/). Maintenance page redesigned with NUUK-style typography, Roobert font from same origin, pulsing live status pill, "Caught in a thunderstorm" hero, hero-right email card, "While you wait" value-prop strip. Buttondown embed-subscribe form tagged `outage-notify`; re-engagement is a manual broadcast in Buttondown. (b) Home page stats corrected: `Weekly / Update Cadence` (was incorrect `24h / Update Cycle`) and `₹0 / Core Tier` (was misleading `₹0 / Cost. Forever.` post-Pro-paywall). (c) Roobert variable font scope extended to the home page root via `.roobert-scope`. (commits 1ef9761, fbe5b6e on grantsetu; fecea41, 0bba7bd on argajitsarkr.github.io) |
+| 2026-04-29 | (a) Roobert variable font (300-900) added at `grantsetu-frontend/public/fonts/roobert-proportional-vf.woff2` (copied from the existing portfolio asset). New `--font-roobert` CSS variable + `.roobert-scope` wrapper class in `globals.css` that re-routes every h1-h6/p/li/a/input/button inside the scope to Roobert. Applied on `/grants`, `/grants/[slug]`, `/blog`, `/blog/[slug]`, dashboard "Recommended for you" section. Beats `.heading-display` and inline `var(--font-display)` overrides via class+element specificity (0,1,1) and direct inline replacements where needed. (b) Grants default sort fixed: `deadline_asc` is now tiered (upcoming -> rolling -> expired) so already-expired grants stop floating to the top. (c) Visitor counter shipped: Redis-backed `POST /api/v1/stats/visit` + `GET /api/v1/stats/visits` (HyperLogLog of hashed IP+UA), `<VisitorCounter />` pill in the footer, sessionStorage-gated to count once per browser session. (d) Newsletter firewall pattern: `subscribe()` now sends `type: "unactivated"`, `ip_address`, `referrer_url`, then calls `_send_confirmation` to fire the confirmation email immediately (tries three known endpoint shapes, logs which worked). Buttondown firewall set to Auditing mode: Enabled with home-server IPs whitelisted. (commits 603a44b, 0b369b1, 036c111, b9e19fb on grantsetu) |
 | 2026-04-26 | Newsletter pipeline live end-to-end. Buttondown sending domain switched from apex `grantsetu.in` to subdomain `newsletter.grantsetu.in` (Managed setup - 2 NS records to `ns1/ns2.onbuttondown.com` in Cloudflare DNS, Buttondown owns DKIM/MX/DMARC/track records on the subdomain). From address: `argajit@newsletter.grantsetu.in`. Subdomain isolates from Resend's apex records and protects future Google Workspace use. Inbound flow verified: site → backend → Buttondown → confirmation email → confirmed list, with source tags landing per form (`footer`, `newsletter`, `home`, `grant-detail`, `studio-waitlist`). Apex `grantsetu.in` DNS untouched. (commit ca8155a) |
 | 2026-04-26 | Hotfix: `/newsletter` page had its own inline subscribe form pointing at the deprecated `buttondown.com/api/emails/embed-subscribe/grantsetu` URL - missed in the original c5524c8 rewrite which only updated the shared `<NewsletterSignup>` component. After the Buttondown sender-domain switch the legacy URL 404'd and signups silently failed. Converted both inline forms on `/newsletter` to call `/api/v1/newsletter/subscribe`, dropped `BUTTONDOWN_ACTION/BUTTONDOWN_USERNAME` constants and `mode:'no-cors'` fallback, made the second form's email input controlled. (commit ca8155a) |
 | 2026-04-26 | Newsletter subscribe rewritten to go through our backend instead of Buttondown's direct embed endpoint. New `POST /api/v1/newsletter/subscribe` route + `buttondown_service.subscribe()` helper. Frontend `<NewsletterSignup>` now gets real success/error responses (no more `mode:'no-cors'` fire-and-forget), shows "Already on the list" for repeats, "Check your inbox to confirm" copy aligned with double opt-in. Removed unused `NEXT_PUBLIC_BUTTONDOWN_USERNAME`. Post-deploy: set `BUTTONDOWN_API_KEY` in backend .env, enable double opt-in + welcome email in Buttondown dashboard, restart. (commit c5524c8) |
