@@ -15,7 +15,11 @@
  * needs to be touched again.
  */
 
-const DOWN_STATUSES = new Set([502, 503, 521, 522, 523, 524, 525, 526]);
+// Cloudflare returns HTTP 530 for tunnel-disconnected errors (the visible
+// "Error 1033" page) and 520 for "unknown origin error". 521-526 cover
+// origin-unreachable / SSL / timeout cases. 502/503 cover bad-gateway and
+// service-unavailable from any layer in front of the tunnel.
+const DOWN_STATUSES = new Set([502, 503, 520, 521, 522, 523, 524, 525, 526, 530]);
 
 export default {
   async fetch(request, env) {
