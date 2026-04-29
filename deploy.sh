@@ -6,7 +6,6 @@
 #  After push:   bash deploy.sh update
 #  Logs:         bash deploy.sh logs
 #  Status:       bash deploy.sh status
-#  Worker:       bash deploy.sh worker     (deploy outage-fallback Worker)
 # ════════════════════════════════════════════════════════════════════
 set -e
 
@@ -20,26 +19,6 @@ echo "════════════════════════�
 echo ""
 
 cd "$PROJECT_DIR"
-
-# The "worker" action operates on grantsetu-worker/ (Cloudflare Worker for
-# the outage fallback page) and doesn't need the Docker .env file. Short-
-# circuit the pre-flight check before it errors out on a fresh checkout.
-if [ "$ACTION" = "worker" ]; then
-  if [ ! -d "grantsetu-worker" ]; then
-    echo "❌  grantsetu-worker/ folder not found."
-    exit 1
-  fi
-  echo "🛰   Deploying Cloudflare Worker (grantsetu-downtime)..."
-  cd grantsetu-worker
-  if [ ! -d "node_modules" ]; then
-    echo "📦  Installing wrangler dependencies (first run)..."
-    npm install
-  fi
-  npx wrangler deploy
-  echo ""
-  echo "✅  Worker deployed."
-  exit 0
-fi
 
 # ── Pre-flight checks ──────────────────────────────────────────────
 if [ ! -f ".env" ]; then
@@ -97,6 +76,6 @@ case "$ACTION" in
     ;;
 
   *)
-    echo "Usage: bash deploy.sh [up|update|logs|status|down|worker]"
+    echo "Usage: bash deploy.sh [up|update|logs|status|down]"
     ;;
 esac

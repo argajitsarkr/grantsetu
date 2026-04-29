@@ -198,18 +198,6 @@ bash deploy.sh status         # container status + memory
 bash deploy.sh down           # stop everything
 ```
 
-### Outage fallback (Cloudflare Worker)
-
-A small Cloudflare Worker (`grantsetu-worker/`) sits in front of `grantsetu.in` and `www.grantsetu.in`. When the home server is online it is a transparent passthrough (the existing tunnel handles every request). When the origin returns a tunnel-down status (502/503/521-526) or the `fetch()` to the tunnel throws (power cut), the Worker serves an inline branded maintenance HTML page with an email-capture form that posts to Buttondown (`tag: outage-notify`, `type: unactivated`).
-
-- Worker name: `grantsetu-downtime` (free tier, stateless, no KV/D1).
-- Routes: `grantsetu.in/*`, `www.grantsetu.in/*`. **`api.grantsetu.in` is intentionally NOT routed through the Worker** so JSON clients see Cloudflare's parseable 5xx instead of HTML.
-- Deploy: `bash deploy.sh worker` (laptop, not server) - runs `wrangler deploy` from `grantsetu-worker/`.
-- Secret: `BUTTONDOWN_API_KEY` (same value as backend `.env`); set with `npx wrangler secret put BUTTONDOWN_API_KEY` once. **Not** in source control.
-- Re-engagement after each outage: Buttondown -> Subscribers -> filter `tag: outage-notify` -> Emails -> New email -> send. Manual broadcast keeps it simple and avoids double-sends if the tunnel flaps. Optional: bulk-untag after broadcast so the next outage lands as a fresh batch.
-- Maintenance HTML is fully self-contained (inline SVG mark, inline CSS, inline JS - zero external fetches that could themselves fail when origin is down).
-- Buttondown firewall: the Worker calls Buttondown from Cloudflare egress IPs (different from the home server IP that's already allowlisted). If `subscriber_blocked` errors appear in `npx wrangler tail`, set Buttondown firewall auditing mode to **Enabled** (not Aggressive) - same fix documented under the Newsletter section.
-
 ### Cloudflare Tunnel
 
 Tunnel ID: `83fae86d-d17a-4a33-bc9e-8bf012046afa`
@@ -396,7 +384,6 @@ Full blog feature shipped 2026-04-20 (migration `005`):
 
 | Date | Changes |
 |---|---|
-| 2026-04-29 | Outage fallback Worker (`grantsetu-worker/`): Cloudflare Worker on `grantsetu.in/*` + `www.grantsetu.in/*` that transparently proxies to the home-server tunnel and, when origin returns 502/503/521-526 or `fetch()` throws, serves a branded inline maintenance HTML with email-capture form that posts to Buttondown (`tag: outage-notify`, `type: unactivated`, with `ip_address` + `referrer_url`). `api.grantsetu.in` deliberately left off so API clients see parseable 5xx. New `bash deploy.sh worker` shortcut for `npx wrangler deploy`. Re-engagement after outage = manual Buttondown broadcast filtered by the new tag. (commit pending) |
 | 2026-04-26 | Newsletter pipeline live end-to-end. Buttondown sending domain switched from apex `grantsetu.in` to subdomain `newsletter.grantsetu.in` (Managed setup - 2 NS records to `ns1/ns2.onbuttondown.com` in Cloudflare DNS, Buttondown owns DKIM/MX/DMARC/track records on the subdomain). From address: `argajit@newsletter.grantsetu.in`. Subdomain isolates from Resend's apex records and protects future Google Workspace use. Inbound flow verified: site → backend → Buttondown → confirmation email → confirmed list, with source tags landing per form (`footer`, `newsletter`, `home`, `grant-detail`, `studio-waitlist`). Apex `grantsetu.in` DNS untouched. (commit ca8155a) |
 | 2026-04-26 | Hotfix: `/newsletter` page had its own inline subscribe form pointing at the deprecated `buttondown.com/api/emails/embed-subscribe/grantsetu` URL - missed in the original c5524c8 rewrite which only updated the shared `<NewsletterSignup>` component. After the Buttondown sender-domain switch the legacy URL 404'd and signups silently failed. Converted both inline forms on `/newsletter` to call `/api/v1/newsletter/subscribe`, dropped `BUTTONDOWN_ACTION/BUTTONDOWN_USERNAME` constants and `mode:'no-cors'` fallback, made the second form's email input controlled. (commit ca8155a) |
 | 2026-04-26 | Newsletter subscribe rewritten to go through our backend instead of Buttondown's direct embed endpoint. New `POST /api/v1/newsletter/subscribe` route + `buttondown_service.subscribe()` helper. Frontend `<NewsletterSignup>` now gets real success/error responses (no more `mode:'no-cors'` fire-and-forget), shows "Already on the list" for repeats, "Check your inbox to confirm" copy aligned with double opt-in. Removed unused `NEXT_PUBLIC_BUTTONDOWN_USERNAME`. Post-deploy: set `BUTTONDOWN_API_KEY` in backend .env, enable double opt-in + welcome email in Buttondown dashboard, restart. (commit c5524c8) |
