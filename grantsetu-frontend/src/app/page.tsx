@@ -51,7 +51,7 @@ const faqJsonLd = {
 
 export default function HomePage() {
   return (
-    <div>
+    <div className="roobert-scope">
       {/* ── Hero - NUUK: huge bold black on white ── */}
       <section className="relative bg-white pt-6 pb-10 sm:pt-14 sm:pb-16 overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,7 +75,7 @@ export default function HomePage() {
           {/* Subtitle */}
           <p
             className="mt-4 sm:mt-6 text-[14px] sm:text-[18px] text-gray-600 max-w-[680px] leading-[1.5] opacity-0 animate-fade-in-up"
-            style={{ animationDelay: "0.4s", animationFillMode: "forwards", fontFamily: "var(--font-body)" }}
+            style={{ animationDelay: "0.4s", animationFillMode: "forwards", fontFamily: "var(--font-roobert)" }}
           >
             Every active grant call from <span className="font-bold text-black">DBT, BIRAC, ICMR</span> and allied
             agencies - curated daily for biotech, biomedical &amp; life science researchers.
@@ -291,8 +291,8 @@ export default function HomePage() {
             {[
               { value: "7", label: "Agencies Tracked" },
               { value: "24", label: "Life Sci Subjects" },
-              { value: "24h", label: "Update Cycle" },
-              { value: "₹0", label: "Cost. Forever." },
+              { value: "Weekly", label: "Update Cadence" },
+              { value: "₹0", label: "Core Tier" },
             ].map((stat) => (
               <div key={stat.label} className="py-12 px-4 text-center">
                 <p
